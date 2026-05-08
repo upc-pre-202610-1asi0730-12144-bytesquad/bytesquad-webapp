@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Equipment, EquipmentStatus } from '../../../domain/model/equipment.entity';
 import { EquipmentStore } from '../../../application/equipment.store';
 import { EquipmentRow } from '../equipment-management/equipment-management.component';
+import { environment } from '../../../../../environments/environment';
 
 export interface EquipmentFormData {
   id?:           number;
@@ -77,10 +78,10 @@ export class AddEquipmentDialogComponent {
       this.store.addEquipment(entity);
     }
 
-    this.router.navigate(['equipment']);
+    this.router.navigate([environment.equipmentEndpoints]);
   }
 
   cancel(): void {
-    this.router.navigate(['equipment']);
+    this.router.navigate([environment.equipmentEndpoints]);
   }
 }
