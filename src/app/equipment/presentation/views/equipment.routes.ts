@@ -2,21 +2,21 @@ import { Routes } from '@angular/router';
 
 export const equipmentRoutes: Routes = [
   {
-    path: 'equipment',
+    path: 'equipments',
     loadComponent: () =>
       import('./equipment-management/equipment-management.component').then(
         m => m.EquipmentManagementComponent
       ),
   },
   {
-    path: 'equipment/new',
+    path: 'equipments/new',
     loadComponent: () =>
       import('./add-equipment-dialog/add-equipment-dialog.component').then(
         m => m.AddEquipmentDialogComponent
       ),
   },
   {
-    path: 'equipment/:id/edit',
+    path: 'equipments/:id/edit',
     loadComponent: () =>
       import('./add-equipment-dialog/add-equipment-dialog.component').then(
         m => m.AddEquipmentDialogComponent

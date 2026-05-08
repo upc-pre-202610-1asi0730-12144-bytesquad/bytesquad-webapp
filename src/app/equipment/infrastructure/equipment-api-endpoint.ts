@@ -11,7 +11,7 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<Equipment, EquipmentRe
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.equipmentApiProvider}${environment.equipmentEnpoints}`,
+      `${environment.equipmentApiProvider}${environment.equipmentEndpoints}`,
       new EquipmentAssembler()
     );
   }
