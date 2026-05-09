@@ -1,12 +1,38 @@
 {
   "nav": {
-    "dashboard": "Dashboard",
-    "equipment": "Equipment",
-    "iot": "IoT Monitoring",
-    "maintenance": "Maintenance",
-    "analytics": "Analytics",
-    "alerts": "Alerts",
-    "configuration": "Configuration"
+    "dashboard":     "Dashboard",
+    "equipment":     "Equipment",
+    "iot":           "IoT Monitoring",
+    "maintenance":   "Maintenance",
+    "analytics":     "Analytics",
+    "alerts":        "Alerts",
+    "configuration": "Configuration",
+    "clientHome":    "My Home"
+  },
+  "auth": {
+    "login": {
+      "title":              "Sign In",
+      "subtitle":           "Enter your credentials to access the platform",
+      "emailLabel":         "Email",
+      "emailPlaceholder":   "you@email.com",
+      "passwordLabel":      "Password",
+      "passwordPlaceholder":"••••••••",
+      "submitBtn":          "Sign In",
+      "noAccount":          "Don't have an account?",
+      "register":           "Register here",
+      "demoTitle":          "Test demo:",
+      "demoPassword":       "Password: anything"
+    },
+    "error": {
+      "emptyFields":         "Please fill in all fields",
+      "invalidCredentials":  "Email not recognized. Use a demo account."
+    },
+    "logout": "Log out"
+  },
+  "client": {
+    "welcome":  "Welcome",
+    "subtitle": "This is your client area. More features coming soon.",
+    "role":     "Client"
   },
   "iot": {
     "title": "IoT Monitoring",
