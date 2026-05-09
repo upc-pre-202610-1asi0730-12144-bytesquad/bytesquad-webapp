@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSliderModule } from '@angular/material/slider';
+import { TranslatePipe } from '@ngx-translate/core'; // <-- 1. Agregado el import
 
 export interface AlertType {
   key: string;
@@ -14,25 +16,27 @@ export interface AlertType {
 @Component({
   selector: 'app-configuration',
   standalone: true,
+  // <-- 2. Agregado MatSliderModule al arreglo de imports
   imports: [
     CommonModule,
     FormsModule,
     MatIconModule,
     MatSnackBarModule,
+    MatSliderModule,
+    TranslatePipe,
   ],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.scss',
 })
 export class ConfigurationComponent {
-
   // ── Maintenance Thresholds ──────────────────────────────────────────────
-  criticalHours   = 500;
-  maxIdleMinutes  = 15;
-  peakBuffer      = 2;
+  criticalHours = 500;
+  maxIdleMinutes = 15;
+  peakBuffer = 2;
 
   // ── IoT Configuration ───────────────────────────────────────────────────
-  batteryThreshold    = 20;
-  pingInterval        = '10';
+  batteryThreshold = 20;
+  pingInterval = '10';
   offlineGraceMinutes = 3;
 
   // ── Notifications ───────────────────────────────────────────────────────
@@ -66,9 +70,9 @@ export class ConfigurationComponent {
   ];
 
   // ── Financial Configuration ─────────────────────────────────────────────
-  downtimeCostPerHour  = 25;
+  downtimeCostPerHour = 25;
   avgMonthlyMembership = 89;
-  systemCurrency       = 'USD';
+  systemCurrency = 'USD';
 
   constructor(private snackBar: MatSnackBar) {}
 
