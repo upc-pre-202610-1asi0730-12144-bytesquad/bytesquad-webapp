@@ -6,7 +6,14 @@
     "maintenance": "Maintenance",
     "analytics": "Analytics",
     "alerts": "Alerts",
-    "configuration": "Configuration"
+    "configuration": "Configuration",
+    "routines": "My Routines",
+    "progress": "My Progress",
+    "profile": "My Profile"
+  },
+  "role": {
+    "switch_to_client": "View as Client",
+    "switch_to_admin": "View as Admin"
   },
   "iot": {
     "title": "IoT Monitoring",
@@ -40,10 +47,10 @@
       "noData": "No devices found"
     },
     "status": {
-      "ONLINE":   "Online",
-      "OFFLINE":  "Disconnected",
-      "WARNING":  "Warning",
-      "ACTIVE":   "Online",
+      "ONLINE": "Online",
+      "OFFLINE": "Disconnected",
+      "WARNING": "Warning",
+      "ACTIVE": "Online",
       "INACTIVE": "Disconnected"
     },
     "alerts": {

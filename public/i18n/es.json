@@ -6,7 +6,14 @@
     "maintenance": "Mantenimiento",
     "analytics": "Analítica",
     "alerts": "Alertas",
-    "configuration": "Configuración"
+    "configuration": "Configuración",
+    "routines": "Mis Rutinas",
+    "progress": "Mi Progreso",
+    "profile": "Mi Perfil"
+  },
+  "role": {
+    "switch_to_client": "Ver como Cliente",
+    "switch_to_admin": "Ver como Administrador"
   },
   "iot": {
     "title": "Monitoreo IoT",
@@ -40,10 +47,10 @@
       "noData": "No se encontraron dispositivos"
     },
     "status": {
-      "ONLINE":   "En Línea",
-      "OFFLINE":  "Desconectado",
-      "WARNING":  "Advertencia",
-      "ACTIVE":   "En Línea",
+      "ONLINE": "En Línea",
+      "OFFLINE": "Desconectado",
+      "WARNING": "Advertencia",
+      "ACTIVE": "En Línea",
       "INACTIVE": "Desconectado"
     },
     "alerts": {
