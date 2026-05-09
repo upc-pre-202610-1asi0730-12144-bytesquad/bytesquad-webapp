@@ -147,47 +147,73 @@ $green:        #22c55e;
   line-height: 1.4;
 }
 
-// ─── Custom range slider ──────────────────────────────────────────────────────
+// ─── mat-slider dark theme ────────────────────────────────────────────────────
+// mat-slider (Angular 15+/MDC) usa internamente un <input> real con
+// matSliderThumb. Sin el tema global de Material ese input queda visible
+// como caja de texto blanca. Lo ocultamos explícitamente aquí.
+
+@mixin slider-theme($color) {
+  ::ng-deep {
+    // ── Input nativo de matSliderThumb ──────────────────────────────────
+    // MDC escucha los eventos de drag/pointer SOBRE este input para mover
+    // el thumb. No se puede usar display:none ni pointer-events:none porque
+    // eso bloquea la interacción. La solución correcta es dejarlo opaco
+    // (opacity:0) con posicionamiento absoluto cubriendo la zona del slider,
+    // exactamente como lo hace el tema global de Material internamente.
+    input[matSliderThumb],
+    input.mat-mdc-slider-input {
+      opacity: 0 !important;
+      position: absolute !important;
+      pointer-events: auto !important;   // NUNCA none — es quien recibe el drag
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      left: 0 !important;
+      top: 0 !important;
+      cursor: pointer !important;
+    }
+
+    // ── Track derecho (gris de fondo) ────────────────────────────────────
+    .mdc-slider__track--inactive {
+      background-color: $border;
+      opacity: 1;
+    }
+
+    // ── Track izquierdo (fill coloreado) ─────────────────────────────────
+    // !important necesario para superar la especificidad del tema MDC
+    .mdc-slider__track--active .mdc-slider__track--active_fill,
+    .mdc-slider__track--active_fill {
+      background-color: $color !important;
+      border-color:     $color !important;
+    }
+
+    // ── Thumb (círculo arrastrable) ──────────────────────────────────────
+    .mdc-slider__thumb-knob {
+      background-color: $color !important;
+      border-color:     $color !important;
+      box-shadow: 0 0 0 3px rgba($color, 0.25);
+    }
+
+    // ── Ripple / focus ring ──────────────────────────────────────────────
+    .mat-ripple-element { background-color: rgba($color, 0.15); }
+    .mdc-slider__thumb--focused .mdc-slider__focus-ring { background-color: rgba($color, 0.15); }
+
+    // ── Burbuja de valor (modo discrete) ────────────────────────────────
+    .mdc-slider__value-indicator         { background-color: $color !important; }
+    .mdc-slider__value-indicator-text    { color: #000; font-weight: 700; }
+    .mdc-slider__value-indicator::before { border-top-color: $color !important; }
+  }
+}
+
 .cfg-slider {
-  -webkit-appearance: none;
-  appearance: none;
   width: 100%;
-  height: 6px;
-  border-radius: 4px;
-  background: linear-gradient(to right, $accent var(--val, 60%), $border var(--val, 60%));
-  outline: none;
-  cursor: pointer;
+  // Garantiza que el host mat-slider ocupe el ancho completo del contenedor
+  ::ng-deep .mdc-slider { width: 100%; }
 
-  &--red {
-    background: linear-gradient(to right, $red var(--val, 20%), $border var(--val, 20%));
+  @include slider-theme($accent);
 
-    &::-webkit-slider-thumb { background: $red; box-shadow: 0 0 0 3px rgba($red, 0.2); }
-    &::-moz-range-thumb     { background: $red; box-shadow: 0 0 0 3px rgba($red, 0.2); }
-  }
-
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: $accent;
-    cursor: pointer;
-    box-shadow: 0 0 0 3px rgba($accent, 0.2);
-    transition: box-shadow 0.15s;
-
-    &:hover { box-shadow: 0 0 0 5px rgba($accent, 0.3); }
-  }
-
-  &::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: none;
-    background: $accent;
-    cursor: pointer;
-    box-shadow: 0 0 0 3px rgba($accent, 0.2);
-  }
+  &--amber { @include slider-theme($amber); }
+  &--red   { @include slider-theme($red);   }
 }
 
 // ─── Info box ─────────────────────────────────────────────────────────────────
