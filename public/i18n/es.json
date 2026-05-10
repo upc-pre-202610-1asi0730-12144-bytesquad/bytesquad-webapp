@@ -203,6 +203,66 @@
       }
     }
   },
+  "analytics": {
+    "title": "Reportes y Analíticas",
+    "subtitle": "Análisis detallado de uso, afluencia y rendimiento operativo",
+    "exportCsv": "Exportar CSV",
+    "generatePdf": "Generar PDF",
+    "filters": {
+      "period": {
+        "label":   "Período",
+        "month":   "Último mes",
+        "quarter": "Últimos 3 meses",
+        "year":    "Último año"
+      },
+      "branch": {
+        "label": "Sede",
+        "all":   "Todas las sedes",
+        "main":  "Sede Principal"
+      },
+      "customRange": "Rango Personalizado",
+      "dateStart":   "Inicio",
+      "dateEnd":     "Fin"
+    },
+    "stats": {
+      "totalHours":    "Horas Totales de Uso",
+      "occupancyRate": "Tasa de Ocupación",
+      "peakUsage":     "Pico Máximo",
+      "inactiveTime":  "Tiempo Inactivo",
+      "vsLastMonth":   "vs mes anterior"
+    },
+    "charts": {
+      "weeklyUsage":    "Uso Semanal vs Capacidad",
+      "showComparison": "Mostrar Comparativa",
+      "hideComparison": "Ocultar Comparativa",
+      "prevMonth":      "Mes anterior",
+      "usage":          "Uso",
+      "capacity":       "Capacidad",
+      "machineTypes":   "Distribución por Tipo de Máquina",
+      "stressPeaks":    "Picos de Estrés por Hora (Aforo > 90%)"
+    },
+    "relocation": {
+      "title":         "Recomendaciones de Reubicación",
+      "subtitle":      "Máquinas infrautilizadas detectadas entre sedes — reubicarlas maximiza el ROI de activos",
+      "opportunities": "oportunidades",
+      "action":        "Reubicar"
+    },
+    "executive": {
+      "title": "Resumen Ejecutivo",
+      "positive": {
+        "title":       "Rendimiento Positivo",
+        "description": "El uso de máquinas ha aumentado un 12% este mes, indicando mayor retención de clientes y mejor aprovechamiento de activos."
+      },
+      "bottleneck": {
+        "title":       "Cuello de Botella Detectado",
+        "description": "Las horas de 18:00 a 20:00 consistentemente superan el 90% de capacidad. Recomendación: Considerar adquirir 2 máquinas adicionales de alto uso o implementar sistema de reservas."
+      },
+      "optimization": {
+        "title":       "Optimización Requerida",
+        "description": "Se registraron 124 horas de inactividad programada por mantenimiento. Aplicar el calendario inteligente podría reducir este número en un 30%."
+      }
+    }
+  },
   "maintenance": {
     "title":       "Centro de Mantenimiento",
     "subtitle":    "Gestiona tickets de mantenimiento preventivo y correctivo",

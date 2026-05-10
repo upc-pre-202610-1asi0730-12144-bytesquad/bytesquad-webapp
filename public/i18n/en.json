@@ -203,6 +203,66 @@
       }
     }
   },
+  "analytics": {
+    "title": "Reports & Analytics",
+    "subtitle": "Detailed analysis of usage, traffic and operational performance",
+    "exportCsv": "Export CSV",
+    "generatePdf": "Generate PDF",
+    "filters": {
+      "period": {
+        "label":   "Period",
+        "month":   "Last month",
+        "quarter": "Last 3 months",
+        "year":    "Last year"
+      },
+      "branch": {
+        "label": "Branch",
+        "all":   "All branches",
+        "main":  "Main Branch"
+      },
+      "customRange": "Custom Range",
+      "dateStart":   "Start",
+      "dateEnd":     "End"
+    },
+    "stats": {
+      "totalHours":    "Total Usage Hours",
+      "occupancyRate": "Occupancy Rate",
+      "peakUsage":     "Peak Usage",
+      "inactiveTime":  "Inactive Time",
+      "vsLastMonth":   "vs last month"
+    },
+    "charts": {
+      "weeklyUsage":    "Weekly Usage vs Capacity",
+      "showComparison": "Show Comparison",
+      "hideComparison": "Hide Comparison",
+      "prevMonth":      "Previous month",
+      "usage":          "Usage",
+      "capacity":       "Capacity",
+      "machineTypes":   "Distribution by Machine Type",
+      "stressPeaks":    "Stress Peaks by Hour (Occupancy > 90%)"
+    },
+    "relocation": {
+      "title":         "Relocation Recommendations",
+      "subtitle":      "Underutilized machines identified across branches — relocate to maximize asset ROI",
+      "opportunities": "opportunities",
+      "action":        "Relocate"
+    },
+    "executive": {
+      "title": "Executive Summary",
+      "positive": {
+        "title":       "Positive Performance",
+        "description": "Machine usage has increased 12% this month, indicating better client retention and improved asset utilization."
+      },
+      "bottleneck": {
+        "title":       "Bottleneck Detected",
+        "description": "Hours from 18:00 to 20:00 consistently exceed 90% capacity. Recommendation: Consider acquiring 2 additional high-use machines or implementing a reservation system."
+      },
+      "optimization": {
+        "title":       "Optimization Required",
+        "description": "124 hours of scheduled downtime recorded for maintenance. Applying the smart scheduler could reduce this figure by 30%."
+      }
+    }
+  },
   "maintenance": {
     "title":       "Maintenance Center",
     "subtitle":    "Manage preventive and corrective maintenance tickets",
