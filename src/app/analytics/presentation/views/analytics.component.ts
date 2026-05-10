@@ -16,6 +16,9 @@ interface RelocationRec {
   toBranch: string; toOccupancy: number; savingsPerMonth: number;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
 }
+interface InactivityRow { machine: string; hours: number; ratePerHour: number; total: number; }
+interface MaintenanceType { label: string; amount: number; pct: number; color: string; }
+interface RoiMonth { month: string; cumulative: number; }
 
 const WEEKLY_DATA: WeekDay[] = [
   { day: 'Lun', usage: 350, prevUsage: 300 },
@@ -55,6 +58,19 @@ const RELOCATION_DATA: RelocationRec[] = [
   { machine: 'Bicicleta Est. 2', fromBranch: 'Sede Barranco',   fromOccupancy: 31, toBranch: 'Sede Surco',      toOccupancy: 88, savingsPerMonth: 800,  priority: 'MEDIUM' },
   { machine: 'Elíptica Elite',   fromBranch: 'Sede La Molina',  fromOccupancy: 18, toBranch: 'Sede Miraflores', toOccupancy: 91, savingsPerMonth: 950,  priority: 'HIGH'   },
   { machine: 'Remo Concept 2',   fromBranch: 'Sede Barranco',   fromOccupancy: 42, toBranch: 'Sede San Isidro', toOccupancy: 87, savingsPerMonth: 650,  priority: 'MEDIUM' },
+];
+
+const INACTIVITY_LOSS: InactivityRow[] = [
+  { machine: 'Cinta #3',        hours: 48, ratePerHour: 12, total: 576 },
+  { machine: 'Elíptica Pro',    hours: 72, ratePerHour: 8,  total: 576 },
+  { machine: 'Rack Sentadilla', hours: 24, ratePerHour: 15, total: 360 },
+  { machine: 'Prensa Piernas',  hours: 36, ratePerHour: 10, total: 360 },
+];
+
+const MAINTENANCE_TYPES: MaintenanceType[] = [
+  { label: 'Mantenimiento Correctivo (3-5x más caro)', amount: 3200, pct: 62, color: '#fb2c36' },
+  { label: 'Mantenimiento Preventivo',                 amount: 1100, pct: 21, color: '#00c950' },
+  { label: 'Inventario de Repuestos',                  amount: 850,  pct: 17, color: '#f5bc36' },
 ];
 
 @Component({
@@ -136,6 +152,64 @@ export class AnalyticsComponent {
 
   // ── Relocation recommendations (US-27) ───────────────────────────────────
   readonly relocationData = RELOCATION_DATA;
+
+  // ── Financial Impact & ROI ────────────────────────────────────────────────
+  readonly financialStats = computed(() => ({
+    lossInactivity:   1872,
+    maintenanceCost:  5150,
+    potentialSavings: 1840,
+    roiMonths:        7.2,
+  }));
+
+  readonly inactivityLoss   = INACTIVITY_LOSS;
+  readonly maintenanceTypes = MAINTENANCE_TYPES;
+
+  readonly totalMonthlyLoss = computed(() =>
+    this.inactivityLoss.reduce((s, r) => s + r.total, 0)
+  );
+
+  maintenancePieGradient(): string {
+    let cur = 0;
+    return this.maintenanceTypes.map(t => {
+      const start = cur; cur += t.pct;
+      return `${t.color} ${start}% ${cur}%`;
+    }).join(', ');
+  }
+
+  // ROI Projection (cumulative, based on simulator inputs)
+  readonly simMachineCost    = signal(5000);
+  readonly simUnmetDemand    = signal(120);
+  readonly simRevenuePerUser = signal(45);
+
+  readonly roiProjectionData = computed(() => {
+    const cost     = this.simMachineCost();
+    const monthly  = this.simUnmetDemand() * this.simRevenuePerUser();
+    const months   = ['Mes 1','Mes 2','Mes 3','Mes 4','Mes 5','Mes 6','Mes 7','Mes 8'];
+    return months.map((month, i) => ({
+      month,
+      cumulative: Math.round(-cost + monthly * (i + 1)),
+    }));
+  });
+
+  readonly roiYAxisLabels = ['6000', '3000', '0', '-3000', '-6000'];
+
+  readonly ROI_MAX = 6000;
+  readonly ROI_MIN = -6000;
+  readonly ROI_RANGE = 12000; // MAX - MIN
+
+  roiZeroLinePct(): string {
+    // distance of 0 from bottom, as % of the range
+    return `${((0 - this.ROI_MIN) / this.ROI_RANGE) * 100}%`;
+  }
+
+  roiBarHeight(value: number): string {
+    return `${(Math.abs(value) / this.ROI_RANGE) * 100}%`;
+  }
+
+  calculateRoi(): void {
+    // Trigger recompute via signal change (signals are already reactive, just re-sets)
+    this.simMachineCost.set(this.simMachineCost());
+  }
 
   // ── Actions ───────────────────────────────────────────────────────────────
   exportCsv(): void {
