@@ -1,0 +1,36 @@
+<div class="alerts-container">
+  <div class="alerts-grid">
+    @for (alert of alertsList; track alert.id) {
+      <div class="alert-card">
+
+        <button class="close-btn" (click)="deleteAlert($event, alert.id)" title="Eliminar alerta">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <div class="alert-card-top">
+          <div class="alert-icon-container" [ngClass]="'bg-' + alert.type">
+            <mat-icon>{{ alert.icon }}</mat-icon>
+          </div>
+
+          <div class="alert-content">
+            <h3 class="alert-title">{{ alert.title }}</h3>
+            <p class="alert-description">{{ alert.description }}</p>
+          </div>
+        </div>
+
+        <div class="alert-card-bottom">
+          <span class="alert-time">{{ getRelativeTime(alert.date) }}</span>
+          <button class="details-btn" (click)="navigateTo(alert.targetRoute)">
+            Ver detalles →
+          </button>
+        </div>
+
+      </div>
+    } @empty {
+      <div class="empty-state">
+        <mat-icon>done_all</mat-icon>
+        <p>No tienes alertas pendientes</p>
+      </div>
+    }
+  </div>
+</div>
