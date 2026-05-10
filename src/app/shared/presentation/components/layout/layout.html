@@ -1,5 +1,8 @@
-<div class="shell">
-  <app-sidebar [role]="currentRole"></app-sidebar>
+<div class="shell" [class.is-client]="currentRole === 'client'">
+
+  @if (currentRole === 'admin') {
+    <app-sidebar [role]="currentRole"></app-sidebar>
+  }
 
   <div class="shell__body">
     <header class="shell__topbar">
@@ -10,8 +13,14 @@
 
       <app-language-switcher></app-language-switcher>
     </header>
+
     <main class="shell__content">
       <router-outlet></router-outlet>
     </main>
   </div>
+
+  @if (currentRole === 'client') {
+    <app-bottom-bar></app-bottom-bar>
+  }
+
 </div>

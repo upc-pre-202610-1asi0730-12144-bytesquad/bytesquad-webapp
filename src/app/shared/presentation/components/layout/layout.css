@@ -81,3 +81,7 @@
   color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
 }
+
+.shell.is-client .shell__body {
+  padding-bottom: 70px;
+}
