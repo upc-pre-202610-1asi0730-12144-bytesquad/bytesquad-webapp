@@ -15,6 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 16px;
   padding: 0 16px;
   height: 52px;
   background: #1e1e1e;
@@ -24,4 +25,59 @@
 .shell__content {
   flex: 1;
   overflow-y: auto;
+}
+
+/* User info in topbar */
+.topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px;
+  border-left: 1px solid #333;
+}
+
+.topbar__user-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #9ca3af;
+}
+
+.topbar__user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.topbar__user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.topbar__user-role {
+  font-size: 0.7rem;
+  color: #f5bc36;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.topbar__logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.topbar__logout:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
 }
