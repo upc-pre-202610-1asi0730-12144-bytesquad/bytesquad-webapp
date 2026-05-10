@@ -38,6 +38,11 @@ export const routes: Routes = [
               import('./maintenance/presentation/views/maintenance.component').then(m => m.MaintenanceComponent),
           },
           {
+            path: 'maintenance/new-ticket',
+            loadComponent: () =>
+              import('./maintenance/presentation/views/new-ticket/new-ticket.component').then(m => m.NewTicketComponent),
+          },
+          {
             path: 'analytics',
             loadComponent: () =>
               import('./analytics/presentation/views/analytics.component').then(m => m.AnalyticsComponent),

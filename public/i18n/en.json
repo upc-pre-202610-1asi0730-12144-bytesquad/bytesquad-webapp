@@ -202,5 +202,72 @@
         "min": "Value must be 0 or greater"
       }
     }
+  },
+  "maintenance": {
+    "title":       "Maintenance Center",
+    "subtitle":    "Manage preventive and corrective maintenance tickets",
+    "newTicket":   "New Ticket",
+    "search":      "Search by ID, machine or description...",
+    "assignedTo":  "Assigned to",
+    "completedBy": "Completed by",
+    "stats": {
+      "totalTickets": "Total Tickets",
+      "pending":      "Pending",
+      "inProgress":   "In Progress",
+      "completed":    "Completed"
+    },
+    "filter": {
+      "allStatuses":   "All Statuses",
+      "allPriorities": "All Priorities"
+    },
+    "col": {
+      "pending":    "Pending",
+      "inProgress": "In Progress",
+      "completed":  "Completed",
+      "empty":      "No tickets"
+    },
+    "action": {
+      "start":    "Start",
+      "complete": "Complete"
+    },
+    "form": {
+      "title":       "New Maintenance Ticket",
+      "equipment":   "Equipment",
+      "priority":    "Priority",
+      "type":        "Type",
+      "date":        "Scheduled Date",
+      "time":        "Scheduled Time",
+      "description": "Description",
+      "cancel":      "Cancel",
+      "submit":      "Create Ticket"
+    },
+    "scheduler": {
+      "peakWarning":    "Peak demand hour",
+      "peakWarningMsg": "This time slot has high gym traffic. Scheduling maintenance may disrupt members.",
+      "peakHint":       "High demand — consider an off-peak slot",
+      "suggestions":    "Suggested off-peak times:",
+      "confirmedMsg":   "Off-peak slot — will not disrupt members"
+    },
+    "status": {
+      "OPEN":        "Open",
+      "IN_PROGRESS": "In Progress",
+      "RESOLVED":    "Resolved",
+      "PENDING":     "Pending",
+      "CONFIRMED":   "Confirmed",
+      "CANCELLED":   "Cancelled"
+    },
+    "priority": {
+      "LOW":    "Low",
+      "MEDIUM": "Medium",
+      "HIGH":   "High",
+      "URGENT": "Urgent"
+    },
+    "type": {
+      "CORRECTIVE":  "Corrective",
+      "PREVENTIVE":  "Preventive",
+      "LUBRICATION": "Lubrication",
+      "INSPECTION":  "Inspection",
+      "OVERHAUL":    "Overhaul"
+    }
   }
 }
