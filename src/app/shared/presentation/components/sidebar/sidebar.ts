@@ -34,8 +34,9 @@ export class Sidebar {
   // Rutas para la vista del cliente
   private readonly clientNavItems: NavItem[] = [
     { path: '/dashboard', icon: 'home', labelKey: 'nav.dashboard' },
-    { path: '/routines', icon: 'directions_run', labelKey: 'nav.routines' },
-    { path: '/progress', icon: 'trending_up', labelKey: 'nav.progress' },
+    { path: '/map', icon: 'map', labelKey: 'nav.map' },
+    { path: '/routines', icon: 'fitness_center', labelKey: 'nav.routines' },
+    { path: '/bookings', icon: 'event_available', labelKey: 'nav.bookings' },
     { path: '/profile', icon: 'person', labelKey: 'nav.profile' },
   ];
 

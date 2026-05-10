@@ -7,9 +7,15 @@
     "analytics": "Analítica",
     "alerts": "Alertas",
     "configuration": "Configuración",
-    "routines": "Mis Rutinas",
-    "progress": "Mi Progreso",
+    "map": "Mapa",
+    "routines": "Rutinas",
+    "bookings": "Mis Reservas",
     "profile": "Mi Perfil"
+  },
+  "dashboard": {
+    "welcome": "¡Hola de nuevo, {{name}}!",
+    "client_intro": "Aquí tienes un resumen de tu actividad.",
+    "admin_panel": "Panel de Administración"
   },
   "role": {
     "switch_to_client": "Ver como Cliente",

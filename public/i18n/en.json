@@ -7,9 +7,15 @@
     "analytics": "Analytics",
     "alerts": "Alerts",
     "configuration": "Configuration",
-    "routines": "My Routines",
-    "progress": "My Progress",
+    "map": "Map",
+    "routines": "Routines",
+    "bookings": "My Bookings",
     "profile": "My Profile"
+  },
+  "dashboard": {
+    "welcome": "Welcome back, {{name}}!",
+    "client_intro": "Here is a summary of your activity.",
+    "admin_panel": "Administration Panel"
   },
   "role": {
     "switch_to_client": "View as Client",

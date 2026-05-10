@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { SessionService } from '../../../application/session.service';
 import { RouterOutlet } from '@angular/router';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { Sidebar } from '../sidebar/sidebar';
@@ -21,10 +22,13 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './layout.css',
 })
 export class Layout {
-  // Inicializamos por defecto en la vista que ya tienes (admin)
-  currentRole: 'admin' | 'client' = 'admin';
+  private sessionService = inject(SessionService);
 
+  // Reemplazamos la variable por un Getter
+  get currentRole(): 'admin' | 'client' {
+    return this.sessionService.currentRole();
+  }
   toggleRole() {
-    this.currentRole = this.currentRole === 'admin' ? 'client' : 'admin';
+    this.sessionService.toggleRole();
   }
 }
