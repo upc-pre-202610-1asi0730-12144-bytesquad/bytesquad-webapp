@@ -318,4 +318,223 @@
     </div>
   </div>
 
+  <!-- ── Financial Impact & ROI ─────────────────────────────────────────── -->
+  <div class="fin-header">
+    <div>
+      <h2 class="fin-title">{{ 'analytics.financial.title' | translate }}</h2>
+      <p class="fin-subtitle">{{ 'analytics.financial.subtitle' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Financial stat cards -->
+  <div class="stat-grid">
+
+    <div class="stat-card">
+      <div class="stat-card__info">
+        <p class="stat-card__label">{{ 'analytics.financial.lossInactivity' | translate }}</p>
+        <p class="stat-card__value stat-card__value--red">${{ financialStats().lossInactivity | number:'1.0-0' }}</p>
+        <p class="stat-card__change stat-card__change--muted">{{ 'analytics.stats.vsLastMonth' | translate }}</p>
+      </div>
+      <mat-icon class="stat-card__icon stat-card__icon--red">trending_down</mat-icon>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__info">
+        <p class="stat-card__label">{{ 'analytics.financial.maintenanceCost' | translate }}</p>
+        <p class="stat-card__value stat-card__value--red">${{ financialStats().maintenanceCost | number:'1.0-0' }}</p>
+        <p class="stat-card__change stat-card__change--muted">{{ 'analytics.stats.vsLastMonth' | translate }}</p>
+      </div>
+      <mat-icon class="stat-card__icon stat-card__icon--amber">attach_money</mat-icon>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__info">
+        <p class="stat-card__label">{{ 'analytics.financial.potentialSavings' | translate }}</p>
+        <p class="stat-card__value stat-card__value--green">${{ financialStats().potentialSavings | number:'1.0-0' }}</p>
+        <p class="stat-card__change stat-card__change--muted">{{ 'analytics.financial.withPredictive' | translate }}</p>
+      </div>
+      <mat-icon class="stat-card__icon stat-card__icon--green">trending_up</mat-icon>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__info">
+        <p class="stat-card__label">{{ 'analytics.financial.avgRoi' | translate }}</p>
+        <p class="stat-card__value">{{ financialStats().roiMonths }} {{ 'analytics.financial.months' | translate }}</p>
+        <p class="stat-card__change stat-card__change--muted">{{ 'analytics.financial.investmentRecovery' | translate }}</p>
+      </div>
+      <mat-icon class="stat-card__icon stat-card__icon--amber">calculate</mat-icon>
+    </div>
+
+  </div>
+
+  <!-- Loss table + Maintenance pie -->
+  <div class="charts-row">
+
+    <div class="chart-card">
+      <div class="chart-card__header">
+        <span class="chart-card__title">{{ 'analytics.financial.lossTable.title' | translate }}</span>
+      </div>
+      <div class="fin-table-wrap">
+        <table class="fin-table">
+          <thead>
+          <tr>
+            <th>{{ 'analytics.financial.lossTable.machine' | translate }}</th>
+            <th>{{ 'analytics.financial.lossTable.hours' | translate }}</th>
+            <th>{{ 'analytics.financial.lossTable.ratePerHour' | translate }}</th>
+            <th>{{ 'analytics.financial.lossTable.total' | translate }}</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (row of inactivityLoss; track row.machine) {
+              <tr>
+                <td>{{ row.machine }}</td>
+                <td><span class="hours-badge">{{ row.hours }}h</span></td>
+                <td>${{ row.ratePerHour }}</td>
+                <td class="loss-total">${{ row.total }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+          <tr class="fin-table__footer">
+            <td colspan="3">{{ 'analytics.financial.lossTable.monthlyTotal' | translate }}</td>
+            <td class="loss-total">${{ totalMonthlyLoss() | number:'1.0-0' }}</td>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card__header">
+        <span class="chart-card__title">{{ 'analytics.financial.costBreakdown' | translate }}</span>
+      </div>
+      <div class="pie-container">
+        <div class="pie-donut" [style.background]="'conic-gradient(' + maintenancePieGradient() + ')'">
+          <div class="pie-donut__hole"></div>
+        </div>
+        <div class="pie-legend">
+          @for (t of maintenanceTypes; track t.label) {
+            <div class="pie-legend__item">
+              <span class="pie-legend__dot" [style.background]="t.color"></span>
+              <span class="pie-legend__label">{{ t.label }}: <strong>${{ t.amount | number:'1.0-0' }}</strong></span>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="maint-breakdown-list">
+        @for (t of maintenanceTypes; track t.label) {
+          <div class="maint-row" [style.border-left-color]="t.color">
+            <span class="maint-row__label">{{ t.label }}</span>
+            <div class="occ-bar maint-row__bar">
+              <div class="occ-bar__fill" [style.width.%]="t.pct" [style.background]="t.color"></div>
+            </div>
+            <span class="maint-row__amount" [style.color]="t.color">${{ t.amount | number:'1.0-0' }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROI Projection bar chart -->
+  <div class="chart-card chart-card--full">
+    <div class="chart-card__header">
+      <span class="chart-card__title">{{ 'analytics.financial.roiProjection.title' | translate }}</span>
+    </div>
+    <div class="roi-bar-chart">
+      <div class="bar-chart__y-axis">
+        @for (label of roiYAxisLabels; track label) {
+          <span>{{ label }}</span>
+        }
+      </div>
+      <div class="bar-chart__plot roi-plot">
+        <div class="bar-chart__grid">
+          @for (l of [0,1,2,3,4,5,6]; track l) {
+            <div class="grid-line"></div>
+          }
+        </div>
+        <div class="roi-zero-line" [style.bottom]="roiZeroLinePct()"></div>
+        <div class="bar-chart__bars bar-chart__bars--roi">
+          @for (m of roiProjectionData(); track m.month) {
+            <div class="bar-group">
+              <div class="bar-group__bars bar-group__bars--roi">
+                <div class="bar bar--roi"
+                     [class.bar--roi-pos]="m.cumulative >= 0"
+                     [class.bar--roi-neg]="m.cumulative < 0"
+                     [style.height]="roiBarHeight(m.cumulative)"
+                     [title]="'$' + m.cumulative">
+                </div>
+              </div>
+              <span class="bar-label">{{ m.month }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROI Simulator -->
+  <div class="chart-card chart-card--full">
+    <div class="chart-card__header">
+      <div class="fin-section-title-wrap">
+        <mat-icon class="fin-section-icon">calculate</mat-icon>
+        <span class="chart-card__title">{{ 'analytics.financial.simulator.title' | translate }}</span>
+      </div>
+    </div>
+    <div class="roi-sim-inputs">
+      <div class="roi-sim-field">
+        <label class="roi-sim-label">{{ 'analytics.financial.simulator.machineCost' | translate }}</label>
+        <input class="roi-sim-input" type="number"
+               [value]="simMachineCost()"
+               (input)="simMachineCost.set(+$any($event.target).value)" />
+      </div>
+      <div class="roi-sim-field">
+        <label class="roi-sim-label">{{ 'analytics.financial.simulator.unmetDemand' | translate }}</label>
+        <input class="roi-sim-input" type="number"
+               [value]="simUnmetDemand()"
+               (input)="simUnmetDemand.set(+$any($event.target).value)" />
+      </div>
+      <div class="roi-sim-field">
+        <label class="roi-sim-label">{{ 'analytics.financial.simulator.revenuePerUser' | translate }}</label>
+        <input class="roi-sim-input" type="number"
+               [value]="simRevenuePerUser()"
+               (input)="simRevenuePerUser.set(+$any($event.target).value)" />
+      </div>
+    </div>
+    <button class="btn-accent btn-calc" (click)="calculateRoi()">
+      <mat-icon>calculate</mat-icon>
+      {{ 'analytics.financial.simulator.calculate' | translate }}
+    </button>
+  </div>
+
+  <!-- Financial Recommendations -->
+  <div class="chart-card chart-card--full">
+    <div class="chart-card__header">
+      <span class="chart-card__title">{{ 'analytics.financial.recommendations.title' | translate }}</span>
+    </div>
+    <div class="executive-list">
+      <div class="insight insight--green">
+        <mat-icon class="insight__icon">check_circle</mat-icon>
+        <div class="insight__body">
+          <p class="insight__title insight__title--green">{{ 'analytics.financial.recommendations.preventive.title' | translate }}</p>
+          <p class="insight__desc">{{ 'analytics.financial.recommendations.preventive.description' | translate }}</p>
+        </div>
+      </div>
+      <div class="insight insight--amber">
+        <mat-icon class="insight__icon">trending_up</mat-icon>
+        <div class="insight__body">
+          <p class="insight__title insight__title--amber">{{ 'analytics.financial.recommendations.investment.title' | translate }}</p>
+          <p class="insight__desc">{{ 'analytics.financial.recommendations.investment.description' | translate }}</p>
+        </div>
+      </div>
+      <div class="insight insight--amber">
+        <mat-icon class="insight__icon">warning</mat-icon>
+        <div class="insight__body">
+          <p class="insight__title insight__title--amber">{{ 'analytics.financial.recommendations.relocation.title' | translate }}</p>
+          <p class="insight__desc">{{ 'analytics.financial.recommendations.relocation.description' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
