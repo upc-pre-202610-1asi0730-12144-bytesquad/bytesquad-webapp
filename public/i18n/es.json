@@ -202,5 +202,72 @@
         "min": "El valor debe ser 0 o mayor"
       }
     }
+  },
+  "maintenance": {
+    "title":       "Centro de Mantenimiento",
+    "subtitle":    "Gestiona tickets de mantenimiento preventivo y correctivo",
+    "newTicket":   "Nuevo Ticket",
+    "search":      "Buscar por ID, máquina o descripción...",
+    "assignedTo":  "Asignado a",
+    "completedBy": "Completado por",
+    "stats": {
+      "totalTickets": "Total Tickets",
+      "pending":      "Pendientes",
+      "inProgress":   "En Progreso",
+      "completed":    "Completados"
+    },
+    "filter": {
+      "allStatuses":   "Todos los Estados",
+      "allPriorities": "Todas las Prioridades"
+    },
+    "col": {
+      "pending":    "Pendiente",
+      "inProgress": "En Progreso",
+      "completed":  "Completado",
+      "empty":      "Sin tickets"
+    },
+    "action": {
+      "start":    "Iniciar",
+      "complete": "Completar"
+    },
+    "form": {
+      "title":       "Nuevo Ticket de Mantenimiento",
+      "equipment":   "Equipo",
+      "priority":    "Prioridad",
+      "type":        "Tipo",
+      "date":        "Fecha Programada",
+      "time":        "Hora Programada",
+      "description": "Descripción",
+      "cancel":      "Cancelar",
+      "submit":      "Crear Ticket"
+    },
+    "scheduler": {
+      "peakWarning":    "Hora de alta demanda",
+      "peakWarningMsg": "Esta franja tiene alto tráfico de miembros. Programar mantenimiento puede afectar la disponibilidad.",
+      "peakHint":       "Alta demanda — considera un horario valle",
+      "suggestions":    "Horarios valle sugeridos:",
+      "confirmedMsg":   "Horario valle — no afectará a los miembros"
+    },
+    "status": {
+      "OPEN":        "Abierto",
+      "IN_PROGRESS": "En Progreso",
+      "RESOLVED":    "Resuelto",
+      "PENDING":     "Pendiente",
+      "CONFIRMED":   "Confirmado",
+      "CANCELLED":   "Cancelado"
+    },
+    "priority": {
+      "LOW":    "Baja",
+      "MEDIUM": "Media",
+      "HIGH":   "Alta",
+      "URGENT": "Urgente"
+    },
+    "type": {
+      "CORRECTIVE":  "Correctivo",
+      "PREVENTIVE":  "Preventivo",
+      "LUBRICATION": "Lubricación",
+      "INSPECTION":  "Inspección",
+      "OVERHAUL":    "Revisión General"
+    }
   }
 }
