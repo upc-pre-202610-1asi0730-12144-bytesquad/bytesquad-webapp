@@ -1,4 +1,28 @@
 {
+  "client": {
+    "welcome": "Bienvenido",
+    "subtitle": "Monitorea máquinas, reserva equipos y gestiona tus rutinas",
+    "role": "Cliente"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "subtitle": "¡Bienvenido de nuevo! Ingresa tus credenciales para continuar",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "submitBtn": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "register": "Regístrate",
+      "demoTitle": "Credenciales de demostración",
+      "demoPassword": "Contraseña: demo1234"
+    },
+    "error": {
+      "emptyFields": "Por favor ingresa tu correo y contraseña",
+      "invalidCredentials": "Correo o contraseña incorrectos"
+    }
+  },
   "machines": {
     "zones": {
       "fuerza": "Zona Fuerza",
@@ -40,39 +64,37 @@
       "gym2": "Gimnasio Norte",
       "gym3": "Gimnasio Sur"
     },
-    "muscleGroups": {
-      "chest": "Pectorales",
-      "legs": "Piernas",
-      "back": "Espalda",
-      "shoulders": "Hombros",
-      "arms": "Brazos",
-      "cardio": "Cardio"
-    },
     "detail": {
       "statusLabel": "Estado",
       "status": {
-        "AVAILABLE": "Libre",
-        "IN_USE": "Ocupado",
+        "AVAILABLE": "Disponible",
+        "IN_USE": "En Uso",
         "RESERVED": "Reservado"
       },
-      "reservedByUser": "Esta máquina está reservada por otro usuario",
+      "reservedByUser": "Tienes esta máquina reservada",
       "notifyBtn": "Notificarme cuando esté libre",
-      "alternativesBtn": "Ver Alternativas",
-      "reportFreeBtn": "Reportar como Libre",
-      "reserveBtn": "Reservar 15 minutos",
-      "reportOccupiedBtn": "Reportar como Ocupado",
+      "alternativesBtn": "Ver alternativas",
+      "reportFreeBtn": "Reportar como libre",
+      "reserveBtn": "Reservar",
+      "reportOccupiedBtn": "Reportar como ocupada",
       "notifications": {
-        "notified": "Te notificaremos cuando la máquina esté libre",
+        "notified": "Te notificaremos cuando esta máquina esté libre",
         "reportedFree": "Máquina reportada como libre. ¡Gracias!",
-        "reserved": "Máquina reservada por 15 minutos",
+        "reserved": "Máquina reservada con éxito",
         "reportedOccupied": "Máquina reportada como ocupada. ¡Gracias!"
       }
     },
     "alternatives": {
-      "title": "Ejercicios Alternativos",
-      "subtitle": "Estas máquinas están disponibles y trabajan grupos musculares similares:",
+      "title": "Máquinas Alternativas",
+      "subtitle": "Máquinas disponibles de la misma categoría",
       "free": "Libre",
-      "reserveBtn": "Reservar 15 min"
+      "reserveBtn": "Reservar"
+    },
+    "muscleGroups": {
+      "cardio": "Cardio",
+      "legs": "Piernas",
+      "back": "Espalda",
+      "chest": "Pecho"
     }
   },
   "booking": {
@@ -114,7 +136,8 @@
     "map": "Mapa",
     "routines": "Rutinas",
     "bookings": "Mis Reservas",
-    "profile": "Mi Perfil"
+    "profile": "Mi Perfil",
+    "financial": "Impacto Financiero"
   },
   "dashboard": {
     "welcome": "¡Hola de nuevo, {{name}}!",
@@ -250,38 +273,6 @@
       }
     }
   },
-  "dashboardAdmin": {
-    "kpis": {
-      "operationalEquipment": "Equipos Operativos",
-      "maintenance": "En Mantenimiento",
-      "outOfService": "Fuera de Servicio",
-      "totalTickets": "Tickets Totales"
-    },
-    "charts": {
-      "peakCapacityHours": "Horas Pico de Capacidad",
-      "machineUsage": "Uso de Máquinas (Horas)",
-      "noUsageData": "Sin datos de uso"
-    },
-    "table": {
-      "title": "Equipos Subutilizados",
-      "headers": {
-        "machineId": "ID Máquina",
-        "location": "Ubicación",
-        "hours": "Horas",
-        "roi": "ROI"
-      },
-      "empty": "Sin equipos subutilizados"
-    },
-    "maintenanceCenter": {
-      "title": "Centro de Mantenimiento",
-      "columns": {
-        "todo": "Por Hacer",
-        "inProgress": "En Progreso",
-        "completed": "Completado"
-      },
-      "empty": "Sin tickets"
-    }
-  },
   "equipment": {
     "title": "Gestión de Equipos",
     "subtitle": "Monitorea y gestiona todos los equipos del gimnasio",
@@ -337,91 +328,6 @@
         "required": "Este campo es obligatorio",
         "min": "El valor debe ser 0 o mayor"
       }
-    }
-  },
-  "routines": {
-    "title": "Rutinas y Ejercicios",
-    "subtitle": "Gestiona tus rutinas y encuentra ejercicios alternativos",
-    "newRoutine": "Nueva Rutina",
-    "search": "Buscar ejercicio o máquina...",
-    "filter": {
-      "all": "Todos",
-      "chest": "Pectorales",
-      "legs": "Piernas",
-      "back": "Espalda",
-      "shoulders": "Hombros",
-      "arms": "Brazos"
-    },
-    "exercises": {
-      "pressDePecho": "Press de Pecho",
-      "sentadillaConBarra": "Sentadilla con Barra",
-      "pesoMuertoRumano": "Peso Muerto Rumano",
-      "dominadas": "Dominadas",
-      "pressMilitar": "Press Militar"
-    },
-    "machines": {
-      "bancoPechoPlano": "Banco Pecho Plano",
-      "rackSentadilla2": "Rack Sentadilla #2",
-      "plataformaPesoMuerto": "Plataforma de Peso Muerto",
-      "barraDeDominadas": "Barra de Dominadas",
-      "rackDeFuerza": "Rack de Fuerza"
-    },
-    "tags": {
-      "chest": "Pectorales",
-      "legs": "Piernas",
-      "back": "Espalda",
-      "lowerBack": "Espalda Baja",
-      "shoulders": "Hombros",
-      "arms": "Brazos"
-    },
-    "level": {
-      "beginner": "Principiante",
-      "intermediate": "Intermedio",
-      "advanced": "Avanzado"
-    },
-    "status": {
-      "available": "Disponible",
-      "inUse": "Ocupado",
-      "maintenance": "Mantenimiento"
-    },
-    "alternatives": {
-      "title": "Alternativas disponibles:",
-      "free": "Libre",
-      "viewMap": "Ver en el Mapa",
-      "prensaDePiernas": "Prensa de Piernas",
-      "hackSquat": "Hack Squat",
-      "sentadillaGoblet": "Sentadilla Goblet",
-      "poleaAlta": "Polea Alta",
-      "remoConBarra": "Remo con Barra",
-      "maquinaDeRemo": "Máquina de Remo"
-    },
-    "suggestion": {
-      "title": "Motor de Sugerencias Inteligente",
-      "item1": "Las alternativas respetan tu grupo muscular objetivo",
-      "item2": "Excluye automáticamente máquinas en mantenimiento",
-      "item3": "Sugiere ejercicios de peso corporal si no hay máquinas libres",
-      "item4": "Actualización en tiempo real según disponibilidad"
-    },
-    "modal": {
-      "title": "Nueva Rutina",
-      "subtitle": "Crea una rutina personalizada para tus entrenamientos",
-      "name": "Nombre de la Rutina",
-      "namePlaceholder": "Ej: Rutina de Fuerza - Semana 1",
-      "objective": "Objetivo",
-      "selectObjective": "Selecciona un objetivo",
-      "objectives": {
-        "gainStrength": "Ganar Fuerza",
-        "muscleHypertrophy": "Hipertrofia Muscular",
-        "endurance": "Resistencia",
-        "weightLoss": "Pérdida de Peso",
-        "generalFitness": "Condición Física General"
-      },
-      "difficulty": "Nivel de Dificultad",
-      "notes": "Notas (Opcional)",
-      "notesPlaceholder": "Agrega notas sobre tu rutina...",
-      "cancel": "Cancelar",
-      "create": "Crear Rutina",
-      "successMessage": "¡Rutina \"{{name}}\" creada exitosamente!"
     }
   },
   "analytics": {
@@ -484,48 +390,110 @@
       }
     },
     "financial": {
-      "title":              "Impacto Financiero y ROI",
-      "subtitle":           "Análisis de costos ocultos, pérdidas por inactividad y proyecciones de inversión",
-      "lossInactivity":     "Pérdida por Inactividad",
-      "maintenanceCost":    "Costo Mantenimiento",
-      "potentialSavings":   "Ahorro Potencial",
-      "withPredictive":     "Con mantenimiento predictivo",
-      "avgRoi":             "ROI Promedio",
-      "months":             "meses",
+      "title": "Impacto Financiero y ROI",
+      "subtitle": "Análisis de costos ocultos, pérdidas por inactividad y proyecciones de inversión",
+      "lossInactivity": "Pérdida por Inactividad",
+      "maintenanceCost": "Costo Mantenimiento",
+      "potentialSavings": "Ahorro Potencial",
+      "withPredictive": "Con mantenimiento predictivo",
+      "avgRoi": "ROI Promedio",
+      "months": "meses",
       "investmentRecovery": "Recuperación de inversión",
-      "costBreakdown":      "Desglose de Costos de Mantenimiento",
+      "costBreakdown": "Desglose de Costos de Mantenimiento",
       "lossTable": {
-        "title":        "Pérdida por Inactividad de Equipos",
-        "machine":      "Máquina",
-        "hours":        "Horas",
-        "ratePerHour":  "$/Hora",
-        "total":        "Total",
+        "title": "Pérdida por Inactividad de Equipos",
+        "machine": "Máquina",
+        "hours": "Horas",
+        "ratePerHour": "$/Hora",
+        "total": "Total",
         "monthlyTotal": "TOTAL PÉRDIDA MENSUAL"
+      },
+      "costLabels": {
+        "corrective": "Mantenimiento Correctivo (3-5x más caro)",
+        "preventive": "Mantenimiento Preventivo",
+        "inventory": "Inventario de Repuestos"
       },
       "roiProjection": {
         "title": "Proyección de ROI – Nueva Máquina"
       },
       "simulator": {
-        "title":          "Simulador de Retorno de Inversión (ROI)",
-        "machineCost":    "Costo de la Máquina ($)",
-        "unmetDemand":    "Demanda Insatisfecha (usuarios/mes)",
+        "title": "Simulador de Retorno de Inversión (ROI)",
+        "machineCost": "Costo de la Máquina ($)",
+        "unmetDemand": "Demanda Insatisfecha (usuarios/mes)",
         "revenuePerUser": "Ingreso por Usuario ($)",
-        "calculate":      "Calcular ROI"
+        "calculate": "Calcular ROI"
       },
       "recommendations": {
         "title": "Recomendaciones Financieras",
         "preventive": {
-          "title":       "Migrar a Mantenimiento Preventivo",
+          "title": "Migrar a Mantenimiento Preventivo",
           "description": "Implementar alertas automáticas puede reducir costos correctivos en un 60%, ahorrando aproximadamente $1,920/mes."
         },
         "investment": {
-          "title":       "Inversión Recomendada: 2 Racks de Sentadilla",
+          "title": "Inversión Recomendada: 2 Racks de Sentadilla",
           "description": "Análisis muestra 98% de ocupación en horas pico. Inversión de $10,000 se recuperaría en ~7 meses según demanda actual."
         },
         "relocation": {
-          "title":       "Reubicar Equipos Subutilizados",
+          "title": "Reubicar Equipos Subutilizados",
           "description": "3 máquinas con <30% de uso en Surco podrían generar $1,200/mes adicionales si se trasladan a Miraflores."
         }
+      }
+    }
+  },
+  "financialImpact": {
+    "title": "Impacto Financiero y ROI",
+    "subtitle": "Análisis de costos ocultos, pérdidas por inactividad y proyecciones de inversión",
+    "exportCsv": "Exportar CSV",
+    "generatePdf": "Generar PDF",
+    "stats": {
+      "lossInactivity": "Pérdida por Inactividad",
+      "maintenanceCost": "Costo Mantenimiento",
+      "potentialSavings": "Ahorro Potencial",
+      "withPredictive": "Con mantenimiento predictivo",
+      "avgRoi": "ROI Promedio",
+      "months": "meses",
+      "investmentRecovery": "Recuperación de inversión",
+      "lastMonth": "Último mes"
+    },
+    "lossTable": {
+      "title": "Pérdida por Inactividad de Equipos",
+      "machine": "Máquina",
+      "hours": "Horas",
+      "ratePerHour": "$/Hora",
+      "total": "Total",
+      "monthlyTotal": "TOTAL PÉRDIDA MENSUAL"
+    },
+    "costBreakdown": {
+      "title": "Desglose de Costos de Mantenimiento"
+    },
+    "costLabels": {
+      "corrective": "Mantenimiento Correctivo (3-5x más caro)",
+      "preventive": "Mantenimiento Preventivo",
+      "inventory": "Inventario de Repuestos"
+    },
+    "roiProjection": {
+      "title": "Proyección de ROI – Nueva Máquina"
+    },
+    "simulator": {
+      "title": "Simulador de Retorno de Inversión (ROI)",
+      "machineCost": "Costo de la Máquina ($)",
+      "unmetDemand": "Demanda Insatisfecha (usuarios/mes)",
+      "revenuePerUser": "Ingreso por Usuario ($)",
+      "calculate": "Calcular ROI"
+    },
+    "recommendations": {
+      "title": "Recomendaciones Financieras",
+      "preventive": {
+        "title": "Migrar a Mantenimiento Preventivo",
+        "description": "Implementar alertas automáticas puede reducir costos correctivos en un 60%, ahorrando aproximadamente $1,920/mes."
+      },
+      "investment": {
+        "title": "Inversión Recomendada: 2 Racks de Sentadilla",
+        "description": "Análisis muestra 98% de ocupación en horas pico. Inversión de $10,000 se recuperaría en ~7 meses según demanda actual."
+      },
+      "relocation": {
+        "title": "Reubicar Equipos Subutilizados",
+        "description": "3 máquinas con menos del 30% de uso en Surco podrían generar $1,200/mes adicionales si se trasladan a Miraflores."
       }
     }
   },
@@ -594,6 +562,122 @@
       "LUBRICATION": "Lubricación",
       "INSPECTION": "Inspección",
       "OVERHAUL": "Revisión General"
+    }
+  },
+  "routines": {
+    "title": "Mis Rutinas",
+    "subtitle": "Gestiona tus rutinas de entrenamiento y verifica disponibilidad de máquinas",
+    "newRoutine": "Nueva Rutina",
+    "search": "Buscar rutinas...",
+    "filter": {
+      "all": "Todos",
+      "chest": "Pecho",
+      "legs": "Piernas",
+      "back": "Espalda",
+      "shoulders": "Hombros",
+      "arms": "Brazos"
+    },
+    "exercises": {
+      "pressDePecho": "Press de Pecho",
+      "sentadillaConBarra": "Sentadilla con Barra",
+      "pesoMuertoRumano": "Peso Muerto Rumano",
+      "dominadas": "Dominadas",
+      "pressMilitar": "Press Militar"
+    },
+    "machines": {
+      "bancoPechoPlano": "Banco Pecho Plano",
+      "rackSentadilla2": "Rack Sentadilla #2",
+      "plataformaPesoMuerto": "Plataforma de Peso Muerto",
+      "barraDeDominadas": "Barra de Dominadas",
+      "rackDeFuerza": "Rack de Fuerza"
+    },
+    "tags": {
+      "chest": "Pecho",
+      "legs": "Piernas",
+      "lowerBack": "Zona Lumbar",
+      "back": "Espalda",
+      "shoulders": "Hombros"
+    },
+    "level": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado"
+    },
+    "status": {
+      "available": "Disponible",
+      "inUse": "En Uso",
+      "maintenance": "Mantenimiento"
+    },
+    "alternatives": {
+      "title": "Sugerencias Inteligentes",
+      "prensaDePiernas": "Prensa de Piernas",
+      "hackSquat": "Hack Squat",
+      "sentadillaGoblet": "Sentadilla Goblet",
+      "poleaAlta": "Polea Alta",
+      "remoConBarra": "Remo con Barra",
+      "maquinaDeRemo": "Máquina de Remo",
+      "free": "Libre",
+      "viewMap": "Ver Mapa"
+    },
+    "suggestion": {
+      "title": "Motor de Sugerencias Inteligentes",
+      "item1": "Las rutinas se adaptan a la disponibilidad en tiempo real",
+      "item2": "Se sugieren alternativas cuando tu máquina está ocupada",
+      "item3": "Optimizado para horas pico y valle",
+      "item4": "Personalizado según tus objetivos de entrenamiento"
+    },
+    "modal": {
+      "title": "Nueva Rutina",
+      "subtitle": "Crea una rutina de entrenamiento personalizada",
+      "name": "Nombre de la Rutina",
+      "namePlaceholder": "Ej. Día A - Tren Superior",
+      "objective": "Objetivo",
+      "selectObjective": "Selecciona un objetivo",
+      "difficulty": "Nivel de Dificultad",
+      "notes": "Notas (opcional)",
+      "notesPlaceholder": "Agrega notas o instrucciones específicas...",
+      "cancel": "Cancelar",
+      "create": "Crear Rutina",
+      "successMessage": "Rutina \"{{name}}\" creada con éxito",
+      "objectives": {
+        "gainStrength": "Ganar Fuerza",
+        "muscleHypertrophy": "Hipertrofia Muscular",
+        "endurance": "Resistencia",
+        "weightLoss": "Pérdida de Peso",
+        "generalFitness": "Fitness General"
+      }
+    }
+  },
+  "dashboardAdmin": {
+    "kpis": {
+      "operationalEquipment": "Equipos Operativos",
+      "maintenance": "En Mantenimiento",
+      "outOfService": "Fuera de Servicio",
+      "totalTickets": "Total Tickets"
+    },
+    "charts": {
+      "peakCapacityHours": "Horas de Máxima Capacidad",
+      "machineUsage": "Uso de Máquinas",
+      "noUsageData": "Sin datos de uso disponibles"
+    },
+    "table": {
+      "title": "Equipos Infrautilizados",
+      "headers": {
+        "machineId": "ID Máquina",
+        "location": "Ubicación",
+        "hours": "Horas",
+        "roi": "ROI"
+      },
+      "empty": "No se encontraron equipos infrautilizados"
+    },
+    "maintenanceCenter": {
+      "title": "Centro de Mantenimiento",
+      "columns": {
+        "todo": "Pendiente",
+        "inProgress": "En Progreso",
+        "completed": "Completado"
+      },
+      "empty": "Sin tickets"
     }
   }
 }

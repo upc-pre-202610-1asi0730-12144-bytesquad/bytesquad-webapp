@@ -5,6 +5,7 @@ import { authGuard, adminGuard, clientGuard } from './auth/guards/auth.guard';
 import { ProfileView } from './profiles/presentation/views/profile-view';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
     loadComponent: () =>
@@ -57,6 +58,13 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./analytics/presentation/views/analytics.component').then(
                 (m) => m.AnalyticsComponent,
+              ),
+          },
+          {
+            path: 'financial-impact',
+            loadComponent: () =>
+              import('./financial-impact/presentation/views/financial-impact.component').then(
+                (m) => m.FinancialImpactComponent,
               ),
           },
           {
