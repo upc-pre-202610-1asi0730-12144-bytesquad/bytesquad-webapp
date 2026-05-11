@@ -60,6 +60,11 @@ export const routes: Routes = [
               ),
           },
           {
+            path: 'financial-impact',
+            loadComponent: () =>
+              import('./financial-impact/presentation/views/financial-impact.component').then(m => m.FinancialImpactComponent),
+          },
+          {
             path: 'alerts',
             loadComponent: () =>
               import('./alerts/presentation/views/alerts.component').then((m) => m.AlertsComponent),
