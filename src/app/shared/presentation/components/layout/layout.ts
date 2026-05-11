@@ -8,6 +8,7 @@ import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { Sidebar } from '../sidebar/sidebar';
 import { BottomBar } from '../bottom-bar/bottom-bar';
 import { AuthStore } from '../../../../auth/application/auth.store';
+import { UserProfile } from '../user-profile/user-profile';
 
 @Component({
   selector: 'app-layout',
@@ -21,6 +22,7 @@ import { AuthStore } from '../../../../auth/application/auth.store';
     MatButtonModule,
     MatIconModule,
     TranslateModule,
+    UserProfile
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',

@@ -1,0 +1,90 @@
+.profile-container {
+  padding: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-title {
+  color: #fff;
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.profile-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-card {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.profile-card h2 {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.profile-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas como en la foto */
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* El botón ocupa ambas columnas en el formulario de la imagen */
+.btn-primary {
+  grid-column: span 2;
+  background-color: #3f51b5; /* Azul primario similar a las capturas */
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #303f9f;
+}
+
+label {
+  color: #aaa;
+  font-size: 14px;
+}
+
+input {
+  background-color: #121212;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3f51b5;
+}
+
+/* Responsivo para móviles */
+@media (max-width: 600px) {
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
+  .btn-primary {
+    grid-column: span 1;
+  }
+}
