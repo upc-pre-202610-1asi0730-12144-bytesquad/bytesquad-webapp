@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthStore } from '../../../../auth/application/auth.store';
 
 @Component({
   selector: 'app-user-profile',
@@ -8,4 +9,13 @@ import { RouterLink } from '@angular/router';
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.css',
 })
-export class UserProfile {}
+export class UserProfile {
+  private authStore = inject(AuthStore);
+
+  readonly currentUser = this.authStore.currentUser;
+
+  get initials(): string {
+    const name = this.currentUser()?.name ?? '';
+    return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'U';
+  }
+}
