@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, HostBinding, Input, Output, EventEmitter, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -38,15 +38,16 @@ const CLIENT_NAV: NavItem[] = [
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-  // Inyección del store de tu compañero (por si lo necesitan más adelante)
   private authStore = inject(AuthStore);
 
-  // Variable pública para que el HTML la pueda iterar sin problemas
   navItems: NavItem[] = ADMIN_NAV;
 
-  // Setter para actualizar las rutas instantáneamente al cambiar de rol
   @Input()
   set role(value: 'admin' | 'client') {
     this.navItems = value === 'admin' ? ADMIN_NAV : CLIENT_NAV;
   }
+
+  @Input() @HostBinding('class.open') open = false;
+
+  @Output() linkClicked = new EventEmitter<void>();
 }

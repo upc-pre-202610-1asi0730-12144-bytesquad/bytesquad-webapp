@@ -85,3 +85,51 @@
 .shell.is-client .shell__body {
   padding-bottom: 70px;
 }
+
+/* ── Hamburger button (mobile only) ──────────────────── */
+.topbar__hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #e0e0e0;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.topbar__hamburger:hover { background: #2a2a2a; }
+
+.topbar__hamburger mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+/* ── Sidebar backdrop (mobile drawer) ────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 199;
+}
+
+/* ── Mobile (≤ 767px) ────────────────────────────────── */
+@media (max-width: 767px) {
+  .topbar__hamburger { display: flex; }
+
+  .shell.sidebar-open .sidebar-overlay { display: block; }
+
+  .shell__topbar { gap: 8px; padding: 0 12px; }
+}
+
+/* ── Small phones (≤ 480px) ─────────────────────────── */
+@media (max-width: 480px) {
+  .shell__topbar { gap: 6px; padding: 0 10px; height: 48px; }
+
+  .shell.is-client .shell__body { padding-bottom: 60px; }
+}

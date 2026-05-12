@@ -590,6 +590,16 @@ $blue    : #4fc3f7;
   .maint-row__label { min-width: 120px; }
 }
 
+@media (max-width: 480px) {
+  .fin-page { padding: 12px; gap: 16px; }
+  .page-title { font-size: 1.4rem; }
+  .stat-grid { gap: 10px; }
+  .stat-card { padding: 16px; }
+  .stat-card__value { font-size: 1.5rem; }
+  .maint-row__label { min-width: 80px; }
+  .header-actions { flex-wrap: wrap; width: 100%; }
+}
+
 // ── Print ─────────────────────────────────────────────────────────────────────
 @media print {
   .fin-page       { background: #fff; color: #000; padding: 0; }

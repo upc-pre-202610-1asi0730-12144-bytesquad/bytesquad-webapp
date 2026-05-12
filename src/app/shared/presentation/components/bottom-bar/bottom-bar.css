@@ -33,5 +33,11 @@
 }
 
 .bottom-bar__item--active {
-  color: #4fc3f7; /* Color de acento de SpotTrack */
+  color: #4fc3f7;
+}
+
+@media (max-width: 480px) {
+  .bottom-bar { height: 60px; }
+  .bottom-bar__item { font-size: 11px; gap: 3px; }
+  .bottom-bar__item mat-icon { font-size: 22px; width: 22px; height: 22px; }
 }

@@ -42,3 +42,8 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+@media (max-width: 640px) {
+  .user-name { display: none; }
+  .profile-link { padding: 4px 6px; }
+}

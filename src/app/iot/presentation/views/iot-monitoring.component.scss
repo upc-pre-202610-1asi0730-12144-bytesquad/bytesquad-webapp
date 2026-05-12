@@ -137,6 +137,15 @@
   }
 }
 
+@media (max-width: 480px) {
+  .iot-page { padding: 12px; gap: 12px; }
+  .iot-header__title { font-size: 1.4rem; }
+  .iot-stats { gap: 8px; }
+  .stat-card { padding: 14px 16px; gap: 10px; }
+  .stat-card__value { font-size: 1.6rem; }
+  .iot-card { overflow-x: auto; }
+}
+
 // ── Filters ──────────────────────────────────────────────────────────────────
 .iot-filters {
   display: flex;

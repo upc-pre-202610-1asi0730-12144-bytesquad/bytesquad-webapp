@@ -29,9 +29,14 @@ export class Layout {
   private router = inject(Router);
   private authStore = inject(AuthStore);
 
+  sidebarOpen = false;
+
   get currentRole(): 'admin' | 'client' {
     return this.authStore.isClient() ? 'client' : 'admin';
   }
+
+  toggleSidebar() { this.sidebarOpen = !this.sidebarOpen; }
+  closeSidebar()  { this.sidebarOpen = false; }
 
   logout() {
     this.authStore.logout();

@@ -527,3 +527,19 @@
 
 .btn-create:hover:not(:disabled) { background-color: #e0b214; }
 .btn-create:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .routines-container { padding: 16px 16px calc(60px + 16px); gap: 12px; }
+  .routines-title { font-size: 18px; }
+}
+
+@media (max-width: 480px) {
+  .routines-container { padding: 12px 12px calc(60px + 12px); gap: 10px; }
+  .routines-title { font-size: 16px; }
+  .routines-subtitle { font-size: 12px; }
+  .modal-card { max-width: calc(100vw - 24px); }
+  .modal-backdrop { padding: 12px; }
+  .card-top { padding: 12px 12px 8px; }
+  .new-routine-btn { padding: 8px 14px; }
+}
