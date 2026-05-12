@@ -988,6 +988,19 @@ $blue    : #4fc3f7;
   .reloc-row     { gap: 10px; }
 }
 
+@media (max-width: 480px) {
+  .analytics-page { padding: 12px; gap: 16px; }
+  .page-title { font-size: 1.4rem; }
+  .stat-grid { gap: 10px; }
+  .stat-card { padding: 16px; }
+  .stat-card__value { font-size: 1.5rem; }
+  .reloc-machine { min-width: unset; }
+  .reloc-branch { min-width: unset; }
+  .reloc-savings { min-width: unset; }
+  .roi-sim-inputs { grid-template-columns: 1fr; }
+  .header-actions { flex-wrap: wrap; width: 100%; .btn-accent, .btn-outline { flex: 1; justify-content: center; } }
+}
+
 // ── Print ─────────────────────────────────────────────────────────────────────
 @media print {
   .analytics-page { background: #fff; color: #000; padding: 0; }

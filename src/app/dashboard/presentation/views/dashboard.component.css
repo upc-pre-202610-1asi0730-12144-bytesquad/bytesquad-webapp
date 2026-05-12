@@ -432,3 +432,14 @@
   .kpi-row    { grid-template-columns: 1fr 1fr; }
   .dash-page  { padding: 16px; gap: 16px; }
 }
+
+@media (max-width: 480px) {
+  .dash-page { padding: 12px; gap: 12px; }
+  .kpi-card { padding: 14px 16px; gap: 12px; }
+  .kpi-card__value { font-size: 1.4rem; }
+  .chart-card { padding: 16px; min-height: 200px; }
+  .kanban-board { grid-template-columns: 1fr; }
+  .bar-chart { height: 160px; }
+  .bar-col__track { height: 120px; }
+  .data-table th, .data-table td { padding: 8px 8px 8px 0; font-size: 0.8rem; }
+}

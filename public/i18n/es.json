@@ -144,10 +144,6 @@
     "client_intro": "Aquí tienes un resumen de tu actividad.",
     "admin_panel": "Panel de Administración"
   },
-  "role": {
-    "switch_to_client": "Ver como Cliente",
-    "switch_to_admin": "Ver como Administrador"
-  },
   "iot": {
     "title": "Monitoreo IoT",
     "subtitle": "Estado en tiempo real de sensores Edge IoT instalados en los equipos",
@@ -647,6 +643,73 @@
         "generalFitness": "Fitness General"
       }
     }
+  },
+  "profile": {
+    "admin": {
+      "title": "Panel del Administrador",
+      "roleBadge": "Administrador",
+      "memberSince": "Miembro desde",
+      "stats": {
+        "locations": "Sedes activas",
+        "equipment": "Equipos monitoreados",
+        "sensors": "Sensores IoT online",
+        "members": "Miembros registrados"
+      },
+      "plan": {
+        "active": "Activo",
+        "renewal": "Próxima renovación"
+      }
+    },
+    "client": {
+      "title": "Mi Perfil",
+      "roleBadge": "Cliente",
+      "points": "Puntos Acumulados",
+      "plan": {
+        "name": "Plan Basic",
+        "price": "$69/mes",
+        "upgrade": "Mejorar Plan",
+        "featuresTitle": "Características incluidas:",
+        "feature1": "Hasta 20 máquinas monitoreadas",
+        "feature2": "Mapa de calor en tiempo real",
+        "feature3": "1 sede",
+        "feature4": "Soporte por email",
+        "renewal": "Próxima renovación",
+        "renewalDate": "24 de Mayo, 2026"
+      },
+      "history": "Historial de Puntos",
+      "notifications": {
+        "title": "Notificaciones",
+        "availability": {
+          "title": "Alertas de disponibilidad",
+          "desc": "Cuando una máquina se libera"
+        },
+        "maintenance": {
+          "title": "Mantenimiento programado",
+          "desc": "Cuando un equipo entrará en mantenimiento"
+        },
+        "rewards": {
+          "title": "Puntos de recompensa",
+          "desc": "Cuando ganas puntos nuevos"
+        }
+      }
+    },
+    "account": {
+      "title": "Información de la Cuenta",
+      "email": "Email",
+      "gymName": "Nombre del Gimnasio",
+      "phone": "Teléfono"
+    },
+    "language": {
+      "title": "Preferencias de Idioma",
+      "label": "Idioma de la Interfaz",
+      "hint": "Los cambios se aplicarán inmediatamente en toda la plataforma"
+    },
+    "security": {
+      "title": "Seguridad",
+      "changePassword": "Cambiar Contraseña",
+      "logout": "Cerrar Sesión"
+    },
+    "saveChanges": "Guardar Cambios"
   },
   "dashboardAdmin": {
     "kpis": {

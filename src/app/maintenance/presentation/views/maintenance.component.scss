@@ -490,3 +490,13 @@ $blue:     #4fc3f7;
   .filter-field  { width: 100%; }
   .form-grid     { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 480px) {
+  .maint-page { padding: 12px; gap: 16px; }
+  .maint-title { font-size: 1.4rem; }
+  .maint-stats { gap: 10px; }
+  .stat-card { padding: 16px; }
+  .stat-value { font-size: 1.5rem; }
+  .maint-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .btn-new { width: 100%; justify-content: center; }
+}

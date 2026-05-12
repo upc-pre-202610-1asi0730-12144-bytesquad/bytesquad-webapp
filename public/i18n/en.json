@@ -144,10 +144,6 @@
     "client_intro": "Here is a summary of your activity.",
     "admin_panel": "Administration Panel"
   },
-  "role": {
-    "switch_to_client": "View as Client",
-    "switch_to_admin": "View as Admin"
-  },
   "iot": {
     "title": "IoT Monitoring",
     "subtitle": "Real-time status of Edge IoT sensors installed on equipment",
@@ -647,6 +643,73 @@
         "generalFitness": "General Fitness"
       }
     }
+  },
+  "profile": {
+    "admin": {
+      "title": "Admin Panel",
+      "roleBadge": "Administrator",
+      "memberSince": "Member since",
+      "stats": {
+        "locations": "Active branches",
+        "equipment": "Monitored equipment",
+        "sensors": "IoT sensors online",
+        "members": "Registered members"
+      },
+      "plan": {
+        "active": "Active",
+        "renewal": "Next renewal"
+      }
+    },
+    "client": {
+      "title": "My Profile",
+      "roleBadge": "Client",
+      "points": "Accumulated Points",
+      "plan": {
+        "name": "Basic Plan",
+        "price": "$69/month",
+        "upgrade": "Upgrade Plan",
+        "featuresTitle": "Included features:",
+        "feature1": "Up to 20 monitored machines",
+        "feature2": "Real-time heat map",
+        "feature3": "1 branch",
+        "feature4": "Email support",
+        "renewal": "Next renewal",
+        "renewalDate": "May 24, 2026"
+      },
+      "history": "Points History",
+      "notifications": {
+        "title": "Notifications",
+        "availability": {
+          "title": "Availability alerts",
+          "desc": "When a machine becomes free"
+        },
+        "maintenance": {
+          "title": "Scheduled maintenance",
+          "desc": "When equipment enters maintenance"
+        },
+        "rewards": {
+          "title": "Reward points",
+          "desc": "When you earn new points"
+        }
+      }
+    },
+    "account": {
+      "title": "Account Information",
+      "email": "Email",
+      "gymName": "Gym Name",
+      "phone": "Phone"
+    },
+    "language": {
+      "title": "Language Preferences",
+      "label": "Interface Language",
+      "hint": "Changes will apply immediately across the platform"
+    },
+    "security": {
+      "title": "Security",
+      "changePassword": "Change Password",
+      "logout": "Log Out"
+    },
+    "saveChanges": "Save Changes"
   },
   "dashboardAdmin": {
     "kpis": {

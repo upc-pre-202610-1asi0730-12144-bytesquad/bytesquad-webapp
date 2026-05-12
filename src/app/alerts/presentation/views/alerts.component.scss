@@ -148,3 +148,20 @@
     opacity: 0.5;
   }
 }
+
+@media (max-width: 480px) {
+  .alert-card { padding: 12px; }
+
+  .alert-card .alert-card-top .alert-icon-container {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  }
+
+  .alert-card .alert-card-top .alert-content .alert-title { font-size: 0.9rem; }
+  .alert-card .alert-card-top .alert-content .alert-description { font-size: 0.8rem; }
+
+  .alert-card .alert-card-bottom { padding-left: 42px; }
+  .alert-card .alert-card-bottom .details-btn { margin-right: 28px; font-size: 0.8rem; }
+}

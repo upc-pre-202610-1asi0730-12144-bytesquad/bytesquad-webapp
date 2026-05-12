@@ -1,8 +1,8 @@
 <div class="user-profile">
   <button class="profile-link" routerLink="/profile">
     <div class="avatar">
-      <span>U</span>
+      <span>{{ initials }}</span>
     </div>
-    <span class="user-name">Usuario</span>
+    <span class="user-name">{{ currentUser()?.name }}</span>
   </button>
 </div>
