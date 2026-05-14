@@ -12,7 +12,8 @@
       "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('iot_devices', d.get\\('iot', []\\)\\), indent=2\\)\\)\")",
       "Bash(Get-ChildItem *)",
       "Bash(xargs grep -l \"@Component\")",
-      "Bash(Select-Object -ExpandProperty Name)"
+      "Bash(Select-Object -ExpandProperty Name)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

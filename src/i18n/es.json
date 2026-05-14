@@ -140,6 +140,7 @@
     "reservationExpired": { "title": "Reserva Expirada" },
     "detailsBtn": "Ver detalles →",
     "deleteTitle": "Eliminar alerta",
+    "markAllRead": "Marcar todo como leído",
     "time": {
       "moment":  "Hace un momento",
       "minute":  "Hace {count} minuto",
@@ -497,7 +498,9 @@
       "hours": "Horas",
       "ratePerHour": "$/Hora",
       "total": "Total",
-      "monthlyTotal": "TOTAL PÉRDIDA MENSUAL"
+      "monthlyTotal": "TOTAL PÉRDIDA MENSUAL",
+      "month": "Mes",
+      "lossAmount": "Pérdida"
     },
     "costBreakdown": {
       "title": "Desglose de Costos de Mantenimiento"
