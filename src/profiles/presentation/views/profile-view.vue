@@ -1,0 +1,253 @@
+<script setup>
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/auth/application/auth.store.js';
+
+const { t, locale } = useI18n();
+const router = useRouter();
+const auth   = useAuthStore();
+
+const isAdmin = computed(() => auth.isAdmin);
+
+const notifAvailability  = ref(true);
+const notifMaintenance   = ref(false);
+const notifRewards       = ref(true);
+
+const ADMIN_STATS = [
+  { icon: 'location_on',   key: 'locations',  value: 3 },
+  { icon: 'fitness_center', key: 'equipment', value: 24 },
+  { icon: 'sensors',        key: 'sensors',   value: 18 },
+  { icon: 'group',          key: 'members',   value: 312 },
+];
+
+function initials(name) {
+  return (name ?? '').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '??';
+}
+
+function setLocale(code) {
+  locale.value = code;
+  localStorage.setItem('spottrack_lang', code);
+}
+
+function logout() {
+  auth.logout();
+  router.push('/login');
+}
+</script>
+
+<template>
+  <div class="page">
+
+    <!-- ── ADMIN PROFILE ─────────────────────────────────────── -->
+    <template v-if="isAdmin">
+      <div class="page__header">
+        <h1 class="page__title">{{ t('profile.admin.title') }}</h1>
+        <span class="role-badge role-badge--admin">{{ t('profile.admin.roleBadge') }}</span>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="stat-grid">
+        <div v-for="s in ADMIN_STATS" :key="s.key" class="card stat-card">
+          <div class="stat-icon-wrap">
+            <span class="material-icons stat-icon">{{ s.icon }}</span>
+          </div>
+          <div>
+            <p class="stat-value">{{ s.value }}</p>
+            <p class="stat-label">{{ t(`profile.admin.stats.${s.key}`) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan card -->
+      <div class="card plan-card">
+        <div class="plan-header">
+          <div>
+            <p class="plan-name">SpotTrack Pro</p>
+            <span class="plan-active">{{ t('profile.admin.plan.active') }}</span>
+          </div>
+          <p class="plan-renewal">{{ t('profile.admin.plan.renewal') }}: <strong>Jun 1, 2026</strong></p>
+        </div>
+      </div>
+
+      <!-- Account info -->
+      <div class="card section">
+        <h2 class="section-title">{{ t('profile.account.title') }}</h2>
+        <div class="account-grid">
+          <div class="account-field">
+            <label>{{ t('profile.account.email') }}</label>
+            <p>{{ auth.user?.email }}</p>
+          </div>
+          <div class="account-field">
+            <label>{{ t('profile.account.gymName') }}</label>
+            <p>SpotTrack Fitness</p>
+          </div>
+          <div class="account-field">
+            <label>{{ t('profile.account.phone') }}</label>
+            <p>+51 999 888 777</p>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ── CLIENT PROFILE ─────────────────────────────────────── -->
+    <template v-else>
+      <div class="page__header">
+        <h1 class="page__title">{{ t('profile.client.title') }}</h1>
+        <span class="role-badge role-badge--client">{{ t('profile.client.roleBadge') }}</span>
+      </div>
+
+      <!-- Avatar + points -->
+      <div class="card avatar-card">
+        <div class="avatar-circle">{{ initials(auth.user?.name) }}</div>
+        <div class="avatar-info">
+          <p class="avatar-name">{{ auth.user?.name }}</p>
+          <p class="avatar-email">{{ auth.user?.email }}</p>
+        </div>
+        <div class="points-badge">
+          <span class="material-icons" style="font-size:16px;color:var(--accent)">stars</span>
+          <span class="points-val">1 250</span>
+          <span class="points-label">{{ t('profile.client.points') }}</span>
+        </div>
+      </div>
+
+      <!-- Plan card -->
+      <div class="card plan-card">
+        <div class="plan-header">
+          <div>
+            <p class="plan-name">{{ t('profile.client.plan.name') }}</p>
+            <p class="plan-price">{{ t('profile.client.plan.price') }}</p>
+          </div>
+          <button class="btn btn--accent">{{ t('profile.client.plan.upgrade') }}</button>
+        </div>
+        <p class="plan-features-title">{{ t('profile.client.plan.featuresTitle') }}</p>
+        <ul class="plan-features">
+          <li>{{ t('profile.client.plan.feature1') }}</li>
+          <li>{{ t('profile.client.plan.feature2') }}</li>
+          <li>{{ t('profile.client.plan.feature3') }}</li>
+          <li>{{ t('profile.client.plan.feature4') }}</li>
+        </ul>
+        <p class="plan-renewal">{{ t('profile.client.plan.renewal') }}: {{ t('profile.client.plan.renewalDate') }}</p>
+      </div>
+
+      <!-- Notifications -->
+      <div class="card section">
+        <h2 class="section-title">{{ t('profile.client.notifications.title') }}</h2>
+        <div class="notif-list">
+          <div class="notif-row">
+            <div class="notif-info">
+              <p class="notif-title">{{ t('profile.client.notifications.availability.title') }}</p>
+              <p class="notif-desc">{{ t('profile.client.notifications.availability.desc') }}</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" v-model="notifAvailability" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <p class="notif-title">{{ t('profile.client.notifications.maintenance.title') }}</p>
+              <p class="notif-desc">{{ t('profile.client.notifications.maintenance.desc') }}</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" v-model="notifMaintenance" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <p class="notif-title">{{ t('profile.client.notifications.rewards.title') }}</p>
+              <p class="notif-desc">{{ t('profile.client.notifications.rewards.desc') }}</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" v-model="notifRewards" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ── SHARED SECTIONS ─────────────────────────────────────── -->
+
+    <!-- Language -->
+    <div class="card section">
+      <h2 class="section-title">{{ t('profile.language.title') }}</h2>
+      <label class="section-sub">{{ t('profile.language.label') }}</label>
+      <div class="lang-options">
+        <button class="btn lang-btn" :class="locale === 'es' ? 'btn--accent' : 'btn--outline'" @click="setLocale('es')">Español</button>
+        <button class="btn lang-btn" :class="locale === 'en' ? 'btn--accent' : 'btn--outline'" @click="setLocale('en')">English</button>
+      </div>
+      <p class="section-hint">{{ t('profile.language.hint') }}</p>
+    </div>
+
+    <!-- Security -->
+    <div class="card section">
+      <h2 class="section-title">{{ t('profile.security.title') }}</h2>
+      <div class="security-actions">
+        <button class="btn btn--outline">
+          <span class="material-icons" style="font-size:16px">lock</span>
+          {{ t('profile.security.changePassword') }}
+        </button>
+        <button class="btn btn--danger" @click="logout">
+          <span class="material-icons" style="font-size:16px">logout</span>
+          {{ t('profile.security.logout') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.page__header { align-items: center; display: flex; gap: .75rem; margin-bottom: 1.25rem; }
+.role-badge { border-radius: 12px; font-size: .75rem; font-weight: 700; padding: .25rem .75rem; }
+.role-badge--admin  { background: rgba(245,188,54,.2); color: var(--accent); }
+.role-badge--client { background: rgba(0,204,178,.15); color: var(--teal); }
+.stat-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); margin-bottom: 1rem; }
+.stat-card { align-items: center; display: flex; gap: .75rem; }
+.stat-icon-wrap { align-items: center; background: rgba(245,188,54,.12); border-radius: 10px; display: flex; height: 44px; justify-content: center; width: 44px; }
+.stat-icon { color: var(--accent); font-size: 22px; }
+.stat-value { font-size: 1.4rem; font-weight: 700; }
+.stat-label { color: var(--text-secondary); font-size: .75rem; }
+.plan-card { margin-bottom: 1rem; }
+.plan-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: .75rem; }
+.plan-name { font-size: .95rem; font-weight: 700; }
+.plan-active { background: rgba(34,197,94,.15); border-radius: 10px; color: var(--green); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; }
+.plan-price { color: var(--text-secondary); font-size: .83rem; margin-top: .2rem; }
+.plan-renewal { color: var(--text-secondary); font-size: .78rem; margin-top: .75rem; }
+.plan-features-title { color: var(--text-secondary); font-size: .78rem; font-weight: 500; margin-bottom: .4rem; }
+.plan-features { color: var(--text-secondary); font-size: .8rem; padding-left: 1.25rem; display: flex; flex-direction: column; gap: .3rem; }
+.plan-features li::marker { color: var(--accent); }
+.btn--accent { background: var(--accent); border: none; color: #000; font-weight: 600; }
+.btn--danger { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3); color: var(--red); }
+.avatar-card { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+.avatar-circle { align-items: center; background: var(--accent); border-radius: 50%; color: #000; display: flex; font-size: 1.1rem; font-weight: 700; height: 56px; justify-content: center; width: 56px; }
+.avatar-info { flex: 1; }
+.avatar-name  { font-size: .95rem; font-weight: 600; }
+.avatar-email { color: var(--text-secondary); font-size: .8rem; }
+.points-badge { align-items: center; display: flex; flex-direction: column; gap: .15rem; text-align: center; }
+.points-val   { color: var(--accent); font-size: 1.3rem; font-weight: 700; }
+.points-label { color: var(--text-secondary); font-size: .72rem; }
+.section { margin-bottom: 1rem; }
+.section-title { font-size: .9rem; font-weight: 600; margin-bottom: .5rem; }
+.section-sub  { color: var(--text-secondary); font-size: .8rem; margin-bottom: .5rem; display: block; }
+.section-hint { color: var(--text-secondary); font-size: .75rem; margin-top: .5rem; }
+.account-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); }
+.account-field label { color: var(--text-secondary); font-size: .78rem; margin-bottom: .2rem; display: block; }
+.account-field p { font-size: .85rem; }
+.notif-list { display: flex; flex-direction: column; gap: .75rem; }
+.notif-row { align-items: center; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; padding-bottom: .75rem; }
+.notif-info { display: flex; flex-direction: column; gap: .1rem; }
+.notif-title { font-size: .85rem; font-weight: 500; }
+.notif-desc  { color: var(--text-secondary); font-size: .78rem; }
+.toggle { cursor: pointer; display: inline-flex; align-items: center; }
+.toggle input { display: none; }
+.toggle-track { background: var(--border); border-radius: 12px; height: 22px; position: relative; transition: background .2s; width: 44px; }
+.toggle input:checked + .toggle-track { background: var(--accent); }
+.toggle-track::after { background: #fff; border-radius: 50%; content: ''; height: 16px; left: 3px; position: absolute; top: 3px; transition: transform .2s; width: 16px; }
+.toggle input:checked + .toggle-track::after { transform: translateX(22px); }
+.lang-options { display: flex; gap: .5rem; margin-top: .5rem; }
+.lang-btn { font-size: .85rem; padding: .35rem .9rem; }
+.security-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .25rem; }
+@media (max-width: 600px) { .stat-grid, .account-grid { grid-template-columns: 1fr 1fr; } }
+</style>
