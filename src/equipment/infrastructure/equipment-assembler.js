@@ -1,4 +1,4 @@
-import { Equipment } from '../../../../../Downloads/integrante#5-Jesus/integrante#5-Jesus/commit#2/equipment/domain/model/equipment.entity.js';
+import { Equipment } from '../domain/model/equipment.entity.js';
 
 export class EquipmentAssembler {
   toEntityFromResource(r) {
