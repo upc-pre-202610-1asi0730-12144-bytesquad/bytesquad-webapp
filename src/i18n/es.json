@@ -9,7 +9,7 @@
       "title": "Iniciar Sesión",
       "subtitle": "¡Bienvenido de nuevo! Ingresa tus credenciales para continuar",
       "emailLabel": "Correo electrónico",
-      "emailPlaceholder": "tu@correo.com",
+      "emailPlaceholder": "tu{'@'}correo.com",
       "passwordLabel": "Contraseña",
       "passwordPlaceholder": "Ingresa tu contraseña",
       "submitBtn": "Iniciar Sesión",
