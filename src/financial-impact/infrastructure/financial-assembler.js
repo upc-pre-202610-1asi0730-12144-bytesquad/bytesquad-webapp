@@ -1,4 +1,4 @@
-import { FinancialStat } from '../../../../../Downloads/integrante#5-Jesus/integrante#5-Jesus/commit#3/financial-impact/domain/model/financial-stat.entity.js';
+import { FinancialStat } from '../domain/model/financial-stat.entity.js';
 
 export class FinancialAssembler {
   toEntityFromResource(r) {
