@@ -21,7 +21,12 @@ const isClient = computed(() => auth.isClient);
 
 const unreadCount = computed(() => {
   const role = auth.isAdmin ? 'admin' : 'client';
-  return alertsStore.alerts.filter(a => !a.read[role]).length;
+  return alertsStore.alerts.filter(a => {
+    const visible = role === 'admin'
+      ? a.type === 'admin' || a.type === 'system'
+      : a.type === 'client';
+    return visible && !a.read[role];
+  }).length;
 });
 
 function logout() {

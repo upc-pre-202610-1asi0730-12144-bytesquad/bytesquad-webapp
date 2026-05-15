@@ -1,23 +1,14 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/auth/application/auth.store.js';
 import { gymState } from '@/shared/application/gym-state.service.js';
 import { computed } from 'vue';
 
 const { t } = useI18n();
-const router = useRouter();
 const auth   = useAuthStore();
 
 const availableCount = computed(() => gymState.machines.value.filter(m => m.status === 'AVAILABLE').length);
 const reservedCount  = computed(() => gymState.machines.value.filter(m => m.status === 'RESERVED').length);
-
-const QUICK_ACTIONS = [
-  { icon: 'map',            label: 'nav.map',        path: '/map' },
-  { icon: 'calendar_month', label: 'nav.bookings',   path: '/bookings' },
-  { icon: 'assignment',     label: 'nav.routines',   path: '/routines' },
-  { icon: 'notifications',  label: 'nav.alerts',     path: '/alerts' },
-];
 </script>
 
 <template>
@@ -48,15 +39,6 @@ const QUICK_ACTIONS = [
         </div>
       </div>
     </div>
-
-    <!-- Quick actions -->
-    <div class="quick-grid">
-      <button v-for="action in QUICK_ACTIONS" :key="action.path"
-        class="card quick-card" @click="router.push(action.path)">
-        <span class="material-icons quick-icon">{{ action.icon }}</span>
-        <span class="quick-label">{{ t(action.label) }}</span>
-      </button>
-    </div>
   </div>
 </template>
 
@@ -65,16 +47,10 @@ const QUICK_ACTIONS = [
 .welcome-title { font-size: 1.2rem; font-weight: 700; }
 .welcome-sub  { color: var(--text-secondary); font-size: .85rem; margin-top: .35rem; max-width: 340px; }
 .welcome-icon { color: var(--accent); font-size: 48px; opacity: .4; }
-.status-row { display: grid; gap: .75rem; grid-template-columns: 1fr 1fr; margin-bottom: 1rem; }
+.status-row { display: grid; gap: .75rem; grid-template-columns: 1fr 1fr; }
 .status-card { align-items: center; display: flex; gap: .75rem; }
 .status-card--green .status-icon { color: var(--green); font-size: 28px; }
 .status-card--amber .status-icon { color: var(--accent); font-size: 28px; }
 .status-val   { font-size: 1.6rem; font-weight: 700; }
 .status-label { color: var(--text-secondary); font-size: .78rem; }
-.quick-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
-.quick-card { align-items: center; border: none; cursor: pointer; display: flex; flex-direction: column; gap: .5rem; padding: 1.25rem; text-align: center; transition: transform .1s; }
-.quick-card:hover { transform: translateY(-2px); }
-.quick-icon { color: var(--accent); font-size: 32px; }
-.quick-label { color: var(--text-primary); font-size: .85rem; font-weight: 600; }
-@media (min-width: 600px) { .quick-grid { grid-template-columns: repeat(4, 1fr); } }
 </style>
