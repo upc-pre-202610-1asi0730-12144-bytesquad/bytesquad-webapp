@@ -27,15 +27,15 @@ function submit() {
 
 <template>
   <div class="page">
-    <div class="page__header">
+    <div class="page__header" style="justify-content:flex-start;gap:.75rem">
       <button class="btn btn--icon" @click="router.back()"><span class="material-icons">arrow_back</span></button>
-      <h1 class="page__title">{{ t('maintenance.newTicketTitle') }}</h1>
+      <h1 class="page__title">{{ t('maintenance.form.title') }}</h1>
     </div>
 
     <div class="card form-wrap">
       <div v-if="peakWarn" class="peak-warn">
         <span class="material-icons">schedule</span>
-        {{ t('maintenance.peakHourWarning') }}
+        {{ t('maintenance.scheduler.peakHint') }}
         <div class="suggestions">
           <button v-for="s in store.OFF_PEAK_SUGGESTIONS" :key="s" class="chip" @click="applySuggestion(s)">{{ s }}</button>
         </div>
@@ -45,7 +45,7 @@ function submit() {
         <div class="form-field">
           <label>{{ t('maintenance.form.equipment') }}</label>
           <select v-model="form.equipmentId" required>
-            <option disabled value="">{{ t('maintenance.form.selectEquipment') }}</option>
+            <option disabled value="">— {{ t('maintenance.form.equipment') }} —</option>
             <option v-for="eq in equipStore.equipment" :key="eq.id" :value="eq.id">{{ eq.name }}</option>
           </select>
         </div>
@@ -70,8 +70,8 @@ function submit() {
           <textarea v-model="form.description" rows="3" required></textarea>
         </div>
         <div class="form-actions">
-          <button type="button" class="btn btn--outline" @click="router.push('/maintenance')">{{ t('common.cancel') }}</button>
-          <button type="submit" class="btn btn--primary">{{ t('common.create') }}</button>
+          <button type="button" class="btn btn--outline" @click="router.push('/maintenance')">{{ t('maintenance.form.cancel') }}</button>
+          <button type="submit" class="btn btn--primary">{{ t('maintenance.form.submit') }}</button>
         </div>
       </form>
     </div>

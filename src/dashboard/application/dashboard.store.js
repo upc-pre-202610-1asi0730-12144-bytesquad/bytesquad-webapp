@@ -25,23 +25,25 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const resolvedTickets  = computed(() => useMaintenanceStore().resolvedTickets);
 
   // ─── Line chart: hourly capacity ──────────────────────────────────────────
+  const PEAK_BASELINE = [
+    { hour: '06:00', occupancy: 30  },
+    { hour: '08:00', occupancy: 78  },
+    { hour: '10:00', occupancy: 65  },
+    { hour: '12:00', occupancy: 40  },
+    { hour: '14:00', occupancy: 50  },
+    { hour: '16:00', occupancy: 72  },
+    { hour: '18:00', occupancy: 85  },
+    { hour: '19:00', occupancy: 95  },
+    { hour: '20:00', occupancy: 88  },
+    { hour: '21:00', occupancy: 60  },
+  ];
+
   const hourlyCapacityData = computed(() => {
     const stats = usageStats.value;
-    if (!stats.length) return [];
+    if (!stats.length) return PEAK_BASELINE;
     const totalDaily = stats.reduce((s, r) => s + r.usageCountDaily, 0);
     const scale = Math.min(totalDaily / 30, 1);
-    return [
-      { hour: '06:00', occupancy: Math.round(30  * scale) },
-      { hour: '08:00', occupancy: Math.round(78  * scale) },
-      { hour: '10:00', occupancy: Math.round(65  * scale) },
-      { hour: '12:00', occupancy: Math.round(40  * scale) },
-      { hour: '14:00', occupancy: Math.round(50  * scale) },
-      { hour: '16:00', occupancy: Math.round(72  * scale) },
-      { hour: '18:00', occupancy: Math.round(85  * scale) },
-      { hour: '19:00', occupancy: Math.round(95  * scale) },
-      { hour: '20:00', occupancy: Math.round(88  * scale) },
-      { hour: '21:00', occupancy: Math.round(60  * scale) },
-    ];
+    return PEAK_BASELINE.map(d => ({ hour: d.hour, occupancy: Math.round(d.occupancy * scale) }));
   });
 
   const linePoints = computed(() =>

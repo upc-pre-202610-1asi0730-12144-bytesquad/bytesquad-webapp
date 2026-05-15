@@ -38,18 +38,25 @@ function ticketDesc(type) { return type === 'CORRECTIVE' ? t('maintenance.types.
       <div class="chart-card card">
         <h2 class="chart-title">{{ t('dashboardAdmin.charts.peakCapacityHours') }}</h2>
         <div class="line-wrap">
-          <svg :viewBox="`0 0 ${SVG_W} ${SVG_H + 24}`" preserveAspectRatio="none" class="line-svg">
+          <svg :viewBox="`0 0 ${SVG_W + 36} ${SVG_H + 24}`" preserveAspectRatio="xMidYMid meet" class="line-svg">
             <defs>
               <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%"   stop-color="#f5bc36" stop-opacity="0.25"/>
                 <stop offset="100%" stop-color="#f5bc36" stop-opacity="0"/>
               </linearGradient>
             </defs>
-            <line v-for="tick in yTicks" :key="tick.label" x1="0" :y1="tick.y" :x2="SVG_W" :y2="tick.y" class="grid-line"/>
-            <path :d="store.areaPath" class="area-fill"/>
-            <polyline :points="store.polylinePoints" class="line-stroke"/>
-            <circle v-for="pt in store.linePoints" :key="pt.hour" :cx="pt.x" :cy="pt.y" r="5" class="data-dot"/>
-            <text v-for="(pt, i) in store.linePoints" v-show="i % 2 === 0 || i === store.linePoints.length - 1" :key="`lbl-${pt.hour}`" :x="pt.x" :y="SVG_H + 18" class="axis-label" text-anchor="middle">{{ pt.hour }}</text>
+            <!-- Y-axis labels + grid lines (offset by 36px for label space) -->
+            <g v-for="tick in yTicks" :key="tick.label">
+              <text :x="32" :y="tick.y + 4" class="axis-label" text-anchor="end">{{ tick.label }}</text>
+              <line x1="36" :y1="tick.y" :x2="SVG_W + 36" :y2="tick.y" class="grid-line"/>
+            </g>
+            <!-- Chart area shifted right by 36 -->
+            <g transform="translate(36,0)">
+              <path :d="store.areaPath" class="area-fill"/>
+              <polyline :points="store.polylinePoints" class="line-stroke"/>
+              <circle v-for="pt in store.linePoints" :key="pt.hour" :cx="pt.x" :cy="pt.y" r="5" class="data-dot"/>
+              <text v-for="(pt, i) in store.linePoints" v-show="i % 2 === 0 || i === store.linePoints.length - 1" :key="`lbl-${pt.hour}`" :x="pt.x" :y="SVG_H + 18" class="axis-label" text-anchor="middle">{{ pt.hour }}</text>
+            </g>
           </svg>
         </div>
       </div>
@@ -143,7 +150,7 @@ function ticketDesc(type) { return type === 'CORRECTIVE' ? t('maintenance.types.
 .chart-card { min-height: 260px; }
 .chart-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
 .line-wrap { overflow: hidden; }
-.line-svg { width: 100%; height: 180px; }
+.line-svg { width: 100%; height: 200px; }
 .grid-line { stroke: rgba(255,255,255,.06); stroke-width: 1; }
 .area-fill { fill: url(#areaGrad); }
 .line-stroke { fill: none; stroke: var(--accent); stroke-width: 2; }
