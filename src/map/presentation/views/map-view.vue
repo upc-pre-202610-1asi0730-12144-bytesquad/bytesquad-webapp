@@ -91,7 +91,7 @@ function machineName(nameKey) {
       </button>
     </div>
 
-    <div class="map-layout">
+    <div class="map-layout" :class="{ 'map-layout--panel-open': selectedMachine }">
       <!-- Floor map -->
       <div class="card floor-map" @click.self="closeMachineDetail">
         <h2 class="map-card-title">{{ t('map.cardTitle') }}</h2>
@@ -259,7 +259,7 @@ function machineName(nameKey) {
 .legend-dot { border-radius: 50%; display: inline-block; height: 10px; width: 10px; }
 .legend-label { color: var(--text-secondary); font-size: .82rem; }
 @media (min-width: 960px) {
-  .map-layout { grid-template-columns: 1fr 320px; }
+  .map-layout--panel-open { grid-template-columns: 1fr 320px; }
   .floor-map { min-height: 540px; }
   .floor-grid { height: 500px; }
 }
