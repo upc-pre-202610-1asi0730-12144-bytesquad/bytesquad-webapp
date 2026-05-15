@@ -34,42 +34,42 @@ async function submit() {
 
 <template>
   <div class="page">
-    <div class="page__header">
+    <div class="page__header" style="justify-content:flex-start;gap:.75rem">
       <button class="btn btn--icon" @click="router.back()"><span class="material-icons">arrow_back</span></button>
-      <h1 class="page__title">{{ isEdit ? t('equipment.editTitle') : t('equipment.addTitle') }}</h1>
+      <h1 class="page__title">{{ isEdit ? t('equipment.dialog.editTitle') : t('equipment.dialog.addTitle') }}</h1>
     </div>
 
     <form class="card form-grid" @submit.prevent="submit">
       <div class="form-field">
-        <label>{{ t('equipment.form.name') }}</label>
+        <label>{{ t('equipment.dialog.fields.name') }}</label>
         <input v-model="form.name" required />
       </div>
       <div class="form-field">
-        <label>{{ t('equipment.form.brand') }}</label>
+        <label>{{ t('equipment.dialog.fields.brand') }}</label>
         <input v-model="form.brand" />
       </div>
       <div class="form-field">
-        <label>{{ t('equipment.form.model') }}</label>
+        <label>{{ t('equipment.dialog.fields.model') }}</label>
         <input v-model="form.model" />
       </div>
       <div class="form-field">
-        <label>{{ t('equipment.form.zone') }}</label>
+        <label>{{ t('equipment.dialog.fields.zoneId') }}</label>
         <input type="number" v-model.number="form.zoneId" min="1" />
       </div>
       <div class="form-field">
-        <label>{{ t('equipment.form.price') }}</label>
+        <label>{{ t('equipment.dialog.fields.purchasePrice') }}</label>
         <input type="number" v-model.number="form.purchasePrice" min="0" step="0.01" />
       </div>
       <div class="form-field">
-        <label>{{ t('equipment.form.status') }}</label>
+        <label>{{ t('equipment.dialog.fields.status') }}</label>
         <select v-model="form.status">
           <option v-for="s in Object.values(EquipmentStatus)" :key="s" :value="s">{{ s }}</option>
         </select>
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn btn--outline" @click="router.push('/equipment')">{{ t('common.cancel') }}</button>
-        <button type="submit" class="btn btn--primary" :disabled="store.loading">{{ isEdit ? t('common.save') : t('common.create') }}</button>
+        <button type="button" class="btn btn--outline" @click="router.push('/equipment')">{{ t('equipment.actions.cancel') }}</button>
+        <button type="submit" class="btn btn--primary" :disabled="store.loading">{{ isEdit ? t('equipment.actions.save') : t('equipment.actions.register') }}</button>
       </div>
     </form>
   </div>
