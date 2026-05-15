@@ -274,3 +274,4 @@ MSBuild_Logs/
 healthchecksdb
 **/.ionide/
 FodyWeavers.xsd
+.env.production
