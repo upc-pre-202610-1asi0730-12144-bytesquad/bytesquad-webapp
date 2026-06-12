@@ -601,6 +601,18 @@
       "LUBRICATION": "Lubricación",
       "INSPECTION": "Inspección",
       "OVERHAUL": "Revisión General"
+    },
+    "tickets": {
+      "t1001": "Fuga de fluido hidráulico detectada en brazo de cargadora",
+      "t1002": "Sobrecalentamiento del motor — requiere inspección inmediata",
+      "t1003": "Cambio de aceite y filtro programado cada 500 h vencido",
+      "t1004": "Reemplazo de rodamiento del tambor vibratorio en curso",
+      "t1005": "Ajuste de tensión de cadena e inspección del tren de rodaje",
+      "t1006": "Inspección de desgaste de cuchilla y reemplazo de filo de corte",
+      "t1007": "Reemplazo de sello del cilindro de pluma — resuelto",
+      "t1008": "Lubricación mensual del cable de acero de grúa completada",
+      "t1009": "Dientes de cucharon reemplazados y articulación delantera engrasada",
+      "t1010": "Servicio de filtro de aire y sistema de refrigeración completado"
     }
   },
   "routines": {
@@ -768,11 +780,17 @@
     },
     "table": {
       "title": "Equipos Infrautilizados",
+      "zonePrefix": "Zona",
       "headers": {
         "machineId": "ID Máquina",
         "location": "Ubicación",
         "hours": "Horas",
         "roi": "ROI"
+      },
+      "roi": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto"
       },
       "empty": "No se encontraron equipos infrautilizados"
     },

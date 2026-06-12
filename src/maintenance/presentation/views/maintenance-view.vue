@@ -26,10 +26,10 @@ function priorityClass(p) { return p === 'URGENT' ? 'red' : p === 'HIGH' ? 'ambe
 
 function filter(list) {
   const q = search.value.toLowerCase();
-  return list.filter(t =>
-    (!q || eq(t.equipmentId).toLowerCase().includes(q) || t.description.toLowerCase().includes(q)) &&
-    (!statusF.value || t.status === statusF.value) &&
-    (!priorityF.value || t.priority === priorityF.value)
+  return list.filter(ticket =>
+    (!q || eq(ticket.equipmentId).toLowerCase().includes(q) || t(ticket.description).toLowerCase().includes(q)) &&
+    (!statusF.value || ticket.status === statusF.value) &&
+    (!priorityF.value || ticket.priority === priorityF.value)
   );
 }
 
@@ -56,8 +56,8 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
 
     <div class="filters card">
       <input v-model="search" :placeholder="t('maintenance.search')" style="flex:1" />
-      <select v-model="statusF"><option value="">{{ t('maintenance.filter.allStatuses') }}</option><option v-for="s in Object.values(TicketStatus)" :key="s" :value="s">{{ s }}</option></select>
-      <select v-model="priorityF"><option value="">{{ t('maintenance.filter.allPriorities') }}</option><option v-for="p in Object.values(TicketPriority)" :key="p" :value="p">{{ p }}</option></select>
+      <select v-model="statusF"><option value="">{{ t('maintenance.filter.allStatuses') }}</option><option v-for="s in Object.values(TicketStatus)" :key="s" :value="s">{{ t('maintenance.status.' + s) }}</option></select>
+      <select v-model="priorityF"><option value="">{{ t('maintenance.filter.allPriorities') }}</option><option v-for="p in Object.values(TicketPriority)" :key="p" :value="p">{{ t('maintenance.priority.' + p) }}</option></select>
     </div>
 
     <div class="kanban-board">
@@ -67,10 +67,10 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
         <div v-for="ticket in pendingFiltered" :key="ticket.id" class="ticket-card ticket-card--open">
           <div class="ticket-top">
             <span class="ticket-id">{{ ticketId(ticket.id) }}</span>
-            <span class="badge" :class="`badge--${priorityClass(ticket.priority)}`">{{ ticket.priority }}</span>
+            <span class="badge" :class="`badge--${priorityClass(ticket.priority)}`">{{ t('maintenance.priority.' + ticket.priority) }}</span>
           </div>
           <p class="ticket-eq">{{ eq(ticket.equipmentId) }}</p>
-          <p class="ticket-desc">{{ ticket.description }}</p>
+          <p class="ticket-desc">{{ t(ticket.description) }}</p>
           <div class="ticket-bottom">
             <span class="ticket-age">{{ ticketAge(ticket.createdAt) }}</span>
             <button class="btn btn--outline" style="font-size:.75rem" @click="store.startTicket(ticket.id)">{{ t('maintenance.action.start') }}</button>
@@ -82,9 +82,9 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
         <h3 class="col-header col-header--progress">{{ t('maintenance.col.inProgress') }} ({{ inProgressFiltered.length }})</h3>
         <p v-if="!inProgressFiltered.length" class="kanban-empty">{{ t('maintenance.col.empty') }}</p>
         <div v-for="ticket in inProgressFiltered" :key="ticket.id" class="ticket-card ticket-card--progress">
-          <div class="ticket-top"><span class="ticket-id">{{ ticketId(ticket.id) }}</span><span class="badge" :class="`badge--${priorityClass(ticket.priority)}`">{{ ticket.priority }}</span></div>
+          <div class="ticket-top"><span class="ticket-id">{{ ticketId(ticket.id) }}</span><span class="badge" :class="`badge--${priorityClass(ticket.priority)}`">{{ t('maintenance.priority.' + ticket.priority) }}</span></div>
           <p class="ticket-eq">{{ eq(ticket.equipmentId) }}</p>
-          <p class="ticket-desc">{{ ticket.description }}</p>
+          <p class="ticket-desc">{{ t(ticket.description) }}</p>
           <div class="ticket-bottom">
             <span class="ticket-age">{{ ticketAge(ticket.createdAt) }}</span>
             <button class="btn btn--primary" style="font-size:.75rem" @click="store.completeTicket(ticket.id)">{{ t('maintenance.action.complete') }}</button>
@@ -98,7 +98,7 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
         <div v-for="ticket in resolvedFiltered" :key="ticket.id" class="ticket-card ticket-card--resolved">
           <div class="ticket-top"><span class="ticket-id">{{ ticketId(ticket.id) }}</span><span class="badge badge--green">{{ t('maintenance.status.RESOLVED') }}</span></div>
           <p class="ticket-eq">{{ eq(ticket.equipmentId) }}</p>
-          <p class="ticket-desc">{{ ticket.description }}</p>
+          <p class="ticket-desc">{{ t(ticket.description) }}</p>
         </div>
       </div>
     </div>
