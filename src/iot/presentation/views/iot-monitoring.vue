@@ -60,7 +60,7 @@ function batteryClass(b){ return b > 60 ? 'green' : b > 20 ? 'amber' : 'red'; }
           <tr v-for="d in filteredDevices" :key="d.id">
             <td class="cell-id">{{ sensorId(d) }}</td>
             <td>{{ d.location }}</td>
-            <td><span class="status-chip" :class="`status-chip--${statusClass(d.status)}`"><span class="material-icons" style="font-size:14px">{{ statusIcon(d.status) }}</span> {{ d.status }}</span></td>
+            <td><span class="status-chip" :class="`status-chip--${statusClass(d.status)}`"><span class="material-icons" style="font-size:14px">{{ statusIcon(d.status) }}</span> {{ t('iot.status.' + d.status) }}</span></td>
             <td><span :class="`bat-${batteryClass(d.batteryLevel)}`"><span class="material-icons" style="font-size:14px">{{ batteryIcon(d.batteryLevel) }}</span> {{ d.batteryLevel }}%</span></td>
             <td>{{ d.signalStrength }} dBm</td>
             <td>{{ d.firmwareVersion }}</td>
@@ -74,7 +74,7 @@ function batteryClass(b){ return b > 60 ? 'green' : b > 20 ? 'amber' : 'red'; }
       <h2 class="chart-title">{{ t('iot.alerts.title') }}</h2>
       <div v-for="d in store.activeAlerts" :key="d.id" class="alert-row">
         <span class="material-icons" style="color:var(--red)">{{ statusIcon(d.status) }}</span>
-        <div class="alert-info"><p class="alert-name">{{ sensorId(d) }} — {{ d.location }}</p><p class="alert-sub">{{ d.status }}</p></div>
+        <div class="alert-info"><p class="alert-name">{{ sensorId(d) }} — {{ d.location }}</p><p class="alert-sub">{{ t('iot.status.' + d.status) }}</p></div>
         <button class="btn btn--outline" style="font-size:0.75rem" @click="store.investigateAlert(d)">{{ t('iot.alerts.investigate') }}</button>
         <button class="btn btn--danger" style="font-size:0.75rem" @click="store.scheduleReplacement(d.id)">{{ t('iot.alerts.scheduleReplacement') }}</button>
       </div>

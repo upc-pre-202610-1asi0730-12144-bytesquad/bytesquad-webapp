@@ -9,8 +9,8 @@ const SVG_W = store.SVG_W, SVG_H = store.SVG_H;
 const yTicks = [0, 25, 50, 75, 100].map(v => ({ label: String(v), y: SVG_H - (v / 100) * SVG_H }));
 
 function barShortName(name) { return name.length > 10 ? name.slice(0, 8) + '…' : name; }
-function roiClass(roi) { return roi === 'Alto' ? 'green' : roi === 'Medio' ? 'amber' : 'red'; }
-function ticketDesc(type) { return type === 'CORRECTIVE' ? t('maintenance.types.corrective') : t('maintenance.types.preventive'); }
+function roiClass(roi) { return roi === 'HIGH' ? 'green' : roi === 'MEDIUM' ? 'amber' : 'red'; }
+function ticketDesc(type) { return t('maintenance.type.' + type); }
 </script>
 
 <template>
@@ -91,9 +91,9 @@ function ticketDesc(type) { return type === 'CORRECTIVE' ? t('maintenance.types.
             <tr v-if="!store.underutilizedEquipment.length"><td colspan="4" class="table-empty">{{ t('dashboardAdmin.table.empty') }}</td></tr>
             <tr v-for="row in store.underutilizedEquipment" :key="row.machineId">
               <td class="cell-id">{{ row.machineId }}</td>
-              <td>{{ row.location }}</td>
+              <td>{{ t('dashboardAdmin.table.zonePrefix') }} {{ row.zoneId }}</td>
               <td>{{ row.hours }}</td>
-              <td><span class="badge" :class="`badge--${roiClass(row.roi)}`">{{ row.roi }}</span></td>
+              <td><span class="badge" :class="`badge--${roiClass(row.roi)}`">{{ t('dashboardAdmin.table.roi.' + row.roi) }}</span></td>
             </tr>
           </tbody>
         </table>

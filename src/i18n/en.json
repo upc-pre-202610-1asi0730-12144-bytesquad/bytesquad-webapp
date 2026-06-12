@@ -601,6 +601,18 @@
       "LUBRICATION": "Lubrication",
       "INSPECTION": "Inspection",
       "OVERHAUL": "Overhaul"
+    },
+    "tickets": {
+      "t1001": "Hydraulic fluid leak detected on loader arm",
+      "t1002": "Engine overheating — requires immediate inspection",
+      "t1003": "Scheduled 500 h oil & filter change due",
+      "t1004": "Vibration drum bearing replacement in progress",
+      "t1005": "Track tension adjustment and undercarriage inspection",
+      "t1006": "Blade wear inspection and cutting edge replacement",
+      "t1007": "Boom cylinder seal replacement — resolved",
+      "t1008": "Monthly crane wire rope lubrication completed",
+      "t1009": "Bucket teeth replaced and front linkage greased",
+      "t1010": "Air filter and coolant system service completed"
     }
   },
   "routines": {
@@ -768,11 +780,17 @@
     },
     "table": {
       "title": "Underutilized Equipment",
+      "zonePrefix": "Zone",
       "headers": {
         "machineId": "Machine ID",
         "location": "Location",
         "hours": "Hours",
         "roi": "ROI"
+      },
+      "roi": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High"
       },
       "empty": "No underutilized equipment found"
     },
