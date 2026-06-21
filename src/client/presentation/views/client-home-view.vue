@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { useAuthStore } from '@/auth/application/auth.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 import { gymState } from '@/shared/application/gym-state.service.js';
 import { computed } from 'vue';
 
@@ -16,7 +16,8 @@ const reservedCount  = computed(() => gymState.machines.value.filter(m => m.stat
     <!-- Welcome banner -->
     <div class="welcome-banner card">
       <div class="welcome-text">
-        <h1 class="welcome-title">{{ t('client.welcome') }}, {{ auth.user?.name ?? '' }}!</h1>
+        <!-- TODO: from Profiles BC — use fullName once profiles aggregate is wired -->
+        <h1 class="welcome-title">{{ t('client.welcome') }}, {{ auth.user?.username ?? '' }}!</h1>
         <p class="welcome-sub">{{ t('client.subtitle') }}</p>
       </div>
       <span class="material-icons welcome-icon">directions_run</span>
