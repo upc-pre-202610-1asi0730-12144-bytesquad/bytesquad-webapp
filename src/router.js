@@ -18,9 +18,9 @@ const routes = [
 
       // Admin routes
       { path: 'dashboard',       component: () => import('@/dashboard/presentation/views/dashboard-view.vue'),             meta: { requiresAdmin: true } },
-      { path: 'equipment',       component: () => import('@/equipment/presentation/views/equipment-management.vue'),        meta: { requiresAdmin: true } },
-      { path: 'equipment/new',   component: () => import('@/equipment/presentation/views/equipment-form.vue'),              meta: { requiresAdmin: true } },
-      { path: 'equipment/:id/edit', component: () => import('@/equipment/presentation/views/equipment-form.vue'),           meta: { requiresAdmin: true } },
+      { path: 'equipment',       component: () => import('@/gym/presentation/views/equipment-management.vue'),        meta: { requiresAdmin: true } },
+      { path: 'equipment/new',   component: () => import('@/gym/presentation/views/equipment-form.vue'),              meta: { requiresAdmin: true } },
+      { path: 'equipment/:id/edit', component: () => import('@/gym/presentation/views/equipment-form.vue'),           meta: { requiresAdmin: true } },
       { path: 'iot',             component: () => import('@/iot/presentation/views/iot-monitoring.vue'),                    meta: { requiresAdmin: true } },
       { path: 'maintenance',     component: () => import('@/maintenance/presentation/views/maintenance-view.vue'),          meta: { requiresAdmin: true } },
       { path: 'maintenance/new-ticket', component: () => import('@/maintenance/presentation/views/new-ticket-view.vue'),   meta: { requiresAdmin: true } },
