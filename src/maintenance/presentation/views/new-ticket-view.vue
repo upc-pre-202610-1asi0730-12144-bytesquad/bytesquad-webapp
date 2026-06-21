@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useMaintenanceStore } from '@/maintenance/application/maintenance.store.js';
-import { useEquipmentStore } from '@/equipment/application/equipment.store.js';
+import { useEquipmentStore } from '@/gym/application/equipment.store.js';
 import { TicketPriority, TicketType } from '@/maintenance/domain/model/maintenance-ticket.entity.js';
 
 const { t }      = useI18n();
