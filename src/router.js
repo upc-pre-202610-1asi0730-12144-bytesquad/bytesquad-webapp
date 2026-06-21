@@ -27,6 +27,7 @@ const routes = [
       { path: 'analytics',       component: () => import('@/analytics/presentation/views/analytics-view.vue'),             meta: { requiresAdmin: true } },
       { path: 'financial-impact',component: () => import('@/financial-impact/presentation/views/financial-impact-view.vue'), meta: { requiresAdmin: true } },
       { path: 'configuration',   component: () => import('@/configuration/presentation/views/configuration-view.vue'),     meta: { requiresAdmin: true } },
+      { path: 'membership',      component: () => import('@/membership/presentation/views/membership-management.vue'),        meta: { requiresAdmin: true } },
 
       // Client routes
       { path: 'client',   component: () => import('@/client/presentation/views/client-home-view.vue'),  meta: { requiresClient: true } },
