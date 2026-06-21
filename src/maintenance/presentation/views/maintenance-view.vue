@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useMaintenanceStore } from '@/maintenance/application/maintenance.store.js';
 import { TicketStatus, TicketPriority } from '@/maintenance/domain/model/maintenance-ticket.entity.js';
-import { useEquipmentStore } from '@/equipment/application/equipment.store.js';
+import { useEquipmentStore } from '@/gym/application/equipment.store.js';
 
 const { t }    = useI18n();
 const store    = useMaintenanceStore();
