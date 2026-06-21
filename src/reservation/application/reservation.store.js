@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { gymState } from '@/shared/application/gym-state.service.js';
-import { useAlertsStore } from '@/alerts/application/alerts.service.js';
+import { useAlertsStore } from '@/monitoring/application/alerts.service.js';
 
 export const useReservationStore = defineStore('reservation', () => {
   const expiredReservations = ref([]);
