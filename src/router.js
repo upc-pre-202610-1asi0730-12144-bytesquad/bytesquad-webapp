@@ -14,7 +14,7 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       { path: 'profile', component: () => import('@/profiles/presentation/views/profile-view.vue') },
-      { path: 'alerts',  component: () => import('@/alerts/presentation/views/alerts-view.vue') },
+      { path: 'alerts',  component: () => import('@/monitoring/presentation/views/alerts-view.vue') },
 
       // Admin routes
       { path: 'dashboard',       component: () => import('@/dashboard/presentation/views/dashboard-view.vue'),             meta: { requiresAdmin: true } },
@@ -32,7 +32,7 @@ const routes = [
 
       // Client routes
       { path: 'client',   component: () => import('@/client/presentation/views/client-home-view.vue'),  meta: { requiresClient: true } },
-      { path: 'map',      component: () => import('@/map/presentation/views/map-view.vue'),             meta: { requiresClient: true } },
+      { path: 'map',      component: () => import('@/monitoring/presentation/views/map-view.vue'),             meta: { requiresClient: true } },
       { path: 'bookings', component: () => import('@/reservation/presentation/views/reservation-view.vue'), meta: { requiresClient: true } },
       { path: 'routines', component: () => import('@/routines/presentation/views/routines-view.vue'),   meta: { requiresClient: true } },
     ],
