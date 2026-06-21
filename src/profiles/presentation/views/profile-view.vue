@@ -1,25 +1,46 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/authentication/application/auth.store.js';
+import { useAuthStore }     from '@/authentication/application/auth.store.js';
+import { useProfilesStore } from '@/profiles/application/profiles.store.js';
 
 const { t, locale } = useI18n();
-const router = useRouter();
-const auth   = useAuthStore();
+const router         = useRouter();
+const auth           = useAuthStore();
+const profilesStore  = useProfilesStore();
 
 const isAdmin = computed(() => auth.isAdmin);
 
-const notifAvailability  = ref(true);
-const notifMaintenance   = ref(false);
-const notifRewards       = ref(true);
+const notifAvailability = ref(true);
+const notifMaintenance  = ref(false);
+const notifRewards      = ref(true);
 
 const ADMIN_STATS = [
-  { icon: 'location_on',   key: 'locations',  value: 3 },
+  { icon: 'location_on',    key: 'locations', value: 3 },
   { icon: 'fitness_center', key: 'equipment', value: 24 },
   { icon: 'sensors',        key: 'sensors',   value: 18 },
   { icon: 'group',          key: 'members',   value: 312 },
 ];
+
+const editMode = ref(false);
+const editForm = ref({ firstName: '', lastName: '', phoneNumber: '' });
+
+function openEdit() {
+  const p = profilesStore.myProfile;
+  editForm.value = {
+    firstName:   '',
+    lastName:    '',
+    phoneNumber: p?.phoneNumber ?? '',
+  };
+  editMode.value = true;
+}
+
+async function submitEdit() {
+  if (!editForm.value.firstName || !editForm.value.lastName) return;
+  await profilesStore.updateMyProfile(editForm.value);
+  editMode.value = false;
+}
 
 function initials(name) {
   return (name ?? '').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '??';
@@ -34,6 +55,8 @@ function logout() {
   auth.logout();
   router.push('/login');
 }
+
+onMounted(() => profilesStore.loadMyProfile());
 </script>
 
 <template>
@@ -76,8 +99,7 @@ function logout() {
         <div class="account-grid">
           <div class="account-field">
             <label>{{ t('profile.account.email') }}</label>
-            <!-- TODO: from Profiles BC — email not provided by IAM -->
-            <p>{{ auth.user?.username }}</p>
+            <p>{{ profilesStore.myProfile?.email ?? '—' }}</p>
           </div>
           <div class="account-field">
             <label>{{ t('profile.account.gymName') }}</label>
@@ -85,9 +107,36 @@ function logout() {
           </div>
           <div class="account-field">
             <label>{{ t('profile.account.phone') }}</label>
-            <p>+51 999 888 777</p>
+            <p>{{ profilesStore.myProfile?.phoneNumber ?? '—' }}</p>
           </div>
         </div>
+
+        <!-- Edit form -->
+        <template v-if="editMode">
+          <form class="edit-form" @submit.prevent="submitEdit">
+            <div class="edit-grid">
+              <div class="form-field">
+                <label>First name</label>
+                <input v-model="editForm.firstName" placeholder="First name" required />
+              </div>
+              <div class="form-field">
+                <label>Last name</label>
+                <input v-model="editForm.lastName" placeholder="Last name" required />
+              </div>
+              <div class="form-field">
+                <label>Phone</label>
+                <input v-model="editForm.phoneNumber" placeholder="+51 999 000 000" />
+              </div>
+            </div>
+            <div class="edit-actions">
+              <button type="submit" class="btn btn--primary" :disabled="profilesStore.loading">Save</button>
+              <button type="button" class="btn btn--outline" @click="editMode = false">Cancel</button>
+            </div>
+          </form>
+        </template>
+        <button v-else class="btn btn--outline edit-btn" @click="openEdit">
+          <span class="material-icons" style="font-size:15px">edit</span> Edit profile
+        </button>
       </div>
     </template>
 
@@ -100,13 +149,10 @@ function logout() {
 
       <!-- Avatar + points -->
       <div class="card avatar-card">
-        <!-- TODO: from Profiles BC — use fullName for initials once profiles aggregate is wired -->
-        <div class="avatar-circle">{{ initials(auth.user?.username) }}</div>
+        <div class="avatar-circle">{{ initials(profilesStore.myProfile?.fullName) }}</div>
         <div class="avatar-info">
-          <!-- TODO: from Profiles BC — fullName not provided by IAM -->
-          <p class="avatar-name">{{ auth.user?.username }}</p>
-          <!-- TODO: from Profiles BC — email not provided by IAM -->
-          <p class="avatar-email">—</p>
+          <p class="avatar-name">{{ profilesStore.myProfile?.fullName ?? '—' }}</p>
+          <p class="avatar-email">{{ profilesStore.myProfile?.email ?? '—' }}</p>
         </div>
         <div class="points-badge">
           <span class="material-icons" style="font-size:16px;color:var(--accent)">stars</span>
@@ -132,6 +178,46 @@ function logout() {
           <li>{{ t('profile.client.plan.feature4') }}</li>
         </ul>
         <p class="plan-renewal">{{ t('profile.client.plan.renewal') }}: {{ t('profile.client.plan.renewalDate') }}</p>
+      </div>
+
+      <!-- Edit form -->
+      <div class="card section">
+        <h2 class="section-title">{{ t('profile.account.title') }}</h2>
+        <div class="account-grid">
+          <div class="account-field">
+            <label>{{ t('profile.account.email') }}</label>
+            <p>{{ profilesStore.myProfile?.email ?? '—' }}</p>
+          </div>
+          <div class="account-field">
+            <label>{{ t('profile.account.phone') }}</label>
+            <p>{{ profilesStore.myProfile?.phoneNumber ?? '—' }}</p>
+          </div>
+        </div>
+        <template v-if="editMode">
+          <form class="edit-form" @submit.prevent="submitEdit">
+            <div class="edit-grid">
+              <div class="form-field">
+                <label>First name</label>
+                <input v-model="editForm.firstName" placeholder="First name" required />
+              </div>
+              <div class="form-field">
+                <label>Last name</label>
+                <input v-model="editForm.lastName" placeholder="Last name" required />
+              </div>
+              <div class="form-field">
+                <label>Phone</label>
+                <input v-model="editForm.phoneNumber" placeholder="+51 999 000 000" />
+              </div>
+            </div>
+            <div class="edit-actions">
+              <button type="submit" class="btn btn--primary" :disabled="profilesStore.loading">Save</button>
+              <button type="button" class="btn btn--outline" @click="editMode = false">Cancel</button>
+            </div>
+          </form>
+        </template>
+        <button v-else class="btn btn--outline edit-btn" @click="openEdit">
+          <span class="material-icons" style="font-size:15px">edit</span> Edit profile
+        </button>
       </div>
 
       <!-- Notifications -->
@@ -239,6 +325,12 @@ function logout() {
 .account-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); }
 .account-field label { color: var(--text-secondary); font-size: .78rem; margin-bottom: .2rem; display: block; }
 .account-field p { font-size: .85rem; }
+.edit-btn { font-size: .8rem; margin-top: .75rem; }
+.edit-form { margin-top: .75rem; }
+.edit-grid { display: grid; gap: .75rem; grid-template-columns: 1fr 1fr 1fr; margin-bottom: .75rem; }
+.form-field { display: flex; flex-direction: column; gap: .3rem; }
+.form-field label { color: var(--text-secondary); font-size: .78rem; }
+.edit-actions { display: flex; gap: .5rem; }
 .notif-list { display: flex; flex-direction: column; gap: .75rem; }
 .notif-row { align-items: center; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; padding-bottom: .75rem; }
 .notif-info { display: flex; flex-direction: column; gap: .1rem; }
@@ -253,5 +345,5 @@ function logout() {
 .lang-options { display: flex; gap: .5rem; margin-top: .5rem; }
 .lang-btn { font-size: .85rem; padding: .35rem .9rem; }
 .security-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .25rem; }
-@media (max-width: 600px) { .stat-grid, .account-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .stat-grid, .account-grid, .edit-grid { grid-template-columns: 1fr 1fr; } }
 </style>
