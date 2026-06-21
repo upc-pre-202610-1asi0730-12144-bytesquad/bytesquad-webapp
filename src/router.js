@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '@/auth/application/auth.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 
 const routes = [
   { path: '/', redirect: '/login' },
   {
     path: '/login',
-    component: () => import('@/auth/presentation/views/login-view.vue'),
+    component: () => import('@/authentication/presentation/views/login-view.vue'),
     meta: { public: true },
   },
   {
@@ -28,6 +28,7 @@ const routes = [
       { path: 'financial-impact',component: () => import('@/financial-impact/presentation/views/financial-impact-view.vue'), meta: { requiresAdmin: true } },
       { path: 'configuration',   component: () => import('@/configuration/presentation/views/configuration-view.vue'),     meta: { requiresAdmin: true } },
       { path: 'gym',             component: () => import('@/gym/presentation/views/gym-management.vue'),                   meta: { requiresAdmin: true } },
+      { path: 'membership',      component: () => import('@/membership/presentation/views/membership-management.vue'),        meta: { requiresAdmin: true } },
 
       // Client routes
       { path: 'client',   component: () => import('@/client/presentation/views/client-home-view.vue'),  meta: { requiresClient: true } },

@@ -10,6 +10,17 @@ export class BaseApi {
       baseURL: API_URL,
       headers: { 'Content-Type': 'application/json' },
     });
+
+    this.#http.interceptors.request.use((config) => {
+      try {
+        const raw = localStorage.getItem('spottrack_session');
+        if (raw) {
+          const { token } = JSON.parse(raw);
+          if (token) config.headers.Authorization = `Bearer ${token}`;
+        }
+      } catch { /* no session — proceed without auth header */ }
+      return config;
+    });
   }
 
   get http() { return this.#http; }
