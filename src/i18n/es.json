@@ -708,7 +708,13 @@
         "weightLoss": "Pérdida de Peso",
         "generalFitness": "Fitness General"
       }
-    }
+    },
+    "blocks": "{count} bloques",
+    "addBlock": "+ Agregar Bloque de Ejercicio",
+    "sessions": "Sesiones",
+    "startSession": "▶ Iniciar Sesión",
+    "noBlocks": "Aún no hay bloques de ejercicio",
+    "noRoutines": "Aún no hay rutinas"
   },
   "profile": {
     "admin": {
