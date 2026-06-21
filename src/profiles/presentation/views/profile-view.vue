@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/auth/application/auth.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -76,7 +76,8 @@ function logout() {
         <div class="account-grid">
           <div class="account-field">
             <label>{{ t('profile.account.email') }}</label>
-            <p>{{ auth.user?.email }}</p>
+            <!-- TODO: from Profiles BC — email not provided by IAM -->
+            <p>{{ auth.user?.username }}</p>
           </div>
           <div class="account-field">
             <label>{{ t('profile.account.gymName') }}</label>
@@ -99,10 +100,13 @@ function logout() {
 
       <!-- Avatar + points -->
       <div class="card avatar-card">
-        <div class="avatar-circle">{{ initials(auth.user?.name) }}</div>
+        <!-- TODO: from Profiles BC — use fullName for initials once profiles aggregate is wired -->
+        <div class="avatar-circle">{{ initials(auth.user?.username) }}</div>
         <div class="avatar-info">
-          <p class="avatar-name">{{ auth.user?.name }}</p>
-          <p class="avatar-email">{{ auth.user?.email }}</p>
+          <!-- TODO: from Profiles BC — fullName not provided by IAM -->
+          <p class="avatar-name">{{ auth.user?.username }}</p>
+          <!-- TODO: from Profiles BC — email not provided by IAM -->
+          <p class="avatar-email">—</p>
         </div>
         <div class="points-badge">
           <span class="material-icons" style="font-size:16px;color:var(--accent)">stars</span>

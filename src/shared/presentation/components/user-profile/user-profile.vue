@@ -1,21 +1,23 @@
 <script setup>
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/auth/application/auth.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 
 const auth    = useAuthStore();
 const router  = useRouter();
 
+// TODO: from Profiles BC — IAM User only provides username; fullName comes from profiles aggregate
 const initials = computed(() => {
-  const name = auth.user?.name ?? '';
-  return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?';
+  const n = auth.user?.username ?? '';
+  return n.slice(0, 2).toUpperCase() || '?';
 });
 </script>
 
 <template>
   <button class="user-profile" @click="router.push('/profile')">
     <div class="avatar">{{ initials }}</div>
-    <span class="user-name">{{ auth.user?.name }}</span>
+    <!-- TODO: from Profiles BC — use fullName once profiles aggregate is wired -->
+    <span class="user-name">{{ auth.user?.username }}</span>
   </button>
 </template>
 

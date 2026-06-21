@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useAuthStore } from '@/auth/application/auth.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 import { useAlertsStore } from '@/monitoring/application/alerts.service.js';
 import SidebarComponent from '../sidebar/sidebar.vue';
 import BottomBar from '../bottom-bar/bottom-bar.vue';
