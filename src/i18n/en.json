@@ -127,7 +127,18 @@
       "option20m": "20 minutes",
       "cancel": "Cancel",
       "create": "Create Reservation"
-    }
+    },
+    "action": {
+      "requestAvailable": "Request Equipment Available",
+      "startTimer": "Start Timer",
+      "cancel": "Cancel",
+      "submitRequest": "Submit Request",
+      "end": "End Reservation"
+    },
+    "equipmentLabel": "Equipment ID",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "noReservations": "No reservations yet"
   },
   "clientAlerts": {
     "reservationExpired": {
@@ -697,7 +708,13 @@
         "weightLoss": "Weight Loss",
         "generalFitness": "General Fitness"
       }
-    }
+    },
+    "blocks": "{count} blocks",
+    "addBlock": "+ Add Exercise Block",
+    "sessions": "Sessions",
+    "startSession": "▶ Start Session",
+    "noBlocks": "No exercise blocks yet",
+    "noRoutines": "No routines yet"
   },
   "profile": {
     "admin": {
