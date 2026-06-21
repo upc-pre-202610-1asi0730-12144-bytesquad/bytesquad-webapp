@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { ProfilesApi } from '../infrastructure/profiles-api.js';
-import { useAuthStore } from '@/auth/application/auth.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 
 const api = new ProfilesApi();
 

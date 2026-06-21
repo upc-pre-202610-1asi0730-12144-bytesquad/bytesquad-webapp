@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore }     from '@/auth/application/auth.store.js';
+import { useAuthStore }     from '@/authentication/application/auth.store.js';
 import { useProfilesStore } from '@/profiles/application/profiles.store.js';
 
 const auth           = useAuthStore();
@@ -10,6 +10,7 @@ const router         = useRouter();
 
 const displayName = computed(() => profilesStore.myProfile?.fullName ?? auth.user?.name ?? '');
 
+// TODO: from Profiles BC — IAM User only provides username; fullName comes from profiles aggregate
 const initials = computed(() => {
   return displayName.value.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?';
 });

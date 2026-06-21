@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useAuthStore }     from '@/auth/application/auth.store.js';
+import { useAuthStore }     from '@/authentication/application/auth.store.js';
 import { useProfilesStore } from '@/profiles/application/profiles.store.js';
 
 const { t, locale } = useI18n();

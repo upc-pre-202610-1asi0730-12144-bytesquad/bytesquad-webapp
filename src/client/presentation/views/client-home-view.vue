@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { useAuthStore }     from '@/auth/application/auth.store.js';
+import { useAuthStore }     from '@/authentication/application/auth.store.js';
 import { useProfilesStore } from '@/profiles/application/profiles.store.js';
 import { gymState } from '@/shared/application/gym-state.service.js';
 import { computed } from 'vue';
