@@ -2,8 +2,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useEquipmentStore } from '@/equipment/application/equipment.store.js';
-import { Equipment, EquipmentStatus } from '@/equipment/domain/model/equipment.entity.js';
+import { useEquipmentStore } from '@/gym/application/equipment.store.js';
+import { Equipment, EquipmentStatus } from '@/gym/domain/model/equipment.entity.js';
 
 const { t }  = useI18n();
 const store  = useEquipmentStore();

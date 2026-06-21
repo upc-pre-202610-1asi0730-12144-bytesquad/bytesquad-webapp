@@ -18,15 +18,16 @@ const routes = [
 
       // Admin routes
       { path: 'dashboard',       component: () => import('@/dashboard/presentation/views/dashboard-view.vue'),             meta: { requiresAdmin: true } },
-      { path: 'equipment',       component: () => import('@/equipment/presentation/views/equipment-management.vue'),        meta: { requiresAdmin: true } },
-      { path: 'equipment/new',   component: () => import('@/equipment/presentation/views/equipment-form.vue'),              meta: { requiresAdmin: true } },
-      { path: 'equipment/:id/edit', component: () => import('@/equipment/presentation/views/equipment-form.vue'),           meta: { requiresAdmin: true } },
-      { path: 'iot',             component: () => import('@/monitoring/presentation/views/iot-monitoring.vue'),                    meta: { requiresAdmin: true } },
+      { path: 'equipment',       component: () => import('@/gym/presentation/views/equipment-management.vue'),        meta: { requiresAdmin: true } },
+      { path: 'equipment/new',   component: () => import('@/gym/presentation/views/equipment-form.vue'),              meta: { requiresAdmin: true } },
+      { path: 'equipment/:id/edit', component: () => import('@/gym/presentation/views/equipment-form.vue'),           meta: { requiresAdmin: true } },
+      { path: 'iot',             component: () => import('@/iot/presentation/views/iot-monitoring.vue'),                    meta: { requiresAdmin: true } },
       { path: 'maintenance',     component: () => import('@/maintenance/presentation/views/maintenance-view.vue'),          meta: { requiresAdmin: true } },
       { path: 'maintenance/new-ticket', component: () => import('@/maintenance/presentation/views/new-ticket-view.vue'),   meta: { requiresAdmin: true } },
       { path: 'analytics',       component: () => import('@/analytics/presentation/views/analytics-view.vue'),             meta: { requiresAdmin: true } },
       { path: 'financial-impact',component: () => import('@/financial-impact/presentation/views/financial-impact-view.vue'), meta: { requiresAdmin: true } },
       { path: 'configuration',   component: () => import('@/configuration/presentation/views/configuration-view.vue'),     meta: { requiresAdmin: true } },
+      { path: 'gym',             component: () => import('@/gym/presentation/views/gym-management.vue'),                   meta: { requiresAdmin: true } },
       { path: 'membership',      component: () => import('@/membership/presentation/views/membership-management.vue'),        meta: { requiresAdmin: true } },
 
       // Client routes

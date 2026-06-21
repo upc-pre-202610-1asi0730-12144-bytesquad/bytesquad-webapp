@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { useAuthStore }         from '@/authentication/application/auth.store.js';
 import { useMaintenanceStore }  from '@/maintenance/application/maintenance.store.js';
 import { TechnicalTicketStatus, MaintenanceProgress } from '@/maintenance/domain/model/technical-ticket.entity.js';
-import { useEquipmentStore }    from '@/equipment/application/equipment.store.js';
+import { useEquipmentStore }    from '@/gym/application/equipment.store.js';
 
 const { t }      = useI18n();
 const store      = useMaintenanceStore();

@@ -1,38 +1,84 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { gymState } from '@/shared/application/gym-state.service.js';
-import { useAlertsStore } from '@/monitoring/application/alerts.service.js';
+import { ReservationApi } from '../infrastructure/reservation-api.js';
+import { ReservationStatus } from '../domain/model/reservation.entity.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
+
+const api = new ReservationApi();
 
 export const useReservationStore = defineStore('reservation', () => {
-  const expiredReservations = ref([]);
+  // TODO: wire when backend adds GET /reservations (get-all)
+  const reservations = ref([]);
+  const loading      = ref(false);
+  const error        = ref(null);
 
-  const reservedMachines  = computed(() => gymState.machines.value.filter(m => m.status === 'RESERVED'));
-  const availableMachines = computed(() => gymState.machines.value.filter(m => m.status === 'AVAILABLE'));
+  const activeReservations    = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Active));
+  const initiatedReservations = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Initiated));
+  const reservedReservations  = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Reserved));
+  const endedReservations     = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Ended));
 
-  setInterval(() => {
-    const alerts = useAlertsStore();
-    const expired = gymState.tickReservedMachines();
-    if (expired.length > 0) {
-      expiredReservations.value = [...expiredReservations.value, ...expired];
-      expired.forEach(e => alerts.addReservationExpiredAlert(e.nameKey));
-    }
-  }, 1000);
-
-  function createReservation(machineId, durationSeconds) {
-    gymState.setMachineAsReserved(machineId, durationSeconds);
+  function _upsert(updated) {
+    const idx = reservations.value.findIndex(r => r.id === updated.id);
+    if (idx >= 0) reservations.value = reservations.value.map(r => r.id === updated.id ? updated : r);
+    else reservations.value = [updated, ...reservations.value];
   }
 
-  function cancelReservation(machineId) {
-    gymState.setMachineAsAvailable(machineId);
-    expiredReservations.value = expiredReservations.value.filter(r => r.machineId !== machineId);
+  async function loadByClient(clientId) {
+    if (!clientId) return;
+    loading.value = true; error.value = null;
+    try {
+      reservations.value = await api.getByClient(clientId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load reservations';
+    } finally { loading.value = false; }
   }
 
-  function dismissExpiredReservation(machineId) {
-    expiredReservations.value = expiredReservations.value.filter(r => r.machineId !== machineId);
+  async function expressCreate(equipmentId, startDate, endDate) {
+    const auth = useAuthStore();
+    if (!auth.user?.id) return;
+    loading.value = true; error.value = null;
+    try {
+      const created = await api.expressCreate(auth.user.id, equipmentId, startDate, endDate);
+      _upsert(created);
+      return created;
+    } catch (e) {
+      error.value = e.message || 'Failed to create reservation';
+    } finally { loading.value = false; }
   }
 
-  function formatTimer(seconds) { return gymState.formatTimer(seconds); }
-  function getZoneKey(category) { return gymState.getZoneKey(category); }
+  async function submitRequest(id) {
+    try {
+      _upsert(await api.submitRequest(id));
+    } catch (e) { error.value = e.message; }
+  }
 
-  return { expiredReservations, reservedMachines, availableMachines, createReservation, cancelReservation, dismissExpiredReservation, formatTimer, getZoneKey };
+  async function requestEquipmentAvailable(id) {
+    try {
+      _upsert(await api.requestEquipmentAvailable(id));
+    } catch (e) { error.value = e.message; }
+  }
+
+  async function startTimer(id) {
+    try {
+      _upsert(await api.startTimer(id));
+    } catch (e) { error.value = e.message; }
+  }
+
+  async function end(id) {
+    try {
+      _upsert(await api.end(id));
+    } catch (e) { error.value = e.message; }
+  }
+
+  async function cancel(id) {
+    try {
+      _upsert(await api.cancel(id));
+    } catch (e) { error.value = e.message; }
+  }
+
+  return {
+    reservations, loading, error,
+    activeReservations, initiatedReservations, reservedReservations, endedReservations,
+    loadByClient, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
+  };
 });
