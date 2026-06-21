@@ -5,13 +5,14 @@ export const EquipmentStatus = Object.freeze({
 });
 
 export class Equipment {
-  constructor({ id, zoneId, name, brand, model, purchasePrice, status }) {
+  constructor({ id, name, zoneId, status,
+    brand, model, purchasePrice }) {      // TODO: UI-only, not in API contract
     this.id            = id;
-    this.zoneId        = zoneId;
     this.name          = name;
-    this.brand         = brand;
-    this.model         = model;
-    this.purchasePrice = purchasePrice;
+    this.zoneId        = zoneId;
     this.status        = status;
+    this.brand         = brand;           // TODO: UI-only
+    this.model         = model;           // TODO: UI-only
+    this.purchasePrice = purchasePrice;   // TODO: UI-only
   }
 }
