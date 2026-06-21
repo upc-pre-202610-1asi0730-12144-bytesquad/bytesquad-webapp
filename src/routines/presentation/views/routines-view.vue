@@ -1,145 +1,157 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRoutineStore } from '@/routines/application/routine.store.js';
+import { useRoutineSessionStore } from '@/routines/application/routine-session.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
+import { ExerciseType } from '@/routines/domain/model/routine.entity.js';
+import { RoutineSessionStatus } from '@/routines/domain/model/routine-session.entity.js';
 
-const { t } = useI18n();
-const router = useRouter();
+const { t }        = useI18n();
+const routineStore = useRoutineStore();
+const sessionStore = useRoutineSessionStore();
+const auth         = useAuthStore();
 
-const activeFilter = ref('all');
-const showModal    = ref(false);
-const showAltFor   = ref(null);
+const showModal   = ref(false);
+const newName     = ref('');
+const blockForms  = ref({});
 
-const newRoutine = ref({ name: '', objective: '', difficulty: 'intermediate', notes: '' });
+onMounted(() => {
+  routineStore.loadByClient(auth.user?.id);
+  sessionStore.loadByClient(auth.user?.id);
+});
 
-const FILTERS = ['all', 'chest', 'legs', 'back', 'shoulders', 'arms'];
-const DIFFICULTIES = ['beginner', 'intermediate', 'advanced'];
-const OBJECTIVES = ['gainStrength', 'muscleHypertrophy', 'endurance', 'weightLoss', 'generalFitness'];
+function openModal() { newName.value = ''; showModal.value = true; }
 
-const ROUTINES = [
-  {
-    id: 1, nameKey: 'routineA', tag: 'chest', difficulty: 'intermediate',
-    exercises: [
-      { key: 'pressDePecho',      machineKey: 'bancoPechoPlano',       status: 'available',    altKey: null },
-      { key: 'sentadillaConBarra', machineKey: 'rackSentadilla2',      status: 'inUse',        altKeys: ['prensaDePiernas', 'hackSquat', 'sentadillaGoblet'] },
-    ]
-  },
-  {
-    id: 2, nameKey: 'routineB', tag: 'back', difficulty: 'advanced',
-    exercises: [
-      { key: 'pesoMuertoRumano',  machineKey: 'plataformaPesoMuerto',  status: 'available',    altKey: null },
-      { key: 'dominadas',         machineKey: 'barraDeDominadas',      status: 'maintenance',  altKeys: ['poleaAlta', 'remoConBarra', 'maquinaDeRemo'] },
-    ]
-  },
-  {
-    id: 3, nameKey: 'routineC', tag: 'shoulders', difficulty: 'beginner',
-    exercises: [
-      { key: 'pressMilitar',      machineKey: 'rackDeFuerza',          status: 'available',    altKey: null },
-    ]
-  },
-];
-
-const filtered = computed(() =>
-  activeFilter.value === 'all' ? ROUTINES : ROUTINES.filter(r => r.tag === activeFilter.value)
-);
-
-const STATUS_CLASS = { available: 'status--green', inUse: 'status--amber', maintenance: 'status--red' };
-
-function openModal()  { newRoutine.value = { name: '', objective: '', difficulty: 'intermediate', notes: '' }; showModal.value = true; }
-function createRoutine() {
+async function submitRoutine() {
+  if (!newName.value.trim()) return;
+  await routineStore.createRoutine(newName.value.trim());
   showModal.value = false;
+}
+
+function blockForm(routineId) {
+  if (!blockForms.value[routineId]) {
+    blockForms.value[routineId] = { exerciseName: '', exerciseType: ExerciseType.Strength, open: false };
+  }
+  return blockForms.value[routineId];
+}
+
+function toggleBlockForm(routineId) {
+  const f = blockForm(routineId);
+  f.open = !f.open;
+}
+
+async function submitBlock(routineId) {
+  const f = blockForm(routineId);
+  if (!f.exerciseName.trim()) return;
+  await routineStore.addExerciseBlock(routineId, f.exerciseName.trim(), f.exerciseType);
+  f.exerciseName = '';
+  f.open = false;
+}
+
+function sessionsFor(routineId) {
+  return sessionStore.sessions.filter(s => s.routineId === routineId);
+}
+
+function statusClass(status) {
+  return {
+    [RoutineSessionStatus.Started]:   'badge--blue',
+    [RoutineSessionStatus.Completed]: 'badge--green',
+    [RoutineSessionStatus.Missed]:    'badge--red',
+  }[status] ?? 'badge--gray';
 }
 </script>
 
 <template>
   <div class="page">
     <div class="page__header">
-      <div>
-        <h1 class="page__title">{{ t('routines.title') }}</h1>
-        <p class="page__subtitle">{{ t('routines.subtitle') }}</p>
-      </div>
-      <button class="btn btn--accent" @click="openModal">
+      <h1 class="page__title">{{ t('routines.title') }}</h1>
+      <button class="btn btn--primary" @click="openModal">
         <span class="material-icons" style="font-size:16px">add</span>
         {{ t('routines.newRoutine') }}
       </button>
     </div>
 
-    <!-- Filter chips -->
-    <div class="filter-chips">
-      <button v-for="f in FILTERS" :key="f"
-        class="chip" :class="{ 'chip--active': activeFilter === f }"
-        @click="activeFilter = f">
-        {{ t(`routines.filter.${f}`) }}
-      </button>
+    <div v-if="routineStore.loading" class="empty-state card">
+      <span class="material-icons empty-icon">hourglass_empty</span>
+      <p class="empty-title">{{ t('common.loading') }}</p>
     </div>
 
-    <div class="routines-layout">
-      <div class="routines-col">
-        <!-- Routine cards -->
-        <div v-for="routine in filtered" :key="routine.id" class="card routine-card">
-          <div class="routine-header">
-            <div>
-              <h3 class="routine-name">{{ t(`routines.exercises.${routine.exercises[0].key}`) || routine.nameKey }}</h3>
-              <div class="routine-meta">
-                <span class="tag">{{ t(`routines.tags.${routine.tag}`) }}</span>
-                <span class="level-badge">{{ t(`routines.level.${routine.difficulty}`) }}</span>
-              </div>
-            </div>
+    <div v-else-if="!routineStore.routines.length" class="empty-state card">
+      <span class="material-icons empty-icon">assignment</span>
+      <p class="empty-title">{{ t('routines.empty') }}</p>
+    </div>
+
+    <div v-else class="routines-list">
+      <div v-for="routine in routineStore.routines" :key="routine.id" class="card routine-card">
+
+        <!-- Routine header -->
+        <div class="routine-header">
+          <span class="routine-name">{{ routine.routineName }}</span>
+          <span class="count-badge">{{ routine.exerciseBlockCount }} {{ t('routines.blocks') }}</span>
+        </div>
+
+        <!-- Exercise blocks (local state after POST) -->
+        <!-- TODO: exercise blocks are write-only; displayed from local state after POST /exercise-blocks -->
+        <div v-if="routine.exerciseBlocks?.length" class="blocks-list">
+          <div v-for="block in routine.exerciseBlocks" :key="block.id" class="block-row">
+            <span class="block-order">#{{ block.order }}</span>
+            <span class="block-name">{{ block.exerciseName }}</span>
+            <span class="block-type badge badge--gray">{{ block.exerciseType }}</span>
+          </div>
+        </div>
+
+        <!-- Add exercise block form -->
+        <div class="block-add">
+          <button class="btn btn--outline btn--sm" @click="toggleBlockForm(routine.id)">
+            <span class="material-icons" style="font-size:14px">add</span>
+            {{ t('routines.addBlock') }}
+          </button>
+          <div v-if="blockForm(routine.id).open" class="block-form">
+            <input
+              v-model="blockForm(routine.id).exerciseName"
+              :placeholder="t('routines.blockName')"
+              class="block-input"
+            />
+            <select v-model="blockForm(routine.id).exerciseType" class="block-select">
+              <option :value="ExerciseType.Cardio">{{ ExerciseType.Cardio }}</option>
+              <option :value="ExerciseType.Strength">{{ ExerciseType.Strength }}</option>
+              <option :value="ExerciseType.Flexibility">{{ ExerciseType.Flexibility }}</option>
+            </select>
+            <button class="btn btn--primary btn--sm" @click="submitBlock(routine.id)">
+              {{ t('routines.save') }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Sessions for this routine -->
+        <div class="sessions-section">
+          <div class="sessions-header">
+            <span class="sessions-label">{{ t('routines.sessions') }}</span>
+            <button class="btn btn--outline btn--sm" @click="sessionStore.createSession(routine.id)">
+              <span class="material-icons" style="font-size:14px">play_arrow</span>
+              {{ t('routines.startSession') }}
+            </button>
           </div>
 
-          <div class="exercise-list">
-            <div v-for="(ex, idx) in routine.exercises" :key="idx" class="exercise-row">
-              <div class="exercise-info">
-                <span class="ex-name">{{ t(`routines.exercises.${ex.key}`) || ex.key }}</span>
-                <span class="ex-machine">{{ t(`routines.machines.${ex.machineKey}`) || ex.machineKey }}</span>
-              </div>
-              <span class="status-chip" :class="STATUS_CLASS[ex.status]">
-                {{ t(`routines.status.${ex.status}`) }}
-              </span>
+          <div v-if="!sessionsFor(routine.id).length" class="sessions-empty">
+            {{ t('routines.noSessions') }}
+          </div>
 
-              <button v-if="ex.status !== 'available'" class="btn btn--outline btn--xs"
-                @click="showAltFor = showAltFor === `${routine.id}-${idx}` ? null : `${routine.id}-${idx}`">
-                <span class="material-icons" style="font-size:13px">swap_horiz</span>
+          <div v-for="session in sessionsFor(routine.id)" :key="session.id" class="session-row">
+            <span class="session-date">{{ session.startedAt?.slice(0, 10) ?? '—' }}</span>
+            <span class="badge" :class="statusClass(session.status)">{{ session.status }}</span>
+            <div v-if="session.status === RoutineSessionStatus.Started" class="session-actions">
+              <button class="btn btn--primary btn--sm" @click="sessionStore.complete(session.id)">
+                {{ t('routines.complete') }}
+              </button>
+              <button class="btn btn--outline btn--sm btn--danger" @click="sessionStore.miss(session.id)">
+                {{ t('routines.miss') }}
               </button>
             </div>
-
-            <!-- Alternatives panel -->
-            <template v-for="(ex, idx) in routine.exercises" :key="`alt-${idx}`">
-              <div v-if="showAltFor === `${routine.id}-${idx}` && ex.altKeys" class="alt-panel">
-                <p class="alt-panel-title">{{ t('routines.alternatives.title') }}</p>
-                <div class="alt-list">
-                  <div v-for="altKey in ex.altKeys" :key="altKey" class="alt-item">
-                    <span class="material-icons" style="font-size:16px;color:var(--green)">fitness_center</span>
-                    <span class="alt-name">{{ t(`routines.alternatives.${altKey}`) || altKey }}</span>
-                    <span class="alt-free">{{ t('routines.alternatives.free') }}</span>
-                    <button class="btn btn--outline btn--xs" @click="router.push('/map')">
-                      {{ t('routines.alternatives.viewMap') }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </template>
           </div>
         </div>
 
-        <div v-if="!filtered.length" class="empty-state card">
-          <span class="material-icons" style="font-size:40px;color:var(--text-secondary)">assignment</span>
-          <p>{{ t('routines.search') }}</p>
-        </div>
-      </div>
-
-      <!-- Smart suggestion sidebar -->
-      <div class="card suggestion-card">
-        <h3 class="sug-title">
-          <span class="material-icons" style="color:var(--accent);font-size:18px">auto_awesome</span>
-          {{ t('routines.suggestion.title') }}
-        </h3>
-        <ul class="sug-list">
-          <li>{{ t('routines.suggestion.item1') }}</li>
-          <li>{{ t('routines.suggestion.item2') }}</li>
-          <li>{{ t('routines.suggestion.item3') }}</li>
-          <li>{{ t('routines.suggestion.item4') }}</li>
-        </ul>
       </div>
     </div>
 
@@ -152,42 +164,14 @@ function createRoutine() {
             <span class="material-icons">close</span>
           </button>
         </div>
-        <p class="modal-sub">{{ t('routines.modal.subtitle') }}</p>
-
         <div class="form-field">
           <label>{{ t('routines.modal.name') }}</label>
-          <input type="text" v-model="newRoutine.name" :placeholder="t('routines.modal.namePlaceholder')" />
+          <input type="text" v-model="newName" :placeholder="t('routines.modal.namePlaceholder')" />
         </div>
-
-        <div class="form-field">
-          <label>{{ t('routines.modal.objective') }}</label>
-          <select v-model="newRoutine.objective">
-            <option value="" disabled>{{ t('routines.modal.selectObjective') }}</option>
-            <option v-for="obj in OBJECTIVES" :key="obj" :value="obj">
-              {{ t(`routines.modal.objectives.${obj}`) }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-field">
-          <label>{{ t('routines.modal.difficulty') }}</label>
-          <div class="diff-options">
-            <button v-for="d in DIFFICULTIES" :key="d"
-              class="btn diff-btn" :class="newRoutine.difficulty === d ? 'btn--accent' : 'btn--outline'"
-              @click="newRoutine.difficulty = d">
-              {{ t(`routines.level.${d}`) }}
-            </button>
-          </div>
-        </div>
-
-        <div class="form-field">
-          <label>{{ t('routines.modal.notes') }}</label>
-          <textarea v-model="newRoutine.notes" :placeholder="t('routines.modal.notesPlaceholder')" rows="3"></textarea>
-        </div>
-
+        <div v-if="routineStore.error" class="error-msg">{{ routineStore.error }}</div>
         <div class="modal-footer">
           <button class="btn btn--outline" @click="showModal = false">{{ t('routines.modal.cancel') }}</button>
-          <button class="btn btn--accent" :disabled="!newRoutine.name || !newRoutine.objective" @click="createRoutine">
+          <button class="btn btn--primary" :disabled="!newName.trim() || routineStore.loading" @click="submitRoutine">
             {{ t('routines.modal.create') }}
           </button>
         </div>
@@ -197,53 +181,39 @@ function createRoutine() {
 </template>
 
 <style scoped>
-.page__subtitle { color: var(--text-secondary); font-size: .85rem; margin-top: .25rem; }
-.page__header { align-items: flex-start; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; margin-bottom: 1rem; }
-.btn--accent { background: var(--accent); border: none; color: #000; font-weight: 600; }
-.btn--accent:disabled { opacity: .5; cursor: default; }
-.filter-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
-.chip { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text-secondary); cursor: pointer; font-size: .8rem; padding: .3rem .85rem; transition: all .15s; }
-.chip--active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
-.routines-layout { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-.routines-col { display: flex; flex-direction: column; gap: .75rem; }
-.routine-card { }
-.routine-header { margin-bottom: .75rem; }
-.routine-name { font-size: .92rem; font-weight: 600; margin-bottom: .35rem; }
-.routine-meta { display: flex; gap: .5rem; }
-.tag { background: rgba(245,188,54,.15); border-radius: 12px; color: var(--accent); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; }
-.level-badge { background: rgba(255,255,255,.06); border-radius: 12px; color: var(--text-secondary); font-size: .72rem; padding: .15rem .5rem; }
-.exercise-list { display: flex; flex-direction: column; gap: .5rem; }
-.exercise-row { align-items: center; background: var(--bg-surface); border-radius: 6px; display: flex; gap: .75rem; padding: .5rem .75rem; }
-.exercise-info { display: flex; flex: 1; flex-direction: column; gap: .1rem; }
-.ex-name { font-size: .83rem; font-weight: 500; }
-.ex-machine { color: var(--text-secondary); font-size: .75rem; }
-.status-chip { border-radius: 10px; font-size: .72rem; font-weight: 600; padding: .15rem .5rem; }
-.status--green { background: rgba(34,197,94,.15); color: var(--green); }
-.status--amber { background: rgba(245,188,54,.15); color: var(--accent); }
-.status--red   { background: rgba(239,68,68,.15);  color: var(--red); }
-.btn--xs { padding: .2rem .45rem; font-size: .73rem; }
-.alt-panel { background: rgba(255,255,255,.03); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; margin-top: -.25rem; padding: .6rem .75rem; }
-.alt-panel-title { color: var(--accent); font-size: .78rem; font-weight: 600; margin-bottom: .5rem; }
-.alt-list { display: flex; flex-direction: column; gap: .4rem; }
-.alt-item { align-items: center; display: flex; gap: .5rem; }
-.alt-name { flex: 1; font-size: .8rem; }
-.alt-free { color: var(--green); font-size: .72rem; font-weight: 600; }
-.suggestion-card { height: fit-content; }
-.sug-title { align-items: center; display: flex; font-size: .88rem; font-weight: 600; gap: .4rem; margin-bottom: .75rem; }
-.sug-list { color: var(--text-secondary); display: flex; flex-direction: column; font-size: .8rem; gap: .5rem; padding-left: 1.25rem; }
-.sug-list li::marker { color: var(--accent); }
-.empty-state { align-items: center; display: flex; flex-direction: column; gap: .5rem; padding: 2rem; text-align: center; color: var(--text-secondary); }
+.routines-list { display: flex; flex-direction: column; gap: .75rem; }
+.routine-card { display: flex; flex-direction: column; gap: .75rem; }
+.routine-header { align-items: center; display: flex; gap: .75rem; }
+.routine-name { font-size: .95rem; font-weight: 600; flex: 1; }
+.count-badge { background: rgba(245,188,54,.15); border-radius: 12px; color: var(--accent); font-size: .72rem; font-weight: 600; padding: .15rem .55rem; }
+.blocks-list { display: flex; flex-direction: column; gap: .35rem; }
+.block-row { align-items: center; background: var(--bg-surface); border-radius: 6px; display: flex; gap: .6rem; padding: .4rem .75rem; }
+.block-order { color: var(--text-secondary); font-family: monospace; font-size: .75rem; min-width: 1.5rem; }
+.block-name { flex: 1; font-size: .83rem; }
+.block-type { font-size: .72rem; }
+.block-add { display: flex; flex-direction: column; gap: .5rem; }
+.block-form { align-items: center; display: flex; flex-wrap: wrap; gap: .5rem; }
+.block-input { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); flex: 1; font-size: .83rem; min-width: 140px; padding: .375rem .6rem; }
+.block-select { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: .83rem; padding: .375rem .6rem; }
+.sessions-section { border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: .4rem; padding-top: .625rem; }
+.sessions-header { align-items: center; display: flex; justify-content: space-between; }
+.sessions-label { color: var(--text-secondary); font-size: .8rem; font-weight: 500; }
+.sessions-empty { color: var(--text-secondary); font-size: .78rem; }
+.session-row { align-items: center; display: flex; flex-wrap: wrap; gap: .5rem; }
+.session-date { color: var(--text-secondary); font-size: .78rem; min-width: 80px; }
+.session-actions { display: flex; gap: .4rem; margin-left: auto; }
+.btn--sm { font-size: .75rem; padding: .25rem .6rem; }
+.btn--danger { border-color: var(--red); color: var(--red); }
+.empty-state { align-items: center; display: flex; flex-direction: column; gap: .5rem; padding: 2.5rem; text-align: center; }
+.empty-icon { color: var(--text-secondary); font-size: 48px; }
+.empty-title { color: var(--text-secondary); font-size: .9rem; }
 .modal-overlay { align-items: center; background: rgba(0,0,0,.5); bottom: 0; display: flex; justify-content: center; left: 0; position: fixed; right: 0; top: 0; z-index: 500; }
-.modal { max-width: 460px; padding: 1.5rem; width: 90%; }
-.modal-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: .4rem; }
+.modal { max-width: 420px; padding: 1.5rem; width: 90%; }
+.modal-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: 1rem; }
 .modal-title { font-size: 1rem; font-weight: 700; }
-.modal-sub { color: var(--text-secondary); font-size: .82rem; margin-bottom: 1.25rem; }
 .close-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; }
 .form-field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
 .form-field label { color: var(--text-secondary); font-size: .83rem; font-weight: 500; }
-textarea { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: inherit; font-size: .85rem; padding: .5rem .75rem; resize: vertical; width: 100%; }
-.diff-options { display: flex; gap: .5rem; }
-.diff-btn { font-size: .8rem; padding: .3rem .75rem; }
+.error-msg { background: rgba(239,68,68,.1); border: 1px solid var(--red); border-radius: 6px; color: var(--red); font-size: .8rem; margin-bottom: .75rem; padding: .5rem .75rem; }
 .modal-footer { display: flex; gap: .75rem; justify-content: flex-end; }
-@media (min-width: 900px) { .routines-layout { grid-template-columns: 1fr 280px; } }
 </style>
