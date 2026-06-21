@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { ReservationApi } from '../infrastructure/reservation-api.js';
 import { ReservationStatus } from '../domain/model/reservation.entity.js';
-import { useAuthStore } from '@/authentication/application/auth.store.js';
+import { useAuthStore } from '@/auth/application/auth.store.js';
 
 const api = new ReservationApi();
 
