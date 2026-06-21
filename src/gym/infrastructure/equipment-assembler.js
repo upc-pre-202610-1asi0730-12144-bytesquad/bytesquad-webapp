@@ -3,25 +3,14 @@ import { Equipment } from '../domain/model/equipment.entity.js';
 export class EquipmentAssembler {
   toEntityFromResource(r) {
     return new Equipment({
-      id:            r.id,
-      zoneId:        r.zone_id,
-      name:          r.name,
-      brand:         r.brand,
-      model:         r.model,
-      purchasePrice: r.purchase_price,
-      status:        r.status,
+      id:     r.id,
+      name:   r.name,
+      zoneId: r.zoneId,
+      status: r.status,
     });
   }
 
   toResourceFromEntity(e) {
-    return {
-      id:             e.id,
-      zone_id:        e.zoneId,
-      name:           e.name,
-      brand:          e.brand,
-      model:          e.model,
-      purchase_price: e.purchasePrice,
-      status:         e.status,
-    };
+    return { name: e.name, zoneId: e.zoneId };
   }
 }
