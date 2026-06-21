@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { DashboardApi } from '../infrastructure/dashboard-api.js';
 import { EquipmentUsageStat } from '../domain/model/equipment-usage-stat.entity.js';
-import { useEquipmentStore } from '@/equipment/application/equipment.store.js';
+import { useEquipmentStore } from '@/gym/application/equipment.store.js';
 import { useMaintenanceStore } from '@/maintenance/application/maintenance.store.js';
 
 const api = new DashboardApi();
