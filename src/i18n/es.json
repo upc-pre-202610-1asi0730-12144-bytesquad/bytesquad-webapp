@@ -127,7 +127,18 @@
       "option20m": "20 minutos",
       "cancel": "Cancelar",
       "create": "Crear Reserva"
-    }
+    },
+    "action": {
+      "requestAvailable": "Solicitar Equipo Disponible",
+      "startTimer": "Iniciar Temporizador",
+      "cancel": "Cancelar",
+      "submitRequest": "Enviar Solicitud",
+      "end": "Finalizar Reserva"
+    },
+    "equipmentLabel": "ID de Equipo",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "noReservations": "Aún no hay reservas"
   },
   "clientAlerts": {
     "reservationExpired": {
