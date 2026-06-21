@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useIotStore } from '@/iot/application/iot.store.js';
-import { IotStatus } from '@/iot/domain/model/iot.entity.js';
+import { useIotStore } from '@/monitoring/application/iot.store.js';
+import { IotStatus } from '@/monitoring/domain/model/iot.entity.js';
 
 const { t } = useI18n();
 const store = useIotStore();
