@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useAuthStore }         from '@/auth/application/auth.store.js';
+import { useAuthStore }         from '@/authentication/application/auth.store.js';
 import { useMaintenanceStore }  from '@/maintenance/application/maintenance.store.js';
 import { TechnicalTicketStatus, MaintenanceProgress } from '@/maintenance/domain/model/technical-ticket.entity.js';
 import { useEquipmentStore }    from '@/equipment/application/equipment.store.js';
