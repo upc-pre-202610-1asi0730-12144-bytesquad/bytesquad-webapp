@@ -2,13 +2,13 @@
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useAuthStore } from '@/auth/application/auth.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 
 const { t, locale } = useI18n();
 const auth   = useAuthStore();
 const router = useRouter();
 
-const email    = ref('');
+const username = ref('');
 const password = ref('');
 const showPass = ref(false);
 
@@ -16,10 +16,10 @@ watch(() => auth.isAuthenticated, (v) => {
   if (v) router.push(auth.isAdmin ? '/dashboard' : '/client');
 }, { immediate: true });
 
-function onSubmit()  { auth.login(email.value, password.value); }
+async function onSubmit()  { await auth.signIn(username.value, password.value); }
 function clearError(){ auth.clearError(); }
-function fillAdmin() { email.value = 'admin@spottrack.com'; password.value = 'demo1234'; auth.clearError(); }
-function fillClient(){ email.value = 'cliente@email.com';   password.value = 'demo1234'; auth.clearError(); }
+function fillAdmin() { username.value = 'admin@spottrack.com'; password.value = 'demo1234'; auth.clearError(); }
+function fillClient(){ username.value = 'cliente@email.com';   password.value = 'demo1234'; auth.clearError(); }
 function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', l); }
 </script>
 
@@ -38,7 +38,7 @@ function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', 
       <div class="login-body">
         <div class="form-field">
           <label class="form-field__label">{{ t('auth.login.emailLabel') }}</label>
-          <input type="email" v-model="email" @input="clearError" :placeholder="t('auth.login.emailPlaceholder')" autocomplete="email" />
+          <input type="text" v-model="username" @input="clearError" :placeholder="t('auth.login.emailPlaceholder')" autocomplete="username" />
         </div>
 
         <div class="form-field">
@@ -66,7 +66,7 @@ function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', 
         <div class="demo-section">
           <p class="demo-section__label">{{ t('auth.login.demoTitle') }}</p>
           <button class="demo-card" type="button" @click="fillAdmin">
-            <span class="demo-card__email">Admin: admin@spottrack.com</span>
+            <span class="demo-card__email">Admin: admin@spottrack.com</span><!-- demo username -->
             <span class="demo-card__pass">{{ t('auth.login.demoPassword') }}</span>
           </button>
           <button class="demo-card" type="button" @click="fillClient">
