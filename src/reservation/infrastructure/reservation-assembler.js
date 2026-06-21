@@ -1,23 +1,23 @@
-import { Reservation, ReservationStatus } from '../domain/model/reservation.entity.js';
+import { Reservation } from '../domain/model/reservation.entity.js';
 
 export class ReservationAssembler {
   toEntityFromResource(r) {
     return new Reservation({
-      id:              r.id,
-      machineId:       r.machine_id,
-      durationSeconds: r.duration_seconds,
-      status:          r.status,
-      createdAt:       new Date(r.created_at),
+      id:          r.id,
+      clientId:    r.clientId,
+      equipmentId: r.equipmentId,
+      startDate:   r.startDate,
+      endDate:     r.endDate,
+      status:      r.status,
     });
   }
 
   toResourceFromEntity(e) {
     return {
-      id:               e.id,
-      machine_id:       e.machineId,
-      duration_seconds: e.durationSeconds,
-      status:           e.status,
-      created_at:       e.createdAt.toISOString(),
+      clientId:    e.clientId,
+      equipmentId: e.equipmentId,
+      startDate:   e.startDate,
+      endDate:     e.endDate,
     };
   }
 }
