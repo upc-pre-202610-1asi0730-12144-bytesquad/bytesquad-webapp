@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useEquipmentStore } from '@/equipment/application/equipment.store.js';
-import { EquipmentStatus } from '@/equipment/domain/model/equipment.entity.js';
+import { useEquipmentStore } from '@/gym/application/equipment.store.js';
+import { EquipmentStatus } from '@/gym/domain/model/equipment.entity.js';
 
 const { t }  = useI18n();
 const store  = useEquipmentStore();
@@ -59,9 +59,9 @@ function deleteEquipment(id) {
     <div v-else class="card" style="padding:0;overflow:hidden">
       <table class="data-table">
         <thead><tr>
-          <th>ID</th><th>{{ t('equipment.table.name') }}</th><th>{{ t('equipment.table.brand') }}</th>
-          <th>{{ t('equipment.table.model') }}</th><th>{{ t('equipment.table.zoneId') }}</th>
-          <th>{{ t('equipment.table.purchasePrice') }}</th><th>{{ t('equipment.table.status') }}</th><th></th>
+          <th>ID</th><th>{{ t('equipment.table.name') }}</th><th>{{ t('equipment.table.brand') }}</th><!-- TODO: UI-only -->
+          <th>{{ t('equipment.table.model') }}</th><!-- TODO: UI-only --><th>{{ t('equipment.table.zoneId') }}</th>
+          <th>{{ t('equipment.table.purchasePrice') }}</th><!-- TODO: UI-only --><th>{{ t('equipment.table.status') }}</th><th></th>
         </tr></thead>
         <tbody>
           <tr v-if="!filteredEquipment.length"><td colspan="8" class="table-empty">{{ t('equipment.table.noData') }}</td></tr>
