@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useReservationStore } from '@/reservation/application/reservation.store.js';
-import { useEquipmentStore } from '@/equipment/application/equipment.store.js';
+import { useEquipmentStore } from '@/gym/application/equipment.store.js';
 import { useAuthStore } from '@/authentication/application/auth.store.js';
 import { ReservationStatus } from '@/reservation/domain/model/reservation.entity.js';
 
