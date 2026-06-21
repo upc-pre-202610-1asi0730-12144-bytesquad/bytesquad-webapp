@@ -1,4 +1,4 @@
-export const UserRole = Object.freeze({ ADMIN: 'ADMIN', CLIENT: 'CLIENT' });
+export const UserRole = Object.freeze({ ADMIN: 'Admin', CLIENT: 'Client' });
 
 export class User {
   constructor({ id, username, role }) {
