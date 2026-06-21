@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useFinancialImpactStore } from '@/financial-impact/application/financial-impact.store.js';
+import { useFinancialImpactStore } from '@/analytics/application/financial-impact.store.js';
 
 const { t } = useI18n();
 const store = useFinancialImpactStore();

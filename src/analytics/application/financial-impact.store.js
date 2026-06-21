@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { FinancialApi } from '../infrastructure/financial-api.js';
-
-const api = new FinancialApi();
 
 const INACTIVITY_MACHINES = [
   { machine: 'Cinta #3',        hours: 46, ratePerHour: 12, total: 552  },
@@ -28,7 +25,7 @@ export const useFinancialImpactStore = defineStore('financialImpact', () => {
   const simRevenuePerUser = ref(45);
 
   // KPI summary values (static / derived from machine data)
-  const totalInactivityLoss = computed(() => INACTIVITY_MACHINES.reduce((s, m) => s + m.total, 0));
+  const totalInactivityLoss  = computed(() => INACTIVITY_MACHINES.reduce((s, m) => s + m.total, 0));
   const totalMaintenanceCost = computed(() => MAINTENANCE_BREAKDOWN.reduce((s, b) => s + b.amount, 0));
 
   // ROI projection: invest at month 0, earn monthlyRevenue each month
@@ -62,7 +59,7 @@ export const useFinancialImpactStore = defineStore('financialImpact', () => {
 
   function roiBarPos(value) {
     const clamped = Math.max(-ROI_SCALE, Math.min(ROI_SCALE, value));
-    const zeroY   = 120; // center of 240px chart height
+    const zeroY   = 120;
     if (clamped >= 0) {
       const h = (clamped / ROI_SCALE) * 120;
       return { y: zeroY - h, height: h };
@@ -71,15 +68,6 @@ export const useFinancialImpactStore = defineStore('financialImpact', () => {
       return { y: zeroY, height: h };
     }
   }
-
-  async function load() {
-    loading.value = true; error.value = null;
-    try { await Promise.all([api.getUsageStats(), api.getEquipments()]); }
-    catch (e) { error.value = e.message || 'Error loading financial data'; }
-    finally { loading.value = false; }
-  }
-
-  load();
 
   return {
     loading, error,
