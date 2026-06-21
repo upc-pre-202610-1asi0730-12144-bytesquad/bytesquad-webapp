@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useAlertsStore } from '@/alerts/application/alerts.service.js';
+import { useAlertsStore } from '@/monitoring/application/alerts.service.js';
 import { useAuthStore } from '@/auth/application/auth.store.js';
 
 const { t } = useI18n();
