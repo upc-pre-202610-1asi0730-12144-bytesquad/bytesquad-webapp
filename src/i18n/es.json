@@ -127,7 +127,18 @@
       "option20m": "20 minutos",
       "cancel": "Cancelar",
       "create": "Crear Reserva"
-    }
+    },
+    "action": {
+      "requestAvailable": "Solicitar Equipo Disponible",
+      "startTimer": "Iniciar Temporizador",
+      "cancel": "Cancelar",
+      "submitRequest": "Enviar Solicitud",
+      "end": "Finalizar Reserva"
+    },
+    "equipmentLabel": "ID de Equipo",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "noReservations": "Aún no hay reservas"
   },
   "clientAlerts": {
     "reservationExpired": {
@@ -601,6 +612,18 @@
       "LUBRICATION": "Lubricación",
       "INSPECTION": "Inspección",
       "OVERHAUL": "Revisión General"
+    },
+    "tickets": {
+      "t1001": "Fuga de fluido hidráulico detectada en brazo de cargadora",
+      "t1002": "Sobrecalentamiento del motor — requiere inspección inmediata",
+      "t1003": "Cambio de aceite y filtro programado cada 500 h vencido",
+      "t1004": "Reemplazo de rodamiento del tambor vibratorio en curso",
+      "t1005": "Ajuste de tensión de cadena e inspección del tren de rodaje",
+      "t1006": "Inspección de desgaste de cuchilla y reemplazo de filo de corte",
+      "t1007": "Reemplazo de sello del cilindro de pluma — resuelto",
+      "t1008": "Lubricación mensual del cable de acero de grúa completada",
+      "t1009": "Dientes de cucharon reemplazados y articulación delantera engrasada",
+      "t1010": "Servicio de filtro de aire y sistema de refrigeración completado"
     }
   },
   "routines": {
@@ -685,7 +708,13 @@
         "weightLoss": "Pérdida de Peso",
         "generalFitness": "Fitness General"
       }
-    }
+    },
+    "blocks": "{count} bloques",
+    "addBlock": "+ Agregar Bloque de Ejercicio",
+    "sessions": "Sesiones",
+    "startSession": "▶ Iniciar Sesión",
+    "noBlocks": "Aún no hay bloques de ejercicio",
+    "noRoutines": "Aún no hay rutinas"
   },
   "profile": {
     "admin": {
@@ -768,11 +797,17 @@
     },
     "table": {
       "title": "Equipos Infrautilizados",
+      "zonePrefix": "Zona",
       "headers": {
         "machineId": "ID Máquina",
         "location": "Ubicación",
         "hours": "Horas",
         "roi": "ROI"
+      },
+      "roi": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto"
       },
       "empty": "No se encontraron equipos infrautilizados"
     },
