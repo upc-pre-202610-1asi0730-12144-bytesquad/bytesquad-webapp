@@ -1,79 +1,161 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { MaintenanceApi } from '../infrastructure/maintenance-api.js';
-import { MaintenanceTicket, TicketStatus, TicketPriority, TicketType } from '../domain/model/maintenance-ticket.entity.js';
-import { MaintenanceSchedule, TaskType, ScheduleStatus } from '../domain/model/maintenance-schedule.entity.js';
 
 const api = new MaintenanceApi();
 
-const PEAK_RANGES = [[6, 9], [18, 21]];
-export const OFF_PEAK_SUGGESTIONS = ['10:00', '11:00', '14:00', '15:00'];
-
 export const useMaintenanceStore = defineStore('maintenance', () => {
-  const tickets       = ref([]);
-  const schedules     = ref([]);
-  const loading       = ref(false);
-  const error         = ref(null);
-  const lastScheduled = ref(null);
+  const maintenances = ref([]);
+  const jobs         = ref([]); // TODO: wire when backend adds GET /maintenance-jobs
+  const logs         = ref([]); // TODO: wire when backend adds GET /maintenance-logs
+  const tickets      = ref([]); // TODO: wire when backend adds GET /technical-tickets
+  const loading      = ref(false);
+  const error        = ref(null);
 
-  const pendingTickets    = computed(() => tickets.value.filter(t => t.status === TicketStatus.OPEN));
-  const inProgressTickets = computed(() => tickets.value.filter(t => t.status === TicketStatus.IN_PROGRESS));
-  const resolvedTickets   = computed(() => tickets.value.filter(t => t.status === TicketStatus.RESOLVED));
-  const totalTickets      = computed(() => tickets.value.length);
-  const scheduledCount    = computed(() => schedules.value.length);
+  const openTickets       = computed(() => tickets.value.filter(t => t.status === 'Created' || t.status === 'Assigned'));
+  const inProgressTickets = computed(() => tickets.value.filter(t => t.status === 'InProgress'));
+  const resolvedTickets   = computed(() => tickets.value.filter(t => t.status === 'Resolved'));
 
-  function isPeakHour(time) {
-    if (!time) return false;
-    const h = parseInt(time.split(':')[0], 10);
-    return PEAK_RANGES.some(([s, e]) => h >= s && h < e);
+  function _upsertTicket(updated) {
+    const idx = tickets.value.findIndex(t => t.id === updated.id);
+    if (idx >= 0) tickets.value = tickets.value.map(t => t.id === updated.id ? updated : t);
+    else tickets.value = [...tickets.value, updated];
   }
 
-  async function loadAll() {
+  function _upsertMaintenance(updated) {
+    const idx = maintenances.value.findIndex(m => m.id === updated.id);
+    if (idx >= 0) maintenances.value = maintenances.value.map(m => m.id === updated.id ? updated : m);
+    else maintenances.value = [...maintenances.value, updated];
+  }
+
+  // ── Maintenance ────────────────────────────────────────────────────────────
+  async function loadMaintenancesByEquipment(equipmentId) {
     loading.value = true; error.value = null;
     try {
-      const [t, s] = await Promise.all([api.getTickets(), api.getSchedules()]);
-      tickets.value   = t;
-      schedules.value = s;
+      maintenances.value = await api.getMaintenancesByEquipment(equipmentId);
     } catch (e) {
-      error.value = e.message || 'Failed to load maintenance data';
+      error.value = e.message || 'Failed to load maintenances';
     } finally { loading.value = false; }
   }
 
-  function startTicket(ticketId) {
-    tickets.value = tickets.value.map(t =>
-      t.id === ticketId ? { ...t, status: TicketStatus.IN_PROGRESS } : t
-    );
-  }
-
-  function completeTicket(ticketId, completedBy = 'Admin') {
-    tickets.value = tickets.value.map(t =>
-      t.id === ticketId ? { ...t, status: TicketStatus.RESOLVED, completedBy } : t
-    );
-  }
-
-  function createTicket(equipmentId, description, priority, type) {
-    const ticket = new MaintenanceTicket({
-      id: Date.now(), equipmentId, status: TicketStatus.OPEN, priority, type,
-      createdAt: new Date().toISOString(), description, assignee: '', completedBy: '',
-    });
-    tickets.value = [ticket, ...tickets.value];
-  }
-
-  async function scheduleBlock(equipmentId, date, time, taskType, notes) {
-    loading.value = true; error.value = null; lastScheduled.value = null;
+  async function requestMaintenance(dto) {
+    loading.value = true; error.value = null;
     try {
-      const s = new MaintenanceSchedule({ id: 0, equipmentId, scheduledDate: date, scheduledTime: time, taskType, notes, status: ScheduleStatus.CONFIRMED });
-      const created = await api.createSchedule(s);
-      schedules.value = [created, ...schedules.value];
-      lastScheduled.value = created;
+      const created = await api.requestMaintenance(dto);
+      _upsertMaintenance(created);
+      return created;
     } catch (e) {
-      error.value = e.message || 'Failed to schedule';
+      error.value = e.message || 'Failed to request maintenance';
     } finally { loading.value = false; }
   }
 
-  function clearLastScheduled() { lastScheduled.value = null; }
+  // ── MaintenanceJob ─────────────────────────────────────────────────────────
+  async function acceptJob(dto) {
+    loading.value = true; error.value = null;
+    try {
+      const created = await api.acceptJob(dto);
+      jobs.value = [...jobs.value, created];
+      return created;
+    } catch (e) {
+      error.value = e.message || 'Failed to accept job';
+    } finally { loading.value = false; }
+  }
 
-  loadAll();
+  // ── MaintenanceLog ─────────────────────────────────────────────────────────
+  async function createLog(dto) {
+    loading.value = true; error.value = null;
+    try {
+      const created = await api.createLog(dto);
+      logs.value = [...logs.value, created];
+      return created;
+    } catch (e) {
+      error.value = e.message || 'Failed to create log';
+    } finally { loading.value = false; }
+  }
 
-  return { tickets, schedules, loading, error, lastScheduled, pendingTickets, inProgressTickets, resolvedTickets, totalTickets, scheduledCount, isPeakHour, loadAll, startTicket, completeTicket, createTicket, scheduleBlock, clearLastScheduled, OFF_PEAK_SUGGESTIONS: OFF_PEAK_SUGGESTIONS };
+  // ── TechnicalTicket ────────────────────────────────────────────────────────
+  async function getTicketById(id) {
+    loading.value = true; error.value = null;
+    try {
+      const found = await api.getTicketById(id);
+      _upsertTicket(found);
+      return found;
+    } catch (e) {
+      error.value = e.message || 'Failed to load ticket';
+    } finally { loading.value = false; }
+  }
+
+  async function createTicket(dto) {
+    loading.value = true; error.value = null;
+    try {
+      const created = await api.createTicket(dto);
+      tickets.value = [...tickets.value, created];
+      return created;
+    } catch (e) {
+      error.value = e.message || 'Failed to create ticket';
+    } finally { loading.value = false; }
+  }
+
+  async function updateTicketStatus(id, status) {
+    loading.value = true; error.value = null;
+    try {
+      const updated = await api.updateTicketStatus(id, status);
+      _upsertTicket(updated);
+      return updated;
+    } catch (e) {
+      error.value = e.message || 'Failed to update ticket status';
+    } finally { loading.value = false; }
+  }
+
+  async function updateTicketMaintenanceProgress(id, prog) {
+    loading.value = true; error.value = null;
+    try {
+      const updated = await api.updateTicketMaintenanceProgress(id, prog);
+      _upsertTicket(updated);
+      return updated;
+    } catch (e) {
+      error.value = e.message || 'Failed to update maintenance progress';
+    } finally { loading.value = false; }
+  }
+
+  async function assignTicket(id, technicianId) {
+    loading.value = true; error.value = null;
+    try {
+      const updated = await api.assignTicket(id, technicianId);
+      _upsertTicket(updated);
+      return updated;
+    } catch (e) {
+      error.value = e.message || 'Failed to assign ticket';
+    } finally { loading.value = false; }
+  }
+
+  async function requestTicketStatusUpdate(id) {
+    loading.value = true; error.value = null;
+    try {
+      await api.requestStatusUpdate(id);
+    } catch (e) {
+      error.value = e.message || 'Failed to request status update';
+    } finally { loading.value = false; }
+  }
+
+  async function completeTicket(id) {
+    loading.value = true; error.value = null;
+    try {
+      const updated = await api.completeTicket(id);
+      _upsertTicket(updated);
+      return updated;
+    } catch (e) {
+      error.value = e.message || 'Failed to complete ticket';
+    } finally { loading.value = false; }
+  }
+
+  return {
+    maintenances, jobs, logs, tickets, loading, error,
+    openTickets, inProgressTickets, resolvedTickets,
+    loadMaintenancesByEquipment, requestMaintenance,
+    acceptJob, createLog,
+    getTicketById, createTicket,
+    updateTicketStatus, updateTicketMaintenanceProgress,
+    assignTicket, requestTicketStatusUpdate, completeTicket,
+  };
 });

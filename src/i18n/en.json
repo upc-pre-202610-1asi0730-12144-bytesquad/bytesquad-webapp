@@ -127,7 +127,18 @@
       "option20m": "20 minutes",
       "cancel": "Cancel",
       "create": "Create Reservation"
-    }
+    },
+    "action": {
+      "requestAvailable": "Request Equipment Available",
+      "startTimer": "Start Timer",
+      "cancel": "Cancel",
+      "submitRequest": "Submit Request",
+      "end": "End Reservation"
+    },
+    "equipmentLabel": "Equipment ID",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "noReservations": "No reservations yet"
   },
   "clientAlerts": {
     "reservationExpired": {
@@ -601,6 +612,18 @@
       "LUBRICATION": "Lubrication",
       "INSPECTION": "Inspection",
       "OVERHAUL": "Overhaul"
+    },
+    "tickets": {
+      "t1001": "Hydraulic fluid leak detected on loader arm",
+      "t1002": "Engine overheating — requires immediate inspection",
+      "t1003": "Scheduled 500 h oil & filter change due",
+      "t1004": "Vibration drum bearing replacement in progress",
+      "t1005": "Track tension adjustment and undercarriage inspection",
+      "t1006": "Blade wear inspection and cutting edge replacement",
+      "t1007": "Boom cylinder seal replacement — resolved",
+      "t1008": "Monthly crane wire rope lubrication completed",
+      "t1009": "Bucket teeth replaced and front linkage greased",
+      "t1010": "Air filter and coolant system service completed"
     }
   },
   "routines": {
@@ -685,7 +708,13 @@
         "weightLoss": "Weight Loss",
         "generalFitness": "General Fitness"
       }
-    }
+    },
+    "blocks": "{count} blocks",
+    "addBlock": "+ Add Exercise Block",
+    "sessions": "Sessions",
+    "startSession": "▶ Start Session",
+    "noBlocks": "No exercise blocks yet",
+    "noRoutines": "No routines yet"
   },
   "profile": {
     "admin": {
@@ -768,11 +797,17 @@
     },
     "table": {
       "title": "Underutilized Equipment",
+      "zonePrefix": "Zone",
       "headers": {
         "machineId": "Machine ID",
         "location": "Location",
         "hours": "Hours",
         "roi": "ROI"
+      },
+      "roi": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High"
       },
       "empty": "No underutilized equipment found"
     },
