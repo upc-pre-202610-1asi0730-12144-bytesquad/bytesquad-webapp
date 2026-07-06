@@ -1,6 +1,6 @@
 export const MembershipPlan = Object.freeze({
   Basic:    'Basic',
-  Standard: 'Standard',
+  Mid:      'Mid',
   Premium:  'Premium',
 });
 
