@@ -62,7 +62,9 @@ async function submitGrant() {
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function statusClass(s) {
-  return s === MembershipStatus.Active ? 'green' : s === MembershipStatus.Suspended ? 'amber' : 'red';
+  if (s === MembershipStatus.Active) return 'green';
+  if (s === MembershipStatus.Suspended || s === MembershipStatus.PendingCancellation) return 'amber';
+  return 'red';
 }
 
 function accessClass(s) {
@@ -135,6 +137,9 @@ function accessClass(s) {
               <td style="font-size:.78rem">{{ m.endDate?.slice(0,10) }}</td>
               <td>
                 <span class="badge" :class="`badge--${statusClass(m.status)}`">{{ m.status }}</span>
+                <span v-if="m.status === MembershipStatus.PendingCancellation" class="pending-note">
+                  active until {{ m.endDate?.slice(0, 10) }}
+                </span>
               </td>
               <td class="actions">
                 <button class="btn btn--icon" title="Suspend"
@@ -143,7 +148,7 @@ function accessClass(s) {
                   <span class="material-icons" style="font-size:16px">pause_circle</span>
                 </button>
                 <button class="btn btn--icon" title="Cancel"
-                  :disabled="m.status === 'Cancelled'"
+                  :disabled="m.status === MembershipStatus.Cancelled || m.status === MembershipStatus.PendingCancellation"
                   @click="membershipStore.cancel(m.id)">
                   <span class="material-icons" style="font-size:16px;color:var(--red)">cancel</span>
                 </button>
@@ -251,4 +256,5 @@ function accessClass(s) {
 .error-banner { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: var(--red); font-size: .85rem; margin-bottom: 1rem; padding: .75rem; }
 .empty-state { align-items: center; display: flex; flex-direction: column; gap: .75rem; padding: 2.5rem; text-align: center; }
 @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+.pending-note { color: var(--text-secondary); display: block; font-size: .68rem; margin-top: 2px; }
 </style>
