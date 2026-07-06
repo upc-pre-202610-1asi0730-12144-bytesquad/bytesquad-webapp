@@ -13,19 +13,16 @@ export const useProfilesStore = defineStore('profiles', () => {
   const error          = ref(null);
 
   async function loadMyProfile() {
-    const auth   = useAuthStore();
-    const userId = auth.user?.id;
-    if (!userId) return;
+    const auth = useAuthStore();
+    if (!auth.user) return;
     loading.value = true; error.value = null;
     try {
-      // TODO: replace with GET /profiles/admins?userId={id} or /profiles/clients?userId={id}
-      //       when backend exposes a by-userId endpoint
       if (auth.isAdmin) {
+        // TODO: replace with GET /profiles/admins/me when the backend exposes it
         const list = await api.getAdmins();
-        myProfile.value = list.find(p => p.userId === userId) ?? null;
+        myProfile.value = list.find(p => p.userId === auth.user.id) ?? null;
       } else {
-        const list = await api.getClients();
-        myProfile.value = list.find(p => p.userId === userId) ?? null;
+        myProfile.value = await api.getMyProfile();
       }
     } catch (e) {
       error.value = e.message || 'Failed to load profile';
@@ -72,14 +69,14 @@ export const useProfilesStore = defineStore('profiles', () => {
     } finally { loading.value = false; }
   }
 
-  async function updateMyProfile(dto) {
+  async function updateMyProfile(resource) {
     const auth = useAuthStore();
     if (!myProfile.value) return;
     loading.value = true; error.value = null;
     try {
       const updated = auth.isAdmin
-        ? await api.updateAdmin(myProfile.value.id, dto)
-        : await api.updateClient(myProfile.value.id, dto);
+        ? await api.updateAdmin(myProfile.value.id, resource)
+        : await api.updateMyProfile(resource);
       myProfile.value = updated;
       return updated;
     } catch (e) {
