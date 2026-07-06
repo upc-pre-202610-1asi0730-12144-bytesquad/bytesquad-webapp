@@ -5,10 +5,11 @@ export const MembershipPlan = Object.freeze({
 });
 
 export const MembershipStatus = Object.freeze({
-  Active:    'Active',
-  Suspended: 'Suspended',
-  Cancelled: 'Cancelled',
-  Expired:   'Expired',
+  Active:              'Active',
+  Suspended:           'Suspended',
+  PendingCancellation: 'PendingCancellation',
+  Cancelled:           'Cancelled',
+  Expired:             'Expired',
 });
 
 export class Membership {
