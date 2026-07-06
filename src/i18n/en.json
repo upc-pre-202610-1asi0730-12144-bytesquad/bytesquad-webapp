@@ -4,6 +4,13 @@
     "subtitle": "Track machines, book equipment, and manage your routines",
     "role": "Client"
   },
+  "gymAssociate": {
+    "title": "Choose your gym",
+    "subtitle": "Select a gym to get started",
+    "joinBtn": "Join",
+    "alreadyJoined": "Joined",
+    "noGyms": "No gyms available at the moment."
+  },
   "auth": {
     "login": {
       "title": "Sign In",

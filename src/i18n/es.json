@@ -4,6 +4,13 @@
     "subtitle": "Monitorea máquinas, reserva equipos y gestiona tus rutinas",
     "role": "Cliente"
   },
+  "gymAssociate": {
+    "title": "Elige tu gimnasio",
+    "subtitle": "Selecciona un gimnasio para comenzar",
+    "joinBtn": "Unirse",
+    "alreadyJoined": "Unido",
+    "noGyms": "No hay gimnasios disponibles en este momento."
+  },
   "auth": {
     "login": {
       "title": "Iniciar Sesión",

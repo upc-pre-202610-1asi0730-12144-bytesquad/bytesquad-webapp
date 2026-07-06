@@ -32,6 +32,7 @@ const routes = [
 
       // Client routes
       { path: 'client',   component: () => import('@/shared/presentation/views/client-home-view.vue'), meta: { requiresClient: true } },
+      { path: 'gym/associate', component: () => import('@/profiles/presentation/views/gym-associate-view.vue'), meta: { requiresClient: true } },
       { path: 'map',      component: () => import('@/monitoring/presentation/views/map-view.vue'),             meta: { requiresClient: true } },
       { path: 'bookings', component: () => import('@/reservation/presentation/views/reservation-view.vue'), meta: { requiresClient: true } },
       { path: 'routines', component: () => import('@/routines/presentation/views/routines-view.vue'),   meta: { requiresClient: true } },
