@@ -8,12 +8,20 @@ import { Zone } from '../domain/model/zone.entity.js';
 const api = new GymApi();
 
 export const useGymStore = defineStore('gym', () => {
-  // TODO: wire when backend adds GET /gyms
   const gyms     = ref([]);
   const branches = ref([]);
   const zones    = ref([]);
   const loading  = ref(false);
   const error    = ref(null);
+
+  async function loadGyms() {
+    loading.value = true; error.value = null;
+    try {
+      gyms.value = await api.getAllGyms();
+    } catch (e) {
+      error.value = e.message || 'Failed to load gyms';
+    } finally { loading.value = false; }
+  }
 
   async function addGym(data) {
     loading.value = true; error.value = null;
@@ -51,5 +59,5 @@ export const useGymStore = defineStore('gym', () => {
     } finally { loading.value = false; }
   }
 
-  return { gyms, branches, zones, loading, error, addGym, addBranch, addZone };
+  return { gyms, branches, zones, loading, error, loadGyms, addGym, addBranch, addZone };
 });

@@ -15,6 +15,10 @@ export class GymApi extends BaseApi {
     this.#zoneAssembler   = new ZoneAssembler();
   }
 
+  getAllGyms() {
+    return this.#endpoint.getAll();
+  }
+
   createGym(entity) {
     return this.#endpoint.create(entity);
   }
