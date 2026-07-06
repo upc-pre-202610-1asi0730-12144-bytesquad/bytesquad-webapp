@@ -4,7 +4,8 @@ export class ClientProfileAssembler {
   toEntityFromResource(r) {
     return new ClientProfile({
       id: r.id, userId: r.userId, email: r.email,
-      fullName: r.fullName, phoneNumber: r.phoneNumber, dni: r.dni,
+      fullName: r.fullName, firstName: r.firstName, lastName: r.lastName,
+      phoneNumber: r.phoneNumber, dni: r.dni,
     });
   }
 
