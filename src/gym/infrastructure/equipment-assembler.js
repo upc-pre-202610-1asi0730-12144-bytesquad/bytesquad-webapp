@@ -5,6 +5,7 @@ export class EquipmentAssembler {
     return new Equipment({
       id:     r.id,
       name:   r.name,
+      model:  r.model,
       zoneId: r.zoneId,
       status: r.status,
     });
