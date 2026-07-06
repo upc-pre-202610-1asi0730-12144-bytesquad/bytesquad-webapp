@@ -42,10 +42,10 @@ export const useAuthStore = defineStore('auth', () => {
     } finally { loading.value = false; }
   }
 
-  async function signUp(username, password, role) {
+  async function signUp(username, password) {
     loading.value = true; error.value = null;
     try {
-      await api.signUp(username, password, role);
+      await api.signUp(username, password);
     } catch {
       error.value = 'auth.error.signUpFailed';
     } finally { loading.value = false; }
