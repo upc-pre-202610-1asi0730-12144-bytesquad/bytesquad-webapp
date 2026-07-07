@@ -248,7 +248,8 @@
     "subtitle": "Estado en tiempo real de sensores Edge IoT instalados en los equipos",
     "search": "Buscar por ID sensor, máquina o zona...",
     "actions": {
-      "refresh": "Actualizar"
+      "refresh": "Actualizar",
+      "register": "Registrar Sensor"
     },
     "filter": {
       "status": "Estado",
@@ -275,11 +276,17 @@
       "noData": "No se encontraron dispositivos"
     },
     "status": {
-      "ONLINE": "En Línea",
-      "OFFLINE": "Desconectado",
-      "WARNING": "Advertencia",
-      "ACTIVE": "En Línea",
-      "INACTIVE": "Desconectado"
+      "Online": "En Línea",
+      "Offline": "Desconectado"
+    },
+    "register": {
+      "title": "Registrar Sensor",
+      "equipment": "Equipo",
+      "selectEquipment": "Selecciona un equipo",
+      "macAddress": "Dirección MAC",
+      "location": "Ubicación",
+      "cancel": "Cancelar",
+      "submit": "Registrar"
     },
     "alerts": {
       "title": "Alertas Activas",

@@ -1,17 +1,26 @@
 import { BaseApi } from '@/shared/infrastructure/base-api.js';
-import { IotEndpoint } from './iot-endpoint.js';
+import { IotAssembler } from './iot-assembler.js';
+
+const asm = new IotAssembler();
 
 export class IotApi extends BaseApi {
-  #endpoint;
-
-  constructor() {
-    super();
-    this.#endpoint = new IotEndpoint(this);
+  async getDevices() {
+    const { data } = await this.http.get('sensors');
+    return data.map(r => asm.toEntityFromResource(r));
   }
 
-  getDevices()              { return this.#endpoint.getAll(); }
-  getDeviceById(id)         { return this.#endpoint.getById(id); }
-  registerDevice(entity)    { return this.#endpoint.create(entity); }
-  updateDevice(entity)      { return this.#endpoint.update(entity.id, entity); }
-  deleteDevice(id)          { return this.#endpoint.delete(id); }
+  async registerDevice(data) {
+    const { data: res } = await this.http.post('sensors', asm.toRegisterResource(data));
+    return asm.toEntityFromResource(res);
+  }
+
+  async markDisconnected(id) {
+    const { data } = await this.http.patch(`sensors/${id}/disconnect`);
+    return asm.toEntityFromResource(data);
+  }
+
+  async markReconnected(id) {
+    const { data } = await this.http.patch(`sensors/${id}/reconnect`);
+    return asm.toEntityFromResource(data);
+  }
 }

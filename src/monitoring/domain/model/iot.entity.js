@@ -1,5 +1,4 @@
-export const IotStatus = Object.freeze({ ONLINE: 'ONLINE', OFFLINE: 'OFFLINE', WARNING: 'WARNING' });
-export const AlertType = Object.freeze({ DISCONNECTED: 'DISCONNECTED', LOW_BATTERY: 'LOW_BATTERY', WEAK_SIGNAL: 'WEAK_SIGNAL' });
+export const IotStatus = Object.freeze({ ONLINE: 'Online', OFFLINE: 'Offline' });
 
 export class Iot {
   constructor({ id, equipmentId, macAddress, status, lastHeartbeat, location, batteryLevel, signalStrength, firmwareVersion }) {
