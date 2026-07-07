@@ -192,11 +192,11 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
     } finally { loading.value = false; }
   }
 
-  async function createTicketWithMaintenance({ equipmentId, requestedByAdminId, description }) {
+  async function createTicketWithMaintenance({ equipmentId, requestedByAdminId, description, priority, type }) {
     loading.value = true; error.value = null;
     try {
       const maintenance = await api.requestMaintenance({
-        equipmentId, requestedByAdminId, reason: description,
+        equipmentId, requestedByAdminId, reason: description, priority, type,
       });
       const ticket = await api.createTicket({
         maintenanceId: maintenance.id, equipmentId, description,
