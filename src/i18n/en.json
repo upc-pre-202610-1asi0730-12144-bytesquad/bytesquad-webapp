@@ -345,8 +345,9 @@
       "outOfOrder": "Out of Order"
     },
     "status": {
-      "OPERATIONAL": "Operational",
-      "MAINTENANCE": "Maintenance",
+      "AVAILABLE":    "Available",
+      "OPERATIONAL":  "Operational",
+      "MAINTENANCE":  "In Maintenance",
       "OUT_OF_ORDER": "Out of Order"
     },
     "dialog": {
