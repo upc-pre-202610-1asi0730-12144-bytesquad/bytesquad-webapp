@@ -8,6 +8,7 @@ export class ActivityReportAssembler {
       totalUsageTime:       r.totalUsageTime,
       downtimeCost:         r.downtimeCost,
       percentageComparison: r.percentageComparison,
+      createdAt:            r.createdAt,
     });
   }
 }

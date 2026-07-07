@@ -18,4 +18,9 @@ export class RoiProjectionApi extends BaseApi {
     const { data } = await this.http.post('roi-projections/generate', { roiProjectionId });
     return asm.toEntityFromResource(data);
   }
+
+  async getByAdmin(adminId) {
+    const { data } = await this.http.get(`roi-projections/by-admin/${adminId}`);
+    return Array.isArray(data) ? data.map(r => asm.toEntityFromResource(r)) : [];
+  }
 }

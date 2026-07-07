@@ -23,4 +23,9 @@ export class ActivityReportApi extends BaseApi {
     const { data } = await this.http.post('activity-reports/percentage-comparison', { activityReportId, percentageComparison });
     return asm.toEntityFromResource(data);
   }
+
+  async getByAdmin(adminId) {
+    const { data } = await this.http.get(`activity-reports/by-admin/${adminId}`);
+    return Array.isArray(data) ? data.map(r => asm.toEntityFromResource(r)) : [];
+  }
 }

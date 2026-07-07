@@ -61,7 +61,7 @@ function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', 
 
         <p class="register-hint">
           {{ t('auth.login.noAccount') }}
-          <a class="register-hint__link" href="#">{{ t('auth.login.register') }}</a>
+          <router-link class="register-hint__link" to="/register-business">{{ t('auth.login.register') }}</router-link>
         </p>
 
         <div class="demo-section">

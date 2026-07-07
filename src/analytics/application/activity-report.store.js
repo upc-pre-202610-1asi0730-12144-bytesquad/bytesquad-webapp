@@ -5,7 +5,6 @@ import { ActivityReportApi } from '../infrastructure/activity-report-api.js';
 const api = new ActivityReportApi();
 
 export const useActivityReportStore = defineStore('activityReport', () => {
-  // TODO: no GET endpoint in backend; reading from local mock
   const activityReports = ref([]);
   const loading         = ref(false);
   const error           = ref(null);
@@ -45,5 +44,14 @@ export const useActivityReportStore = defineStore('activityReport', () => {
     } catch (e) { error.value = e.message; }
   }
 
-  return { activityReports, loading, error, createReport, updateUsageTime, updateDowntimeCost, updatePercentageComparison };
+  async function loadByAdmin(adminId) {
+    loading.value = true; error.value = null;
+    try {
+      activityReports.value = await api.getByAdmin(adminId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load activity reports';
+    } finally { loading.value = false; }
+  }
+
+  return { activityReports, loading, error, createReport, updateUsageTime, updateDowntimeCost, updatePercentageComparison, loadByAdmin };
 });

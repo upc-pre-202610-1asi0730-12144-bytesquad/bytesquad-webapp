@@ -94,5 +94,16 @@ export const useMembershipStore = defineStore('membership', () => {
     } finally { loading.value = false; }
   }
 
-  return { memberships, currentMembership, loading, error, activate, loadById, loadByClient, changePlan, suspend, renew, cancel };
+  async function downgrade(id, newPlan) {
+    loading.value = true; error.value = null;
+    try {
+      const updated = await api.downgrade(id, newPlan);
+      _upsert(updated);
+      return updated;
+    } catch (e) {
+      error.value = e.message || 'Failed to downgrade plan';
+    } finally { loading.value = false; }
+  }
+
+  return { memberships, currentMembership, loading, error, activate, loadById, loadByClient, changePlan, downgrade, suspend, renew, cancel };
 });
