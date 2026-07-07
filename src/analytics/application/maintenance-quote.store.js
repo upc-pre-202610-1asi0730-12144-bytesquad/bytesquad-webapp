@@ -44,6 +44,21 @@ export const useMaintenanceQuoteStore = defineStore('maintenanceQuote', () => {
     } catch (e) { error.value = e.message; }
   }
 
+  async function createCompleteQuote({ correctiveActionsCost, sparePartsCost, preventiveCost }) {
+    loading.value = true; error.value = null;
+    try {
+      const base = await api.create(correctiveActionsCost);
+      _upsert(base);
+      await api.updateSparePartsCost(base.maintenanceQuoteId, sparePartsCost);
+      await api.updatePreventiveCost(base.maintenanceQuoteId, preventiveCost);
+      const final = await api.consolidateTotal(base.maintenanceQuoteId);
+      _upsert(final);
+      return final;
+    } catch (e) {
+      error.value = e.message || 'Failed to create maintenance quote';
+    } finally { loading.value = false; }
+  }
+
   async function loadByAdmin(adminId) {
     loading.value = true; error.value = null;
     try {
@@ -53,5 +68,5 @@ export const useMaintenanceQuoteStore = defineStore('maintenanceQuote', () => {
     } finally { loading.value = false; }
   }
 
-  return { quotes, loading, error, createQuote, updateSparePartsCost, updatePreventiveCost, consolidateTotal, loadByAdmin };
+  return { quotes, loading, error, createQuote, updateSparePartsCost, updatePreventiveCost, consolidateTotal, createCompleteQuote, loadByAdmin };
 });
