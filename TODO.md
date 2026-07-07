@@ -28,6 +28,15 @@ The following stores initialize with hardcoded static data instead of fetching f
 - Will automatically improve once the equipment and maintenance stores are connected to real data.
 - `dashboard-api.js` calls `GET /usage_sessions` (note: underscore, inconsistent with the rest of the API path conventions — verify correct path with backend).
 
+### `src/dashboard/infrastructure/dashboard-api.js`
+- Has two methods (`getEquipmentUsageStats`, `getUsageSessions`) that call endpoints which do not exist in the backend.
+- `dashboard.store.js` no longer imports it — it now delegates to the three analytics stores.
+- **Action needed:** delete this file once confirmed no other module references it.
+
+### `src/monitoring/application/iot.store.js` / `src/maintenance/application/maintenance.store.js`
+- Both stores still use mocked/static data.
+- Wire them to their respective real endpoints once backend contracts are confirmed.
+
 ---
 
 ## Other notes
