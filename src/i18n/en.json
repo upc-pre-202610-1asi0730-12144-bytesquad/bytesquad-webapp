@@ -236,7 +236,6 @@
     "reservations": "My Reservations",
     "profile": "My Profile",
     "financial": "Financial Impact",
-    "analyticsRecords": "Analytics Records"
   },
   "dashboard": {
     "welcome": "Welcome back, {name}!",
@@ -379,6 +378,7 @@
       "register": "Register Equipment",
       "edit": "Edit",
       "delete": "Delete",
+      "decommission": "Decommission",
       "save": "Save",
       "cancel": "Cancel",
       "confirm": "Confirm"
@@ -401,16 +401,22 @@
       "outOfOrder": "Out of Order"
     },
     "status": {
-      "AVAILABLE":    "Available",
-      "OPERATIONAL":  "Operational",
-      "MAINTENANCE":  "In Maintenance",
-      "OUT_OF_ORDER": "Out of Order"
+      "AVAILABLE":      "Available",
+      "OPERATIONAL":    "Operational",
+      "MAINTENANCE":    "In Maintenance",
+      "OUT_OF_ORDER":   "Out of Order",
+      "Available":      "Available",
+      "Maintenance":    "In Maintenance",
+      "OutOfService":   "Out of Service",
+      "Decommissioned": "Decommissioned"
     },
     "dialog": {
       "addTitle": "Register New Equipment",
       "editTitle": "Edit Equipment",
       "deleteTitle": "Delete Equipment",
       "deleteMessage": "Are you sure you want to delete this equipment? This action cannot be undone.",
+      "decommissionTitle": "Decommission Equipment",
+      "decommissionMessage": "Are you sure you want to decommission this equipment? It will be marked as inactive.",
       "fields": {
         "name": "Equipment name",
         "brand": "Brand",
@@ -659,6 +665,29 @@
       "LUBRICATION": "Lubrication",
       "INSPECTION": "Inspection",
       "OVERHAUL": "Overhaul"
+    },
+    "technicians": {
+      "title": "Technicians",
+      "register": "Register Technician",
+      "name": "Name",
+      "specialization": "Specialization",
+      "phone": "Phone",
+      "noData": "No technicians registered yet",
+      "noneYet": "No technicians — register one below",
+      "form": {
+        "namePlaceholder": "e.g. Carlos Ríos",
+        "specializationPlaceholder": "e.g. Electrical",
+        "phonePlaceholder": "e.g. +51 999 000 111",
+        "allRequired": "All fields are required",
+        "submit": "Register"
+      }
+    },
+    "complete": {
+      "notesPlaceholder": "Completion notes (optional)"
+    },
+    "log": {
+      "view": "View Log",
+      "noNotes": "No notes recorded"
     },
     "tickets": {
       "t1001": "Hydraulic fluid leak detected on loader arm",
@@ -915,40 +944,4 @@
       "generic": "Something went wrong. Please try again."
     }
   },
-  "analyticsRecords": {
-    "title": "Analytics Records",
-    "subtitle": "Create and view activity reports, maintenance quotes and ROI projections",
-    "submit": "Submit",
-    "successMessage": "Record created successfully",
-    "recentRecords": "Recent Records",
-    "noRecords": "No records yet",
-    "date": "Date",
-    "placeholderNumber": "e.g. 120",
-    "placeholderMoney": "e.g. 1500.00",
-    "placeholderPercent": "e.g. 12.5",
-    "activityReport": {
-      "title": "Activity Report",
-      "formTitle": "New Activity Report",
-      "totalUsageTime": "Total Usage Time (h)",
-      "downtimeCost": "Downtime Cost ($)",
-      "percentageComparison": "% Comparison"
-    },
-    "maintenanceQuote": {
-      "title": "Maintenance Quote",
-      "formTitle": "New Maintenance Quote",
-      "correctiveActionsCost": "Corrective Actions Cost ($)",
-      "sparePartsCost": "Spare Parts Cost ($)",
-      "preventiveCost": "Preventive Cost ($)",
-      "total": "Total",
-      "autoConsolidate": "Total will be automatically consolidated after submission."
-    },
-    "roiProjection": {
-      "title": "ROI Projection",
-      "formTitle": "New ROI Projection",
-      "projectedDowntimeCost": "Projected Downtime Cost ($)",
-      "projectedEarnings": "Projected Earnings ($)",
-      "demand": "Demand",
-      "autoGenerate": "ROI index and demand status will be generated automatically."
-    }
-  }
 }
