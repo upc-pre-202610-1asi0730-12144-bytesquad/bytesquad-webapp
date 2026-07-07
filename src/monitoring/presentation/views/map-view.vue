@@ -261,7 +261,7 @@ function reportAsOccupied() { closeMachineDetail(); showToast(t('map.detail.noti
 </script>
 
 <template>
-  <div class="map-root" @click="closeMachineDetail">
+  <div class="page map-root" @click="closeMachineDetail">
     <header class="map-header">
       <div class="header-meta">
         <div class="live-pill"><span class="live-dot"></span><span class="live-text">LIVE</span></div>
