@@ -1,18 +1,26 @@
 import { BaseApi } from '@/shared/infrastructure/base-api.js';
 import { GymEndpoint } from './gym-endpoint.js';
+import { GymAssembler } from './gym-assembler.js';
 import { BranchAssembler } from './branch-assembler.js';
 import { ZoneAssembler } from './zone-assembler.js';
 
 export class GymApi extends BaseApi {
   #endpoint;
+  #gymAssembler;
   #branchAssembler;
   #zoneAssembler;
 
   constructor() {
     super();
     this.#endpoint        = new GymEndpoint(this);
+    this.#gymAssembler    = new GymAssembler();
     this.#branchAssembler = new BranchAssembler();
     this.#zoneAssembler   = new ZoneAssembler();
+  }
+
+  async getByAdmin(adminId) {
+    const { data } = await this.http.get(`gyms/by-admin/${adminId}`);
+    return this.#gymAssembler.toEntityFromResource(data);
   }
 
   createGym(entity) {
