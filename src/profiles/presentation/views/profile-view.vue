@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useAuthStore }     from '@/authentication/application/auth.store.js';
@@ -46,6 +46,25 @@ function gymName(gymId) {
 
 async function switchGym(gymId) {
   await activeGymStore.changeActiveGym(gymId);
+}
+
+// Client account info: fields are always editable, seeded from the real profile once it loads.
+const accountForm        = ref({ firstName: '', lastName: '', phoneNumber: '' });
+const accountSaveSuccess = ref(false);
+
+watch(() => profilesStore.myProfile, p => {
+  if (!p) return;
+  accountForm.value = { firstName: p.firstName ?? '', lastName: p.lastName ?? '', phoneNumber: p.phoneNumber ?? '' };
+}, { immediate: true });
+
+async function saveAccountInfo() {
+  accountSaveSuccess.value = false;
+  const firstName   = accountForm.value.firstName.trim();
+  const lastName    = accountForm.value.lastName.trim();
+  const phoneNumber = accountForm.value.phoneNumber.trim();
+  if (!firstName || !lastName) return;
+  await profilesStore.updateMyProfile({ firstName, lastName, phoneNumber });
+  if (!profilesStore.error) accountSaveSuccess.value = true;
 }
 
 async function submitEdit() {
@@ -194,50 +213,45 @@ onMounted(() => {
         <router-link to="/gym/associate" class="join-link">{{ t('profile.gymSwitcher.joinAnother') }}</router-link>
       </div>
 
-      <!-- Edit form -->
+      <!-- Account info -->
       <div class="card section">
         <div class="card-header">
           <span class="material-icons card-header__icon">manage_accounts</span>
           <h2 class="section-title">{{ t('profile.account.title') }}</h2>
         </div>
-        <div class="account-grid">
-          <div class="account-field">
-            <label>{{ t('profile.account.email') }}</label>
-            <p>{{ profilesStore.myProfile?.email ?? '—' }}</p>
-          </div>
-          <div class="account-field">
-            <label>{{ t('profile.account.phone') }}</label>
-            <p>{{ profilesStore.myProfile?.phoneNumber ?? '—' }}</p>
-          </div>
-          <div class="account-field">
-            <label>{{ t('profile.account.dni') }}</label>
-            <p>{{ profilesStore.myProfile?.dni ?? '—' }}</p>
-          </div>
+
+        <div class="form-group">
+          <label>{{ t('profile.account.email') }}</label>
+          <input type="email" :value="profilesStore.myProfile?.email ?? ''" disabled />
         </div>
-        <template v-if="editMode">
-          <form class="edit-form" @submit.prevent="submitEdit">
-            <div class="edit-grid">
-              <div class="form-field">
-                <label>First name</label>
-                <input v-model="editForm.firstName" placeholder="First name" required />
-              </div>
-              <div class="form-field">
-                <label>Last name</label>
-                <input v-model="editForm.lastName" placeholder="Last name" required />
-              </div>
-              <div class="form-field">
-                <label>Phone</label>
-                <input v-model="editForm.phoneNumber" placeholder="+51 999 000 000" />
-              </div>
-            </div>
-            <div class="edit-actions">
-              <button type="submit" class="btn btn--primary" :disabled="profilesStore.loading">Save</button>
-              <button type="button" class="btn btn--outline" @click="editMode = false">Cancel</button>
-            </div>
-          </form>
-        </template>
-        <button v-else class="btn btn--outline edit-btn" @click="openEdit">
-          <span class="material-icons" style="font-size:15px">edit</span> Edit profile
+        <div class="form-group">
+          <label>{{ t('profile.account.firstName') }}</label>
+          <input type="text" v-model="accountForm.firstName" />
+        </div>
+        <div class="form-group">
+          <label>{{ t('profile.account.lastName') }}</label>
+          <input type="text" v-model="accountForm.lastName" />
+        </div>
+        <div class="form-group">
+          <label>{{ t('profile.account.phone') }}</label>
+          <input type="tel" v-model="accountForm.phoneNumber" />
+        </div>
+        <div class="form-group">
+          <label>{{ t('profile.account.dni') }}</label>
+          <input type="text" :value="profilesStore.myProfile?.dni ?? ''" disabled />
+        </div>
+
+        <p v-if="accountSaveSuccess" class="save-success">
+          <span class="material-icons" style="font-size:16px">check_circle</span>
+          {{ t('profile.account.saveSuccess') }}
+        </p>
+        <p v-if="profilesStore.error" class="save-error">
+          <span class="material-icons" style="font-size:16px">error_outline</span>
+          {{ profilesStore.error }}
+        </p>
+
+        <button class="btn btn--primary save-btn" :disabled="profilesStore.loading" @click="saveAccountInfo">
+          {{ t('profile.saveChanges') }}
         </button>
       </div>
 
@@ -363,6 +377,14 @@ onMounted(() => {
 .form-field { display: flex; flex-direction: column; gap: .3rem; }
 .form-field label { color: var(--text-secondary); font-size: .78rem; }
 .edit-actions { display: flex; gap: .5rem; }
+.form-group { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+.form-group:last-of-type { margin-bottom: 0; }
+.form-group label { color: var(--text-secondary); font-size: .8rem; font-weight: 500; }
+.form-group input:disabled { color: var(--text-secondary); cursor: not-allowed; opacity: .7; }
+.save-success, .save-error { align-items: center; border-radius: 8px; display: flex; font-size: .82rem; gap: .4rem; margin-top: .75rem; padding: .6rem .8rem; }
+.save-success { background: rgba(34,197,94,.1); color: var(--green); }
+.save-error { background: rgba(239,68,68,.1); color: var(--red); }
+.save-btn { margin-top: 1rem; width: 100%; }
 .notif-list { display: flex; flex-direction: column; gap: .75rem; }
 .notif-row { align-items: center; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; padding-bottom: .75rem; }
 .notif-info { display: flex; flex-direction: column; gap: .1rem; }
