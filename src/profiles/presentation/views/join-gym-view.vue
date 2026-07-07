@@ -19,7 +19,7 @@ async function submit() {
   assocErrorMsg.value = null;
   try {
     await assocStore.associate(selectedGymId.value);
-    router.push('/client');
+    router.push('/map');
   } catch (e) {
     assocErrorMsg.value = e.status === 403
       ? t('joinGym.error.notAuthorized')

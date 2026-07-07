@@ -15,7 +15,7 @@ const showPass = ref(false);
 async function onSubmit() {
   await auth.signIn(username.value, password.value);
   if (auth.isAuthenticated) {
-    router.push(auth.isAdmin ? '/dashboard' : '/client');
+    router.push(auth.isAdmin ? '/dashboard' : '/map');
   }
 }
 function clearError(){ auth.clearError(); }

@@ -64,7 +64,7 @@ router.beforeEach(async (to) => {
   if (to.meta.public) return true;
 
   if (to.meta.requiresAuth && !auth.isAuthenticated) return '/login';
-  if (to.meta.requiresAdmin && !auth.isAdmin)        return '/client';
+  if (to.meta.requiresAdmin && !auth.isAdmin)        return '/map';
   if (to.meta.requiresClient && !auth.isClient)      return '/dashboard';
 
   // Admin onboarding gate — cached for the session
@@ -82,7 +82,7 @@ router.beforeEach(async (to) => {
     if (!assocStore.hasActiveGym) {
       return to.path === '/join-gym' ? true : '/join-gym';
     }
-    if (to.path === '/join-gym') return '/client';
+    if (to.path === '/join-gym') return '/map';
   }
 
   return true;
