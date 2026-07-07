@@ -29,7 +29,7 @@ function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', 
     <div class="login-card">
       <div class="login-header">
         <div class="login-brand">
-          <span class="material-icons login-brand__icon">monitor_heart</span>
+          <img src="/MOscuroSinBG.png" alt="SpotTrack" class="login-brand__logo" />
           <span class="login-brand__name">SpotTrack</span>
         </div>
         <h1 class="login-title">{{ t('auth.login.title') }}</h1>
@@ -90,7 +90,7 @@ function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', 
 .login-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 420px; overflow: hidden; }
 .login-header { padding: 2rem 2rem 1rem; text-align: center; }
 .login-brand { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
-.login-brand__icon { font-size: 2rem; color: var(--accent); }
+.login-brand__logo { height: 2rem; object-fit: contain; width: auto; }
 .login-brand__name { font-size: 1.5rem; font-weight: 700; }
 .login-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; }
 .login-subtitle { color: var(--text-secondary); font-size: 0.875rem; }
