@@ -19,8 +19,8 @@ async function onSubmit() {
   }
 }
 function clearError(){ auth.clearError(); }
-function fillAdmin() { username.value = 'admin1'; password.value = 'Pass123!'; auth.clearError(); }
-function fillClient(){ username.value = 'client1'; password.value = 'Pass123!'; auth.clearError(); }
+function fillAdmin() { username.value = 'admin1@email.com'; password.value = 'Pass123!'; auth.clearError(); }
+function fillClient(){ username.value = 'client1@email.com'; password.value = 'Pass123!'; auth.clearError(); }
 function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', l); }
 </script>
 
@@ -67,11 +67,11 @@ function setLang(l)  { locale.value = l; localStorage.setItem('spottrack_lang', 
         <div class="demo-section">
           <p class="demo-section__label">{{ t('auth.login.demoTitle') }}</p>
           <button class="demo-card" type="button" @click="fillAdmin">
-            <span class="demo-card__email">Admin: admin1</span>
+            <span class="demo-card__email">Admin: admin1@email.com</span>
             <span class="demo-card__pass">Pass123!</span>
           </button>
           <button class="demo-card" type="button" @click="fillClient">
-            <span class="demo-card__email">Cliente: client1</span>
+            <span class="demo-card__email">Cliente: client1@email.com</span>
             <span class="demo-card__pass">Pass123!</span>
           </button>
         </div>
