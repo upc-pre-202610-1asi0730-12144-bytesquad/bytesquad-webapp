@@ -56,6 +56,11 @@
     "title": "Real-Time Availability Map",
     "subtitle": "View the status of all gym machines",
     "cardTitle": "Availability Map",
+    "view": {
+      "map": "Map",
+      "heat": "Heat",
+      "allBranches": "Branches"
+    },
     "filter": {
       "all": "All",
       "strength": "Strength",
@@ -66,16 +71,32 @@
       "inUse": "In Use ({count})",
       "reserved": "Reserved ({count})"
     },
-    "gyms": {
-      "gym1": "Gym Center",
-      "gym2": "North Gym",
-      "gym3": "South Gym"
+    "stats": {
+      "free": "Free",
+      "inUse": "In use",
+      "reserved": "Reserved",
+      "util": "Usage"
+    },
+    "branches": {
+      "allBranches": "All Branches",
+      "networkOverview": "Network Overview",
+      "clickToView": "Click a branch to view its map",
+      "loading": "Loading branches…",
+      "noBranches": "No branches configured yet",
+      "noZones": "No zones configured for this branch"
+    },
+    "zone": {
+      "unzoned": "Unzoned"
     },
     "detail": {
       "statusLabel": "Status",
       "status": {
-        "AVAILABLE": "Available",
-        "IN_USE": "In Use",
+        "Available": "Available",
+        "Occupied": "In Use",
+        "Active": "In Use",
+        "Maintenance": "Maintenance",
+        "OutOfService": "Out of Service",
+        "Decommissioned": "Out of Service",
         "RESERVED": "Reserved"
       },
       "reservedByUser": "You have reserved this machine",
@@ -96,12 +117,6 @@
       "subtitle": "Available machines in the same category",
       "free": "Free",
       "reserveBtn": "Reserve"
-    },
-    "muscleGroups": {
-      "cardio": "Cardio",
-      "legs": "Legs",
-      "back": "Back",
-      "chest": "Chest"
     }
   },
   "booking": {

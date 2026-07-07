@@ -56,6 +56,11 @@
     "title": "Mapa de Disponibilidad en Tiempo Real",
     "subtitle": "Visualiza el estado de todas las máquinas del gimnasio",
     "cardTitle": "Mapa de Disponibilidad",
+    "view": {
+      "map": "Mapa",
+      "heat": "Calor",
+      "allBranches": "Sedes"
+    },
     "filter": {
       "all": "Todos",
       "strength": "Fuerza",
@@ -66,16 +71,32 @@
       "inUse": "Ocupado ({count})",
       "reserved": "Reservado ({count})"
     },
-    "gyms": {
-      "gym1": "Gimnasio Centro",
-      "gym2": "Gimnasio Norte",
-      "gym3": "Gimnasio Sur"
+    "stats": {
+      "free": "Libre",
+      "inUse": "En uso",
+      "reserved": "Reservado",
+      "util": "Uso"
+    },
+    "branches": {
+      "allBranches": "Todas las Sedes",
+      "networkOverview": "Vista General",
+      "clickToView": "Haz clic en una sede para ver su mapa",
+      "loading": "Cargando sedes…",
+      "noBranches": "No hay sedes configuradas aún",
+      "noZones": "Sin zonas configuradas para esta sede"
+    },
+    "zone": {
+      "unzoned": "Sin zona"
     },
     "detail": {
       "statusLabel": "Estado",
       "status": {
-        "AVAILABLE": "Disponible",
-        "IN_USE": "En Uso",
+        "Available": "Disponible",
+        "Occupied": "En Uso",
+        "Active": "En Uso",
+        "Maintenance": "Mantenimiento",
+        "OutOfService": "Fuera de servicio",
+        "Decommissioned": "Fuera de servicio",
         "RESERVED": "Reservado"
       },
       "reservedByUser": "Tienes esta máquina reservada",
@@ -96,12 +117,6 @@
       "subtitle": "Máquinas disponibles de la misma categoría",
       "free": "Libre",
       "reserveBtn": "Reservar"
-    },
-    "muscleGroups": {
-      "cardio": "Cardio",
-      "legs": "Piernas",
-      "back": "Espalda",
-      "chest": "Pecho"
     }
   },
   "booking": {
