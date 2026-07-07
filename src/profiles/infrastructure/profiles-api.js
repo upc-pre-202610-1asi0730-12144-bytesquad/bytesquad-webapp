@@ -31,6 +31,11 @@ export class ProfilesApi extends BaseApi {
     return adminAssembler.toEntityFromResource(data);
   }
 
+  async getMyClientProfile() {
+    const { data } = await this.http.get('profiles/clients/me');
+    return clientAssembler.toEntityFromResource(data);
+  }
+
   async getClients() {
     const { data } = await this.http.get('profiles/clients');
     return (Array.isArray(data) ? data : []).map(r => clientAssembler.toEntityFromResource(r));
@@ -48,6 +53,11 @@ export class ProfilesApi extends BaseApi {
 
   async updateClient(id, dto) {
     const { data } = await this.http.put(`profiles/clients/${id}`, clientAssembler.toUpdateResource(dto));
+    return clientAssembler.toEntityFromResource(data);
+  }
+
+  async updateMyClientProfile(dto) {
+    const { data } = await this.http.put('profiles/clients/me', clientAssembler.toUpdateResource(dto));
     return clientAssembler.toEntityFromResource(data);
   }
 }

@@ -7,8 +7,9 @@ import { useProfilesStore }    from '@/profiles/application/profiles.store.js';
 import { useGymStore }         from '@/gym/application/gym.store.js';
 import { useEquipmentStore }   from '@/gym/application/equipment.store.js';
 import { useMaintenanceStore } from '@/maintenance/application/maintenance.store.js';
-import { useMembershipStore }  from '@/membership/application/membership.store.js';
-import { MembershipStatus }    from '@/membership/domain/model/membership.entity.js';
+import { useMembershipStore }      from '@/membership/application/membership.store.js';
+import { MembershipStatus }        from '@/membership/domain/model/membership.entity.js';
+import { useAuthorizedDniStore }   from '@/gym/application/authorized-dni.store.js';
 
 const { t, locale } = useI18n();
 const router         = useRouter();
@@ -18,6 +19,7 @@ const gymStore       = useGymStore();
 const equipStore     = useEquipmentStore();
 const mainStore      = useMaintenanceStore();
 const memberStore    = useMembershipStore();
+const dniStore       = useAuthorizedDniStore();
 
 const isAdmin = computed(() => auth.isAdmin);
 
@@ -109,6 +111,7 @@ onMounted(async () => {
     const gymId = gymStore.currentGym?.id;
     await Promise.all([
       gymId ? gymStore.loadBranches(gymId) : Promise.resolve(),
+      gymId ? dniStore.load(gymId) : Promise.resolve(),
       equipStore.loadEquipment(),
       mainStore.loadTickets(id),
       memberStore.loadByClient(id),
@@ -201,6 +204,16 @@ onMounted(async () => {
           <div>
             <p class="stat-value">{{ ticketCount }}</p>
             <p class="stat-label">{{ t('profile.admin.stats.tickets') }}</p>
+          </div>
+          <span class="material-icons stat-arrow">chevron_right</span>
+        </button>
+        <button class="card stat-card" @click="router.push('/gym/whitelist')">
+          <div class="stat-icon-wrap stat-icon-wrap--teal">
+            <span class="material-icons stat-icon">how_to_reg</span>
+          </div>
+          <div>
+            <p class="stat-value">{{ dniStore.dnis.length }}</p>
+            <p class="stat-label">{{ t('profile.admin.stats.members') }}</p>
           </div>
           <span class="material-icons stat-arrow">chevron_right</span>
         </button>
@@ -410,16 +423,18 @@ input:disabled { cursor: not-allowed; opacity: .5; }
 .alert--success { background: rgba(34,197,94,.1);  border: 1px solid rgba(34,197,94,.3);  color: var(--green); }
 
 /* Stats */
-.stat-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem; }
+.stat-grid { display: grid; gap: .75rem; grid-template-columns: repeat(4, 1fr); margin-bottom: 1rem; }
 .stat-card { align-items: center; background: none; border: 1px solid var(--border); color: var(--text-primary); cursor: pointer; display: flex; gap: .75rem; text-align: left; width: 100%; }
 .stat-card:hover { border-color: var(--accent); }
 .stat-icon-wrap { align-items: center; border-radius: 10px; display: flex; flex-shrink: 0; height: 44px; justify-content: center; width: 44px; }
 .stat-icon-wrap--blue  { background: rgba(59,130,246,.12); }
 .stat-icon-wrap--amber { background: rgba(245,188,54,.12); }
 .stat-icon-wrap--red   { background: rgba(239,68,68,.12); }
+.stat-icon-wrap--teal  { background: rgba(0,204,178,.12); }
 .stat-icon-wrap--blue  .stat-icon { color: var(--blue); }
 .stat-icon-wrap--amber .stat-icon { color: var(--accent); }
 .stat-icon-wrap--red   .stat-icon { color: var(--red); }
+.stat-icon-wrap--teal  .stat-icon { color: var(--teal); }
 .stat-value { font-size: 1.4rem; font-weight: 700; }
 .stat-label { color: var(--text-secondary); font-size: .75rem; }
 .stat-arrow { color: var(--text-secondary); font-size: 18px; margin-left: auto; }
@@ -487,6 +502,6 @@ input:disabled { cursor: not-allowed; opacity: .5; }
 .lang-options { display: flex; gap: .5rem; margin-top: .5rem; }
 .lang-btn     { font-size: .85rem; padding: .35rem .9rem; }
 
-@media (max-width: 768px) { .stat-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 900px) { .stat-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 500px) { .stat-grid { grid-template-columns: 1fr; } }
 </style>

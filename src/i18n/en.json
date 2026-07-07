@@ -707,7 +707,8 @@
       "stats": {
         "branches": "Branches",
         "equipment": "Equipment",
-        "tickets": "Tickets"
+        "tickets": "Tickets",
+      "members": "Registered Members"
       },
       "gym": {
         "title": "Gym"
@@ -823,6 +824,88 @@
         "completed": "Completed"
       },
       "empty": "No tickets"
+    }
+  },
+  "whitelist": {
+    "title": "Authorized Members",
+    "add": {
+      "title": "Add DNI",
+      "placeholder": "e.g. 12345678",
+      "btn": "Add"
+    },
+    "list": {
+      "dniCol": "DNI",
+      "actionsCol": "Actions"
+    },
+    "empty": "No authorized DNIs yet.",
+    "delete": {
+      "btn": "Remove",
+      "confirm": "This will revoke access for any client associated with this DNI.",
+      "ok": "Confirm",
+      "cancel": "Cancel"
+    },
+    "error": {
+      "invalid": "Invalid DNI format. Must be 8 digits.",
+      "duplicate": "This DNI is already in the whitelist.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "membership": {
+    "title": "My Membership",
+    "empty": "No membership found for your account.",
+    "perMonth": "/month",
+    "card": {
+      "renewal": "Renewal",
+      "startDate": "Start",
+      "pendingDowngrade": "Scheduled downgrade to {plan} at renewal",
+      "pendingCancellation": "Cancellation in progress — access active until {date}"
+    },
+    "status": {
+      "Active": "Active",
+      "Suspended": "Suspended",
+      "PendingCancellation": "Pending Cancellation",
+      "Cancelled": "Cancelled",
+      "Expired": "Expired"
+    },
+    "actions": {
+      "renew": "Renew",
+      "suspend": "Suspend",
+      "cancel": "Cancel",
+      "changePlan": "Change Plan",
+      "downgrade": "Downgrade"
+    },
+    "selector": {
+      "titleDowngrade": "Select the plan to downgrade to",
+      "titleUpgrade": "Select the new plan",
+      "popular": "Most Popular",
+      "currentPlan": "Current plan",
+      "select": "Select"
+    }
+  },
+  "completeProfile": {
+    "title": "Complete Your Profile",
+    "subtitle": "We need a few details before you can access the gym",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone (optional)",
+    "dni": "National ID (DNI)",
+    "dniPlaceholder": "e.g. 12345678",
+    "dniHint": "Your DNI will be verified against the gym's authorized member list",
+    "submit": "Save and Continue"
+  },
+  "joinGym": {
+    "title": "Join a Gym",
+    "subtitle": "Select your gym and verify your membership to get started",
+    "gymLabel": "Select a gym",
+    "gymPlaceholder": "Choose your gym...",
+    "dniLabel": "National ID (DNI)",
+    "dniPlaceholder": "e.g. 12345678",
+    "dniHint": "Your DNI must be on the gym's authorized member list",
+    "submit": "Join Gym",
+    "loadingGyms": "Loading gyms...",
+    "error": {
+      "notAuthorized": "Your DNI is not authorized for this gym. Contact the gym administrator.",
+      "generic": "Something went wrong. Please try again."
     }
   },
   "analyticsRecords": {

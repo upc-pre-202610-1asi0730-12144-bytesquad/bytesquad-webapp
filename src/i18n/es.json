@@ -707,7 +707,8 @@
       "stats": {
         "branches": "Sedes",
         "equipment": "Equipos",
-        "tickets": "Tickets"
+        "tickets": "Tickets",
+      "members": "Miembros Registrados"
       },
       "gym": {
         "title": "Gimnasio"
@@ -823,6 +824,88 @@
         "completed": "Completado"
       },
       "empty": "Sin tickets"
+    }
+  },
+  "whitelist": {
+    "title": "Miembros Autorizados",
+    "add": {
+      "title": "Agregar DNI",
+      "placeholder": "ej. 12345678",
+      "btn": "Agregar"
+    },
+    "list": {
+      "dniCol": "DNI",
+      "actionsCol": "Acciones"
+    },
+    "empty": "Aún no hay DNIs autorizados.",
+    "delete": {
+      "btn": "Eliminar",
+      "confirm": "Esto revocará el acceso de cualquier cliente asociado con este DNI.",
+      "ok": "Confirmar",
+      "cancel": "Cancelar"
+    },
+    "error": {
+      "invalid": "Formato de DNI inválido. Debe tener 8 dígitos.",
+      "duplicate": "Este DNI ya está en la lista de autorizados.",
+      "generic": "Algo salió mal. Por favor, intenta de nuevo."
+    }
+  },
+  "membership": {
+    "title": "Mi Membresía",
+    "empty": "No se encontró una membresía para tu cuenta.",
+    "perMonth": "/mes",
+    "card": {
+      "renewal": "Renovación",
+      "startDate": "Inicio",
+      "pendingDowngrade": "Downgrade programado a {plan} al renovar",
+      "pendingCancellation": "Cancelación en curso — acceso activo hasta {date}"
+    },
+    "status": {
+      "Active": "Activo",
+      "Suspended": "Suspendido",
+      "PendingCancellation": "Cancelación Pendiente",
+      "Cancelled": "Cancelado",
+      "Expired": "Expirado"
+    },
+    "actions": {
+      "renew": "Renovar",
+      "suspend": "Suspender",
+      "cancel": "Cancelar",
+      "changePlan": "Cambiar Plan",
+      "downgrade": "Degradar Plan"
+    },
+    "selector": {
+      "titleDowngrade": "Selecciona el plan al que bajar",
+      "titleUpgrade": "Selecciona el nuevo plan",
+      "popular": "Más Popular",
+      "currentPlan": "Plan actual",
+      "select": "Seleccionar"
+    }
+  },
+  "completeProfile": {
+    "title": "Completa tu Perfil",
+    "subtitle": "Necesitamos algunos datos antes de que puedas acceder al gimnasio",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "phone": "Teléfono (opcional)",
+    "dni": "DNI",
+    "dniPlaceholder": "ej. 12345678",
+    "dniHint": "Tu DNI será verificado contra la lista de miembros autorizados del gimnasio",
+    "submit": "Guardar y Continuar"
+  },
+  "joinGym": {
+    "title": "Únete a un Gimnasio",
+    "subtitle": "Selecciona tu gimnasio y verifica tu membresía para comenzar",
+    "gymLabel": "Selecciona un gimnasio",
+    "gymPlaceholder": "Elige tu gimnasio...",
+    "dniLabel": "DNI",
+    "dniPlaceholder": "ej. 12345678",
+    "dniHint": "Tu DNI debe estar en la lista de miembros autorizados del gimnasio",
+    "submit": "Unirse al Gimnasio",
+    "loadingGyms": "Cargando gimnasios...",
+    "error": {
+      "notAuthorized": "Tu DNI no está autorizado en este gimnasio. Contacta al administrador.",
+      "generic": "Algo salió mal. Por favor, intenta de nuevo."
     }
   },
   "analyticsRecords": {
