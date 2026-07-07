@@ -34,6 +34,11 @@ export class MaintenanceApi extends BaseApi {
   }
 
   // ── TechnicalTicket aggregate ──────────────────────────────────────────────
+  async getTickets(adminId) {
+    const { data } = await this.http.get(`technical-tickets/by-admin/${adminId}`);
+    return (Array.isArray(data) ? data : []).map(r => ticketAssembler.toEntityFromResource(r));
+  }
+
   async getTicketById(id) {
     const { data } = await this.http.get(`technical-tickets/${id}`);
     return ticketAssembler.toEntityFromResource(data);

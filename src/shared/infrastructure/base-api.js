@@ -27,13 +27,15 @@ export class BaseApi {
       (error) => {
         const status = error.response?.status;
         const body   = error.response?.data;
-        if (status === 403 || status === 400) {
+        if ([400, 403, 404, 409].includes(status)) {
           const serverMessage =
             body?.message || body?.error || body?.title ||
             (typeof body === 'string' ? body : null);
           const defaults = {
-            403: 'You do not have permission to perform this action.',
             400: 'The request could not be processed.',
+            403: 'You do not have permission to perform this action.',
+            404: 'The requested resource was not found.',
+            409: 'This resource already exists.',
           };
           const enhanced = new Error(serverMessage || defaults[status]);
           enhanced.status   = status;

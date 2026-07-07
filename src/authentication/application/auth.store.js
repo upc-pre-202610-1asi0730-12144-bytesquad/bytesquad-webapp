@@ -63,6 +63,16 @@ export const useAuthStore = defineStore('auth', () => {
     } finally { loading.value = false; }
   }
 
+  async function changePassword(currentPassword, newPassword) {
+    loading.value = true; error.value = null;
+    try {
+      await api.changePassword(currentPassword, newPassword);
+    } catch (e) {
+      error.value = e.message || 'Failed to change password';
+      throw e; // re-throw so the form can distinguish success from failure
+    } finally { loading.value = false; }
+  }
+
   function logout() {
     user.value  = null;
     token.value = null;
@@ -72,5 +82,5 @@ export const useAuthStore = defineStore('auth', () => {
 
   function clearError() { error.value = null; }
 
-  return { user, token, users, loading, error, isAuthenticated, isAdmin, isClient, signIn, signUp, getUsers, logout, clearError };
+  return { user, token, users, loading, error, isAuthenticated, isAdmin, isClient, signIn, signUp, getUsers, changePassword, logout, clearError };
 });

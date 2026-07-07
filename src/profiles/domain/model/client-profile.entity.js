@@ -1,12 +1,17 @@
 export class ClientProfile {
-  constructor({ id, userId, email, fullName, firstName, lastName, phoneNumber, dni }) {
-    this.id = id;
-    this.userId = userId;
-    this.email = email;
-    this.fullName = fullName;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.phoneNumber = phoneNumber;
-    this.dni = dni;
+  constructor({ id, userId, email, firstName, lastName, fullName, phoneNumber, dni }) {
+    this.id          = id;
+    this.userId      = userId;
+    this.email       = email;
+    this.firstName   = firstName   ?? null;
+    this.lastName    = lastName    ?? null;
+    this._fullName   = fullName    ?? null;
+    this.phoneNumber = phoneNumber ?? null;
+    this.dni         = dni         ?? null;
+  }
+
+  get fullName() {
+    const computed = `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
+    return computed || this._fullName || null;
   }
 }

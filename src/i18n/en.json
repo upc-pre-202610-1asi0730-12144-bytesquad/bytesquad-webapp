@@ -236,7 +236,8 @@
     "bookings": "My Bookings",
     "reservations": "My Reservations",
     "profile": "My Profile",
-    "financial": "Financial Impact"
+    "financial": "Financial Impact",
+    "analyticsRecords": "Analytics Records"
   },
   "dashboard": {
     "welcome": "Welcome back, {name}!",
@@ -739,16 +740,21 @@
     "admin": {
       "title": "Admin Panel",
       "roleBadge": "Administrator",
-      "memberSince": "Member since",
       "stats": {
-        "locations": "Active branches",
-        "equipment": "Monitored equipment",
-        "sensors": "IoT sensors online",
-        "members": "Registered members"
+        "branches": "Branches",
+        "equipment": "Equipment",
+        "tickets": "Tickets",
+      "members": "Registered Members"
       },
-      "plan": {
-        "active": "Active",
-        "renewal": "Next renewal"
+      "gym": {
+        "title": "Gym"
+      },
+      "membership": {
+        "title": "Membership",
+        "manage": "Manage",
+        "expires": "Expires",
+        "none": "No active membership",
+        "pendingDowngrade": "Pending downgrade to"
       }
     },
     "client": {
@@ -779,13 +785,20 @@
     },
     "account": {
       "title": "Account Information",
-      "email": "Email",
-      "gymName": "Gym Name",
+      "name": "Name",
       "firstName": "First name",
       "lastName": "Last name",
+      "email": "Email",
       "phone": "Phone",
       "dni": "DNI",
+      "gymName": "Gym Name",
       "saveSuccess": "Changes saved successfully"
+    },
+    "actions": {
+      "edit": "Edit profile",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saveSuccess": "Profile updated successfully"
     },
     "language": {
       "title": "Language Preferences",
@@ -795,6 +808,12 @@
     "security": {
       "title": "Security",
       "changePassword": "Change Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "updatePassword": "Update password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordChanged": "Password updated successfully",
       "logout": "Log Out"
     },
     "saveChanges": "Save Changes"
@@ -835,6 +854,124 @@
         "completed": "Completed"
       },
       "empty": "No tickets"
+    }
+  },
+  "whitelist": {
+    "title": "Authorized Members",
+    "add": {
+      "title": "Add DNI",
+      "placeholder": "e.g. 12345678",
+      "btn": "Add"
+    },
+    "list": {
+      "dniCol": "DNI",
+      "actionsCol": "Actions"
+    },
+    "empty": "No authorized DNIs yet.",
+    "delete": {
+      "btn": "Remove",
+      "confirm": "This will revoke access for any client associated with this DNI.",
+      "ok": "Confirm",
+      "cancel": "Cancel"
+    },
+    "error": {
+      "invalid": "Invalid DNI format. Must be 8 digits.",
+      "duplicate": "This DNI is already in the whitelist.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "membership": {
+    "title": "My Membership",
+    "empty": "No membership found for your account.",
+    "perMonth": "/month",
+    "card": {
+      "renewal": "Renewal",
+      "startDate": "Start",
+      "pendingDowngrade": "Scheduled downgrade to {plan} at renewal",
+      "pendingCancellation": "Cancellation in progress — access active until {date}"
+    },
+    "status": {
+      "Active": "Active",
+      "Suspended": "Suspended",
+      "PendingCancellation": "Pending Cancellation",
+      "Cancelled": "Cancelled",
+      "Expired": "Expired"
+    },
+    "actions": {
+      "renew": "Renew",
+      "suspend": "Suspend",
+      "cancel": "Cancel",
+      "changePlan": "Change Plan",
+      "downgrade": "Downgrade"
+    },
+    "selector": {
+      "titleDowngrade": "Select the plan to downgrade to",
+      "titleUpgrade": "Select the new plan",
+      "popular": "Most Popular",
+      "currentPlan": "Current plan",
+      "select": "Select"
+    }
+  },
+  "completeProfile": {
+    "title": "Complete Your Profile",
+    "subtitle": "We need a few details before you can access the gym",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone (optional)",
+    "dni": "National ID (DNI)",
+    "dniPlaceholder": "e.g. 12345678",
+    "dniHint": "Your DNI will be verified against the gym's authorized member list",
+    "submit": "Save and Continue"
+  },
+  "joinGym": {
+    "title": "Join a Gym",
+    "subtitle": "Select your gym and verify your membership to get started",
+    "gymLabel": "Select a gym",
+    "gymPlaceholder": "Choose your gym...",
+    "dniLabel": "National ID (DNI)",
+    "dniPlaceholder": "e.g. 12345678",
+    "dniHint": "Your DNI must be on the gym's authorized member list",
+    "submit": "Join Gym",
+    "loadingGyms": "Loading gyms...",
+    "error": {
+      "notAuthorized": "Your DNI is not authorized for this gym. Contact the gym administrator.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "analyticsRecords": {
+    "title": "Analytics Records",
+    "subtitle": "Create and view activity reports, maintenance quotes and ROI projections",
+    "submit": "Submit",
+    "successMessage": "Record created successfully",
+    "recentRecords": "Recent Records",
+    "noRecords": "No records yet",
+    "date": "Date",
+    "placeholderNumber": "e.g. 120",
+    "placeholderMoney": "e.g. 1500.00",
+    "placeholderPercent": "e.g. 12.5",
+    "activityReport": {
+      "title": "Activity Report",
+      "formTitle": "New Activity Report",
+      "totalUsageTime": "Total Usage Time (h)",
+      "downtimeCost": "Downtime Cost ($)",
+      "percentageComparison": "% Comparison"
+    },
+    "maintenanceQuote": {
+      "title": "Maintenance Quote",
+      "formTitle": "New Maintenance Quote",
+      "correctiveActionsCost": "Corrective Actions Cost ($)",
+      "sparePartsCost": "Spare Parts Cost ($)",
+      "preventiveCost": "Preventive Cost ($)",
+      "total": "Total",
+      "autoConsolidate": "Total will be automatically consolidated after submission."
+    },
+    "roiProjection": {
+      "title": "ROI Projection",
+      "formTitle": "New ROI Projection",
+      "projectedDowntimeCost": "Projected Downtime Cost ($)",
+      "projectedEarnings": "Projected Earnings ($)",
+      "demand": "Demand",
+      "autoGenerate": "ROI index and demand status will be generated automatically."
     }
   }
 }
