@@ -34,7 +34,13 @@ async function searchByClient() {
 
 // ── Inline actions ─────────────────────────────────────────────────────────
 const renewForm = ref({ id: null, newEndDate: '' });
-const planForm  = ref({ id: null, newPlan: MembershipPlan.Basic });
+const planForm      = ref({ id: null, newPlan: MembershipPlan.Basic });
+const downgradeForm = ref({ id: null, newPlan: MembershipPlan.Basic });
+
+const PLAN_ORDER = Object.values(MembershipPlan);
+function lowerPlans(plan) {
+  return PLAN_ORDER.slice(0, PLAN_ORDER.indexOf(plan));
+}
 
 async function submitRenew(m) {
   if (!renewForm.value.newEndDate) return;
@@ -45,6 +51,11 @@ async function submitRenew(m) {
 async function submitPlan(m) {
   await membershipStore.changePlan(m.id, planForm.value.newPlan);
   planForm.value = { id: null, newPlan: MembershipPlan.Basic };
+}
+
+async function submitDowngrade(m) {
+  await membershipStore.downgrade(m.id, downgradeForm.value.newPlan);
+  downgradeForm.value = { id: null, newPlan: MembershipPlan.Basic };
 }
 
 // ── Grant form ─────────────────────────────────────────────────────────────
@@ -132,7 +143,10 @@ function accessClass(s) {
             <tr v-for="m in membershipStore.memberships" :key="m.id">
               <td class="cell-id">{{ m.id }}</td>
               <td>{{ m.clientId }}</td>
-              <td>{{ m.plan }}</td>
+              <td>
+                {{ m.plan }}
+                <span v-if="m.pendingDowngradePlan" class="pending-note">→ {{ m.pendingDowngradePlan }} at renewal</span>
+              </td>
               <td style="font-size:.78rem">{{ m.startDate?.slice(0,10) }}</td>
               <td style="font-size:.78rem">{{ m.endDate?.slice(0,10) }}</td>
               <td>
@@ -174,6 +188,20 @@ function accessClass(s) {
                   @click="planForm = { id: m.id, newPlan: m.plan }">
                   <span class="material-icons" style="font-size:16px">swap_horiz</span>
                 </button>
+                <!-- Downgrade plan inline — hidden for Basic (no lower tier) -->
+                <template v-if="lowerPlans(m.plan).length > 0">
+                  <template v-if="downgradeForm.id === m.id">
+                    <select v-model="downgradeForm.newPlan" style="font-size:.75rem">
+                      <option v-for="p in lowerPlans(m.plan)" :key="p" :value="p">{{ p }}</option>
+                    </select>
+                    <button class="btn btn--primary" style="font-size:.75rem" @click="submitDowngrade(m)">OK</button>
+                    <button class="btn btn--outline" style="font-size:.75rem" @click="downgradeForm.id = null">✕</button>
+                  </template>
+                  <button v-else class="btn btn--icon" title="Downgrade plan"
+                    @click="downgradeForm = { id: m.id, newPlan: lowerPlans(m.plan)[0] }">
+                    <span class="material-icons" style="font-size:16px">arrow_downward</span>
+                  </button>
+                </template>
               </td>
             </tr>
           </tbody>
