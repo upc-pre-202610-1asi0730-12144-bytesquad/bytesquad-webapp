@@ -113,6 +113,22 @@
       "reserveBtn": "Reserve ({minutes} min)"
     }
   },
+  "monitoring": {
+    "anomalyReport": {
+      "title": "Report Anomaly",
+      "subtitle": "Manually report an issue detected on a piece of equipment",
+      "formTitle": "New Report",
+      "reservation": "Reservation",
+      "selectReservation": "Select a reservation",
+      "noReservations": "You have no reservations to report an anomaly for.",
+      "zoneId": "Zone ID",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the observed anomaly...",
+      "submit": "Report Anomaly",
+      "listTitle": "Reported Anomalies",
+      "noneReported": "No anomalies reported yet."
+    }
+  },
   "booking": {
     "title": "My Reservations",
     "subtitle": "Manage your active reservations and create new ones",
