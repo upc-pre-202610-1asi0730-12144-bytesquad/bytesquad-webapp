@@ -28,10 +28,6 @@ const windowOptions = [
   { seconds: 1200, label: t('booking.modal.option20m') },
 ];
 
-const timerModalId        = ref(null);
-const timerDuration       = ref(10);
-const timerDurationOptions = [10, 15, 20];
-
 const openReservations = computed(() => store.reservations.filter(
   r => r.status !== ReservationStatus.Ended && r.status !== ReservationStatus.Cancelled));
 
@@ -56,15 +52,20 @@ async function createReservation() {
   if (created) showModal.value = false;
 }
 
-function openTimerModal(id) {
-  timerModalId.value = id;
-  timerDuration.value = 10;
+// The reservation window's own length becomes the timer's usage duration (min 1 minute),
+// so the client only ever activates once instead of choosing a duration a second time.
+function reservationDurationMinutes(r) {
+  const ms = new Date(r.endDate).getTime() - new Date(r.startDate).getTime();
+  return Math.max(1, Math.round(ms / 60000));
 }
 
-async function confirmStartTimer() {
-  const id = timerModalId.value;
-  await store.startTimer(id, Number(timerDuration.value));
-  timerModalId.value = null;
+async function activate(r) {
+  if (r.status === ReservationStatus.Initiated) {
+    await store.submitRequest(r.id);
+  }
+  const updated = store.reservations.find(x => x.id === r.id);
+  if (!updated || updated.status !== ReservationStatus.Reserved) return;
+  await store.startTimer(r.id, reservationDurationMinutes(updated));
 }
 
 function eqName(id) {
@@ -121,7 +122,6 @@ function remaining(r) {
         <li>{{ t('booking.how.item1') }}</li>
         <li>{{ t('booking.how.item2') }}</li>
         <li>{{ t('booking.how.item3') }}</li>
-        <li>{{ t('booking.how.item4') }}</li>
       </ul>
     </div>
 
@@ -159,17 +159,13 @@ function remaining(r) {
         </div>
 
         <div class="res-actions">
-          <button v-if="r.status === ReservationStatus.Initiated"
-            class="btn btn--outline btn--sm" @click="store.submitRequest(r.id)">
-            {{ t('booking.action.submitRequest') }}
+          <button v-if="r.status === ReservationStatus.Initiated || r.status === ReservationStatus.Reserved"
+            class="btn btn--primary btn--sm" :disabled="store.loading" @click="activate(r)">
+            {{ t('booking.action.activate') }}
           </button>
-          <button v-if="r.status === ReservationStatus.Reserved"
+          <button v-if="r.status === ReservationStatus.Active && !isExpired(r)"
             class="btn btn--outline btn--sm" @click="store.requestEquipmentAvailable(r.id)">
             {{ t('booking.action.requestAvailable') }}
-          </button>
-          <button v-if="r.status === ReservationStatus.Reserved"
-            class="btn btn--primary btn--sm" @click="openTimerModal(r.id)">
-            {{ t('booking.action.startTimer') }}
           </button>
           <button v-if="r.status === ReservationStatus.Active && !isExpired(r)"
             class="btn btn--primary btn--sm" @click="store.end(r.id)">
@@ -251,32 +247,6 @@ function remaining(r) {
       </div>
     </div>
 
-    <!-- Start Timer Modal -->
-    <div v-if="timerModalId" class="modal-overlay" @click.self="timerModalId = null">
-      <div class="modal card">
-        <div class="modal-header">
-          <h2 class="modal-title">{{ t('booking.timerModal.title') }}</h2>
-          <button class="close-btn" @click="timerModalId = null">
-            <span class="material-icons">close</span>
-          </button>
-        </div>
-        <p class="modal-subtitle">{{ t('booking.timerModal.subtitle') }}</p>
-
-        <div class="form-field">
-          <label>{{ t('booking.modal.duration') }}</label>
-          <select v-model.number="timerDuration">
-            <option v-for="m in timerDurationOptions" :key="m" :value="m">{{ m }} {{ t('booking.modal.minutesSuffix') }}</option>
-          </select>
-        </div>
-
-        <div v-if="store.error" class="error-msg">{{ store.error }}</div>
-
-        <div class="modal-footer">
-          <button class="btn btn--outline" @click="timerModalId = null">{{ t('booking.modal.cancel') }}</button>
-          <button class="btn btn--primary" @click="confirmStartTimer">{{ t('booking.timerModal.confirm') }}</button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

@@ -118,10 +118,9 @@
     },
     "how": {
       "title": "¿Cómo funcionan las reservas?",
-      "item1": "Crea una reserva express eligiendo el equipo y el tiempo que la quieres mantener",
-      "item2": "Envía la solicitud para ocupar el equipo cuando llegues a él",
-      "item3": "Inicia el temporizador indicando cuánto tiempo lo vas a usar",
-      "item4": "Al terminar, finaliza la reserva para liberar el equipo (o cancélala antes)"
+      "item1": "Crea una reserva express eligiendo el equipo y cuánto tiempo la vas a usar",
+      "item2": "Actívala cuando llegues al equipo — ahí arranca la cuenta regresiva",
+      "item3": "Al terminar, finaliza la reserva para liberar el equipo (o cancélala en cualquier momento antes)"
     },
     "modal": {
       "title": "Nueva Reserva",
@@ -138,15 +137,9 @@
       "cancel": "Cancelar",
       "create": "Crear Reserva"
     },
-    "timerModal": {
-      "title": "Iniciar temporizador",
-      "subtitle": "Indica cuánto tiempo vas a usar el equipo",
-      "confirm": "Iniciar"
-    },
     "action": {
-      "submitRequest": "Ocupar equipo",
+      "activate": "Activar",
       "requestAvailable": "Solicitar liberar equipo",
-      "startTimer": "Iniciar temporizador",
       "end": "Finalizar",
       "cancel": "Cancelar"
     },

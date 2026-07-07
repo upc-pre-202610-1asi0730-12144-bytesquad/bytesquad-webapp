@@ -118,10 +118,9 @@
     },
     "how": {
       "title": "How do reservations work?",
-      "item1": "Create an express reservation choosing the equipment and how long to hold it",
-      "item2": "Submit the request to occupy the equipment once you get to it",
-      "item3": "Start the timer with how long you're going to use it",
-      "item4": "When you're done, end the reservation to release the equipment (or cancel it earlier)"
+      "item1": "Create an express reservation choosing the equipment and how long you'll use it",
+      "item2": "Activate it once you get to the equipment — that's when the countdown starts",
+      "item3": "When you're done, end the reservation to release the equipment (or cancel it any time before)"
     },
     "modal": {
       "title": "New Reservation",
@@ -138,15 +137,9 @@
       "cancel": "Cancel",
       "create": "Create Reservation"
     },
-    "timerModal": {
-      "title": "Start timer",
-      "subtitle": "Tell us how long you're going to use the equipment",
-      "confirm": "Start"
-    },
     "action": {
-      "submitRequest": "Occupy equipment",
+      "activate": "Activate",
       "requestAvailable": "Request to release equipment",
-      "startTimer": "Start timer",
       "end": "End",
       "cancel": "Cancel"
     },
