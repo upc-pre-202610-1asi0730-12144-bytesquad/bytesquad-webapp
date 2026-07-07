@@ -188,10 +188,6 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
           </div>
           <p class="ticket-eq">{{ eq(ticket.equipmentId) }}</p>
           <p class="ticket-desc">{{ ticket.description }}</p>
-          <div class="progress-row">
-            <span class="progress-label">Progress:</span>
-            <span class="badge badge--prog-done">{{ ticket.maintenanceProgress }}</span>
-          </div>
           <div class="ticket-actions">
             <button class="btn btn--outline" style="font-size:.75rem"
               @click="startTicket(ticket.id)" :disabled="store.loading">
@@ -227,10 +223,6 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
           </div>
           <p class="ticket-eq">{{ eq(ticket.equipmentId) }}</p>
           <p class="ticket-desc">{{ ticket.description }}</p>
-          <div class="progress-row">
-            <span class="progress-label">Progress:</span>
-            <span class="badge badge--prog-done">{{ ticket.maintenanceProgress }}</span>
-          </div>
           <div class="ticket-actions">
             <template v-if="completeForm.ticketId === ticket.id">
               <input v-model="completeForm.notes" :placeholder="t('maintenance.complete.notesPlaceholder')"
@@ -263,10 +255,6 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
           </div>
           <p class="ticket-eq">{{ eq(ticket.equipmentId) }}</p>
           <p class="ticket-desc">{{ ticket.description }}</p>
-          <div class="progress-row">
-            <span class="progress-label">Progress:</span>
-            <span class="badge badge--prog-done">{{ ticket.maintenanceProgress }}</span>
-          </div>
           <button class="btn btn--outline" style="font-size:.72rem;margin-top:.25rem;width:100%"
                   @click="toggleLog(ticket.id)">
             <span class="material-icons" style="font-size:13px">{{ expandedLogId === ticket.id ? 'expand_less' : 'expand_more' }}</span>
@@ -370,8 +358,6 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
 .ticket-id       { color: var(--text-secondary); font-family: monospace; font-size: .75rem; }
 .ticket-eq       { font-weight: 500; }
 .ticket-desc     { color: var(--text-secondary); font-size: .78rem; }
-.progress-row    { align-items: center; display: flex; gap: .5rem; }
-.progress-label  { color: var(--text-secondary); font-size: .75rem; }
 .ticket-actions  { align-items: center; display: flex; flex-wrap: wrap; gap: .3rem; }
 .action-error    { align-items: center; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: var(--red); display: flex; font-size: .85rem; gap: .5rem; margin-bottom: 1rem; padding: .6rem .75rem; }
 .log-panel       { background: rgba(255,255,255,.03); border-radius: 4px; padding: .5rem .6rem; }
