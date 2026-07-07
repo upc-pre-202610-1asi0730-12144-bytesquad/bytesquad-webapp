@@ -179,7 +179,6 @@
     "reservations": "Mis Reservas",
     "profile": "Mi Perfil",
     "financial": "Impacto Financiero",
-    "analyticsRecords": "Registros Analíticos"
   },
   "dashboard": {
     "welcome": "¡Hola de nuevo, {name}!",
@@ -938,40 +937,4 @@
       "generic": "Algo salió mal. Por favor, intenta de nuevo."
     }
   },
-  "analyticsRecords": {
-    "title": "Registros Analíticos",
-    "subtitle": "Crea y consulta reportes de actividad, cotizaciones de mantenimiento y proyecciones ROI",
-    "submit": "Registrar",
-    "successMessage": "Registro creado exitosamente",
-    "recentRecords": "Registros Recientes",
-    "noRecords": "Sin registros aún",
-    "date": "Fecha",
-    "placeholderNumber": "ej. 120",
-    "placeholderMoney": "ej. 1500.00",
-    "placeholderPercent": "ej. 12.5",
-    "activityReport": {
-      "title": "Reporte de Actividad",
-      "formTitle": "Nuevo Reporte de Actividad",
-      "totalUsageTime": "Tiempo de Uso Total (h)",
-      "downtimeCost": "Costo de Inactividad ($)",
-      "percentageComparison": "% Comparación"
-    },
-    "maintenanceQuote": {
-      "title": "Cotización de Mantenimiento",
-      "formTitle": "Nueva Cotización de Mantenimiento",
-      "correctiveActionsCost": "Costo de Acciones Correctivas ($)",
-      "sparePartsCost": "Costo de Repuestos ($)",
-      "preventiveCost": "Costo Preventivo ($)",
-      "total": "Total",
-      "autoConsolidate": "El total se consolidará automáticamente tras enviar."
-    },
-    "roiProjection": {
-      "title": "Proyección ROI",
-      "formTitle": "Nueva Proyección ROI",
-      "projectedDowntimeCost": "Costo de Inactividad Proyectado ($)",
-      "projectedEarnings": "Ganancias Proyectadas ($)",
-      "demand": "Demanda",
-      "autoGenerate": "El índice ROI y el estado de demanda se generarán automáticamente."
-    }
-  }
 }
