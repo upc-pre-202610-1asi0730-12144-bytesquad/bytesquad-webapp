@@ -548,7 +548,7 @@ function reportAsOccupied() { closeMachineDetail(); showToast(t('map.detail.noti
 .mini-pin { align-items: center; color: var(--text-primary); display: flex; position: absolute; transform: translate(-50%, -50%); }
 .gym-card-stats { display: flex; font-size: .75rem; gap: .75rem; }
 .gym-stat--green { color: var(--green); } .gym-stat--red { color: var(--red); }
-.detail-backdrop { align-items: flex-end; background: rgba(0,0,0,.5); bottom: 0; display: flex; justify-content: center; left: 0; position: fixed; right: 0; top: 0; z-index: 500; }
+.detail-backdrop { align-items: center; background: rgba(0,0,0,.5); bottom: 0; display: flex; justify-content: center; left: 0; position: fixed; right: 0; top: 0; z-index: 500; }
 .detail-popup { max-width: 420px; padding: 1.25rem; width: 100%; }
 .detail-header { align-items: flex-start; display: flex; justify-content: space-between; margin-bottom: .75rem; }
 .detail-header-info { align-items: center; display: flex; gap: .6rem; }
