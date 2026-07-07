@@ -38,6 +38,11 @@ export class GymApi extends BaseApi {
     return this.#branchAssembler.toEntityFromResource(data);
   }
 
+  async getZones(gymId, branchId) {
+    const { data } = await this.http.get(`gyms/${gymId}/branches/${branchId}/zones`);
+    return (Array.isArray(data) ? data : []).map(r => this.#zoneAssembler.toEntityFromResource(r));
+  }
+
   async createZone(gymId, branchId, entity) {
     const resource = this.#zoneAssembler.toResourceFromEntity(entity);
     const { data } = await this.http.post(`gyms/${gymId}/branches/${branchId}/zones`, resource);
