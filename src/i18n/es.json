@@ -753,11 +753,19 @@
         }
       }
     },
+    "gymSwitcher": {
+      "title": "Tu Gimnasio",
+      "empty": "Todavía no te has unido a ningún gimnasio.",
+      "active": "Activo",
+      "switch": "Cambiar",
+      "joinAnother": "+ Unirme a otro gimnasio"
+    },
     "account": {
       "title": "Información de la Cuenta",
       "email": "Email",
       "gymName": "Nombre del Gimnasio",
-      "phone": "Teléfono"
+      "phone": "Teléfono",
+      "dni": "DNI"
     },
     "language": {
       "title": "Preferencias de Idioma",

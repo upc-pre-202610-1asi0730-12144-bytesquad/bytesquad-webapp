@@ -4,11 +4,15 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useAuthStore }     from '@/authentication/application/auth.store.js';
 import { useProfilesStore } from '@/profiles/application/profiles.store.js';
+import { useActiveGymStore } from '@/profiles/application/active-gym.store.js';
+import { useGymStore } from '@/gym/application/gym.store.js';
 
 const { t, locale } = useI18n();
 const router         = useRouter();
 const auth           = useAuthStore();
 const profilesStore  = useProfilesStore();
+const activeGymStore = useActiveGymStore();
+const gymStore       = useGymStore();
 
 const isAdmin = computed(() => auth.isAdmin);
 
@@ -29,11 +33,19 @@ const editForm = ref({ firstName: '', lastName: '', phoneNumber: '' });
 function openEdit() {
   const p = profilesStore.myProfile;
   editForm.value = {
-    firstName:   '',
-    lastName:    '',
+    firstName:   p?.firstName ?? '',
+    lastName:    p?.lastName ?? '',
     phoneNumber: p?.phoneNumber ?? '',
   };
   editMode.value = true;
+}
+
+function gymName(gymId) {
+  return gymStore.gyms.find(g => g.id === gymId)?.name ?? `#${gymId}`;
+}
+
+async function switchGym(gymId) {
+  await activeGymStore.changeActiveGym(gymId);
 }
 
 async function submitEdit() {
@@ -56,7 +68,13 @@ function logout() {
   router.push('/login');
 }
 
-onMounted(() => profilesStore.loadMyProfile());
+onMounted(() => {
+  profilesStore.loadMyProfile();
+  if (!auth.isAdmin) {
+    activeGymStore.loadAssociations();
+    gymStore.loadGyms();
+  }
+});
 </script>
 
 <template>
@@ -156,6 +174,23 @@ onMounted(() => profilesStore.loadMyProfile());
         </div>
       </div>
 
+      <!-- Gym switcher -->
+      <div class="card section">
+        <h2 class="section-title">{{ t('profile.gymSwitcher.title') }}</h2>
+        <p v-if="!activeGymStore.associations.length" class="section-hint">{{ t('profile.gymSwitcher.empty') }}</p>
+        <ul v-else class="gym-list">
+          <li v-for="assoc in activeGymStore.associations" :key="assoc.gymId" class="gym-item">
+            <span class="material-icons" style="font-size:18px;color:var(--accent)">storefront</span>
+            <span class="gym-item__name">{{ gymName(assoc.gymId) }}</span>
+            <span v-if="assoc.active" class="badge badge--green">{{ t('profile.gymSwitcher.active') }}</span>
+            <button v-else class="btn btn--outline btn--sm" :disabled="activeGymStore.loading" @click="switchGym(assoc.gymId)">
+              {{ t('profile.gymSwitcher.switch') }}
+            </button>
+          </li>
+        </ul>
+        <router-link to="/gym/associate" class="join-link">{{ t('profile.gymSwitcher.joinAnother') }}</router-link>
+      </div>
+
       <!-- Edit form -->
       <div class="card section">
         <h2 class="section-title">{{ t('profile.account.title') }}</h2>
@@ -167,6 +202,10 @@ onMounted(() => profilesStore.loadMyProfile());
           <div class="account-field">
             <label>{{ t('profile.account.phone') }}</label>
             <p>{{ profilesStore.myProfile?.phoneNumber ?? '—' }}</p>
+          </div>
+          <div class="account-field">
+            <label>{{ t('profile.account.dni') }}</label>
+            <p>{{ profilesStore.myProfile?.dni ?? '—' }}</p>
           </div>
         </div>
         <template v-if="editMode">
@@ -266,6 +305,11 @@ onMounted(() => profilesStore.loadMyProfile());
 
 <style scoped>
 .page__header { align-items: center; display: flex; gap: .75rem; margin-bottom: 1.25rem; }
+.gym-list { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .5rem; }
+.gym-item { align-items: center; background: var(--bg-surface); border-radius: 8px; display: flex; gap: .6rem; padding: .5rem .75rem; }
+.gym-item__name { flex: 1; font-size: .85rem; }
+.btn--sm { font-size: .75rem; padding: .25rem .6rem; }
+.join-link { color: var(--accent); font-size: .8rem; text-decoration: none; }
 .role-badge { border-radius: 12px; font-size: .75rem; font-weight: 700; padding: .25rem .75rem; }
 .role-badge--admin  { background: rgba(245,188,54,.2); color: var(--accent); }
 .role-badge--client { background: rgba(0,204,178,.15); color: var(--teal); }

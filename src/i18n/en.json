@@ -753,11 +753,19 @@
         }
       }
     },
+    "gymSwitcher": {
+      "title": "Your Gym",
+      "empty": "You haven't joined a gym yet.",
+      "active": "Active",
+      "switch": "Switch",
+      "joinAnother": "+ Join another gym"
+    },
     "account": {
       "title": "Account Information",
       "email": "Email",
       "gymName": "Gym Name",
-      "phone": "Phone"
+      "phone": "Phone",
+      "dni": "DNI"
     },
     "language": {
       "title": "Language Preferences",
