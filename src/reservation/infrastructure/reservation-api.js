@@ -29,13 +29,9 @@ export class ReservationApi extends BaseApi {
     return asm.toEntityFromResource(data);
   }
 
-  async requestEquipmentAvailable(id) {
-    const { data } = await this.http.post(`reservations/${id}/request-equipment-available`);
-    return asm.toEntityFromResource(data);
-  }
 
-  async startTimer(id) {
-    const { data } = await this.http.post(`reservations/${id}/start-timer`);
+  async startTimer(id, durationMinutes) {
+    const { data } = await this.http.post(`reservations/${id}/start-timer`, { durationMinutes });
     return asm.toEntityFromResource(data);
   }
 

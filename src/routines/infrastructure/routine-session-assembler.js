@@ -8,10 +8,11 @@ export class RoutineSessionAssembler {
       clientId:  r.clientId,
       status:    r.status,
       startedAt: r.startedAt,
+      completedExerciseBlockIds: r.completedExerciseBlockIds,
     });
   }
 
-  toCreateResource(dto) {
-    return { routineId: dto.routineId, clientId: dto.clientId };
+  toCreateResource(resource) {
+    return { routineId: resource.routineId };
   }
 }

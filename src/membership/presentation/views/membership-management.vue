@@ -1,254 +1,312 @@
 <script setup>
-import { ref } from 'vue';
-import { useMembershipStore }   from '@/membership/application/membership.store.js';
-import { useBranchAccessStore } from '@/membership/application/branch-access.store.js';
-import { MembershipPlan, MembershipStatus } from '@/membership/domain/model/membership.entity.js';
-import { BranchAccessStatus } from '@/membership/domain/model/branch-access.entity.js';
+import { ref, computed, onMounted } from 'vue';
+import { useI18n }            from 'vue-i18n';
+import { useAuthStore }       from '@/authentication/application/auth.store.js';
+import { useMembershipStore } from '@/membership/application/membership.store.js';
+import { MembershipStatus }   from '@/membership/domain/model/membership.entity.js';
+import { MEMBERSHIP_PLANS, getPlanInfo, lowerPlans, higherOrOtherPlans } from '@/membership/domain/model/membership-plans.js';
 
-const membershipStore   = useMembershipStore();
-const branchAccessStore = useBranchAccessStore();
+const { t } = useI18n();
 
-const activeTab = ref('membership');
+const auth            = useAuthStore();
+const membershipStore = useMembershipStore();
 
-// ── Activate form ──────────────────────────────────────────────────────────
-const activateForm = ref({ clientId: '', plan: MembershipPlan.Basic, startDate: '', endDate: '' });
+onMounted(() => membershipStore.loadByClient(auth.user.id));
 
-async function submitActivate() {
-  if (!activateForm.value.clientId || !activateForm.value.startDate || !activateForm.value.endDate) return;
-  await membershipStore.activate(
-    Number(activateForm.value.clientId),
-    activateForm.value.plan,
-    activateForm.value.startDate,
-    activateForm.value.endDate,
-  );
-  activateForm.value = { clientId: '', plan: MembershipPlan.Basic, startDate: '', endDate: '' };
-}
+const myMembership = computed(() => membershipStore.memberships[0] ?? null);
+const planInfo     = computed(() => myMembership.value ? getPlanInfo(myMembership.value.plan) : null);
 
-// ── Search by client ───────────────────────────────────────────────────────
-const searchClientId = ref('');
-
-async function searchByClient() {
-  if (!searchClientId.value) return;
-  await membershipStore.loadByClient(Number(searchClientId.value));
-}
-
-// ── Inline actions ─────────────────────────────────────────────────────────
-const renewForm = ref({ id: null, newEndDate: '' });
-const planForm  = ref({ id: null, newPlan: MembershipPlan.Basic });
-
-async function submitRenew(m) {
-  if (!renewForm.value.newEndDate) return;
-  await membershipStore.renew(m.id, renewForm.value.newEndDate);
-  renewForm.value = { id: null, newEndDate: '' };
-}
-
-async function submitPlan(m) {
-  await membershipStore.changePlan(m.id, planForm.value.newPlan);
-  planForm.value = { id: null, newPlan: MembershipPlan.Basic };
-}
-
-// ── Grant form ─────────────────────────────────────────────────────────────
-const grantForm = ref({ membershipId: '', branchId: '', grantedByAdminId: '' });
-
-async function submitGrant() {
-  if (!grantForm.value.membershipId || !grantForm.value.branchId || !grantForm.value.grantedByAdminId) return;
-  await branchAccessStore.grant(
-    Number(grantForm.value.membershipId),
-    Number(grantForm.value.branchId),
-    Number(grantForm.value.grantedByAdminId),
-  );
-  grantForm.value = { membershipId: '', branchId: '', grantedByAdminId: '' };
-}
-
-// ── Helpers ────────────────────────────────────────────────────────────────
+// ── Status badge ───────────────────────────────────────────────────────────
 function statusClass(s) {
-  return s === MembershipStatus.Active ? 'green' : s === MembershipStatus.Suspended ? 'amber' : 'red';
+  if (s === MembershipStatus.Active)              return 'green';
+  if (s === MembershipStatus.Suspended || s === MembershipStatus.PendingCancellation) return 'amber';
+  return 'red';
 }
 
-function accessClass(s) {
-  return s === BranchAccessStatus.Granted ? 'green' : 'red';
+// ── Renew ──────────────────────────────────────────────────────────────────
+const showRenewInput = ref(false);
+const renewDate      = ref('');
+
+async function submitRenew() {
+  if (!renewDate.value) return;
+  await membershipStore.renew(myMembership.value.id, renewDate.value);
+  showRenewInput.value = false;
+  renewDate.value      = '';
 }
+
+// ── Plan selector (Change Plan / Downgrade) ────────────────────────────────
+const selectorMode   = ref(null); // null | 'upgrade' | 'downgrade'
+const selectorPlans  = computed(() => {
+  if (!myMembership.value) return [];
+  return selectorMode.value === 'downgrade'
+    ? lowerPlans(myMembership.value.plan)
+    : higherOrOtherPlans(myMembership.value.plan);
+});
+
+function openSelector(mode) {
+  selectorMode.value   = mode;
+  showRenewInput.value = false;
+}
+function closeSelector() { selectorMode.value = null; }
+
+async function selectPlan(planId) {
+  if (selectorMode.value === 'downgrade') {
+    await membershipStore.downgrade(myMembership.value.id, planId);
+  } else {
+    await membershipStore.changePlan(myMembership.value.id, planId);
+  }
+  closeSelector();
+}
+
+// ── Downgrade visibility ───────────────────────────────────────────────────
+const canDowngrade = computed(() =>
+  myMembership.value ? lowerPlans(myMembership.value.plan).length > 0 : false
+);
 </script>
 
 <template>
   <div class="page">
     <div class="page__header">
-      <h1 class="page__title">Membership Management</h1>
+      <h1 class="page__title">{{ t('membership.title') }}</h1>
     </div>
 
-    <div class="tabs">
-      <button class="tab-btn" :class="{ 'tab-btn--active': activeTab === 'membership' }"    @click="activeTab = 'membership'">Memberships</button>
-      <button class="tab-btn" :class="{ 'tab-btn--active': activeTab === 'branchAccess' }"  @click="activeTab = 'branchAccess'">Branch Access</button>
+    <div v-if="membershipStore.error" class="error-banner card">
+      {{ membershipStore.error }}
     </div>
 
-    <div v-if="membershipStore.error || branchAccessStore.error" class="error-banner card">
-      {{ membershipStore.error || branchAccessStore.error }}
+    <!-- Loading skeleton -->
+    <div v-if="membershipStore.loading && !myMembership" class="card skeleton-card">
+      <div class="skeleton skeleton--title" />
+      <div class="skeleton skeleton--line" />
+      <div class="skeleton skeleton--line short" />
     </div>
 
-    <!-- ── MEMBERSHIP TAB ──────────────────────────────────────────────────── -->
-    <template v-if="activeTab === 'membership'">
+    <!-- No membership -->
+    <div v-else-if="!membershipStore.loading && !myMembership" class="empty-state card">
+      <span class="material-icons" style="font-size:36px;color:var(--text-secondary)">card_membership</span>
+      <p style="color:var(--text-secondary);font-size:.85rem">{{ t('membership.empty') }}</p>
+    </div>
 
-      <!-- Activate form -->
-      <form class="card form-grid" @submit.prevent="submitActivate">
-        <h2 class="form-title">Activate Membership</h2>
-        <div class="form-field">
-          <label>Client ID</label>
-          <input type="number" v-model.number="activateForm.clientId" placeholder="clientId" required />
-        </div>
-        <div class="form-field">
-          <label>Plan</label>
-          <select v-model="activateForm.plan">
-            <option v-for="p in Object.values(MembershipPlan)" :key="p" :value="p">{{ p }}</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Start Date</label>
-          <input type="date" v-model="activateForm.startDate" required />
-        </div>
-        <div class="form-field">
-          <label>End Date</label>
-          <input type="date" v-model="activateForm.endDate" required />
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn--primary" :disabled="membershipStore.loading">Activate</button>
-        </div>
-      </form>
+    <!-- Membership card -->
+    <template v-else-if="myMembership">
+      <div class="card membership-card">
 
-      <!-- Search by client -->
-      <div class="card search-row">
-        <input type="number" v-model.number="searchClientId" placeholder="Search by Client ID" />
-        <button class="btn btn--outline" :disabled="membershipStore.loading" @click="searchByClient">Load</button>
+        <div class="membership-card__top">
+          <div class="membership-card__plan">
+            <span class="plan-name">{{ planInfo?.displayName ?? myMembership.plan }}</span>
+            <span class="plan-price" v-if="myMembership.amount && myMembership.currency">
+              {{ myMembership.currency }} {{ myMembership.amount }}<span class="plan-price__period">{{ t('membership.perMonth') }}</span>
+            </span>
+            <span class="plan-price" v-else-if="planInfo">
+              {{ planInfo.price }}<span class="plan-price__period">{{ t('membership.perMonth') }}</span>
+            </span>
+          </div>
+          <span class="badge" :class="`badge--${statusClass(myMembership.status)}`">
+            {{ t(`membership.status.${myMembership.status}`) }}
+          </span>
+        </div>
+
+        <div class="membership-card__meta">
+          <div class="meta-item">
+            <span class="material-icons meta-item__icon">event</span>
+            <span class="meta-item__label">{{ t('membership.card.renewal') }}</span>
+            <span class="meta-item__value">{{ myMembership.endDate?.slice(0, 10) ?? '—' }}</span>
+          </div>
+          <div v-if="myMembership.startDate" class="meta-item">
+            <span class="material-icons meta-item__icon">calendar_today</span>
+            <span class="meta-item__label">{{ t('membership.card.startDate') }}</span>
+            <span class="meta-item__value">{{ myMembership.startDate.slice(0, 10) }}</span>
+          </div>
+        </div>
+
+        <div v-if="myMembership.pendingDowngradePlan" class="downgrade-notice">
+          <span class="material-icons" style="font-size:15px">schedule</span>
+          {{ t('membership.card.pendingDowngrade', { plan: getPlanInfo(myMembership.pendingDowngradePlan)?.displayName ?? myMembership.pendingDowngradePlan }) }}
+        </div>
+
+        <div v-if="myMembership.status === MembershipStatus.PendingCancellation" class="downgrade-notice downgrade-notice--cancel">
+          <span class="material-icons" style="font-size:15px">info</span>
+          {{ t('membership.card.pendingCancellation', { date: myMembership.endDate?.slice(0, 10) }) }}
+        </div>
       </div>
 
-      <!-- Memberships table -->
-      <div v-if="membershipStore.memberships.length" class="card" style="padding:0;overflow:hidden">
-        <table class="data-table">
-          <thead><tr>
-            <th>ID</th><th>Client</th><th>Plan</th><th>Start</th><th>End</th><th>Status</th><th>Actions</th>
-          </tr></thead>
-          <tbody>
-            <tr v-for="m in membershipStore.memberships" :key="m.id">
-              <td class="cell-id">{{ m.id }}</td>
-              <td>{{ m.clientId }}</td>
-              <td>{{ m.plan }}</td>
-              <td style="font-size:.78rem">{{ m.startDate?.slice(0,10) }}</td>
-              <td style="font-size:.78rem">{{ m.endDate?.slice(0,10) }}</td>
-              <td>
-                <span class="badge" :class="`badge--${statusClass(m.status)}`">{{ m.status }}</span>
-              </td>
-              <td class="actions">
-                <button class="btn btn--icon" title="Suspend"
-                  :disabled="m.status !== 'Active'"
-                  @click="membershipStore.suspend(m.id)">
-                  <span class="material-icons" style="font-size:16px">pause_circle</span>
-                </button>
-                <button class="btn btn--icon" title="Cancel"
-                  :disabled="m.status === 'Cancelled'"
-                  @click="membershipStore.cancel(m.id)">
-                  <span class="material-icons" style="font-size:16px;color:var(--red)">cancel</span>
-                </button>
-                <!-- Renew inline -->
-                <template v-if="renewForm.id === m.id">
-                  <input type="date" v-model="renewForm.newEndDate" style="font-size:.75rem;width:120px" />
-                  <button class="btn btn--primary" style="font-size:.75rem" @click="submitRenew(m)">OK</button>
-                  <button class="btn btn--outline" style="font-size:.75rem" @click="renewForm.id = null">✕</button>
-                </template>
-                <button v-else class="btn btn--icon" title="Renew"
-                  @click="renewForm = { id: m.id, newEndDate: '' }">
-                  <span class="material-icons" style="font-size:16px">autorenew</span>
-                </button>
-                <!-- Change plan inline -->
-                <template v-if="planForm.id === m.id">
-                  <select v-model="planForm.newPlan" style="font-size:.75rem">
-                    <option v-for="p in Object.values(MembershipPlan)" :key="p" :value="p">{{ p }}</option>
-                  </select>
-                  <button class="btn btn--primary" style="font-size:.75rem" @click="submitPlan(m)">OK</button>
-                  <button class="btn btn--outline" style="font-size:.75rem" @click="planForm.id = null">✕</button>
-                </template>
-                <button v-else class="btn btn--icon" title="Change plan"
-                  @click="planForm = { id: m.id, newPlan: m.plan }">
-                  <span class="material-icons" style="font-size:16px">swap_horiz</span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div v-else-if="!membershipStore.loading" class="empty-state card">
-        <span class="material-icons" style="font-size:36px;color:var(--text-secondary)">card_membership</span>
-        <p style="color:var(--text-secondary);font-size:.85rem">No memberships loaded. Activate one or search by client ID.</p>
-      </div>
-    </template>
+      <!-- Action row -->
+      <div class="actions-row">
+        <!-- Renew -->
+        <template v-if="showRenewInput">
+          <input type="date" v-model="renewDate" class="renew-input" />
+          <button class="btn btn--primary btn--sm" :disabled="membershipStore.loading" @click="submitRenew">OK</button>
+          <button class="btn btn--outline btn--sm" @click="showRenewInput = false; renewDate = ''">✕</button>
+        </template>
+        <button v-else
+          class="btn btn--outline"
+          :disabled="myMembership.status === MembershipStatus.Cancelled || myMembership.status === MembershipStatus.Expired"
+          @click="showRenewInput = true; closeSelector()">
+          <span class="material-icons btn__icon">autorenew</span> {{ t('membership.actions.renew') }}
+        </button>
 
-    <!-- ── BRANCH ACCESS TAB ───────────────────────────────────────────────── -->
-    <template v-if="activeTab === 'branchAccess'">
+        <!-- Suspend -->
+        <button class="btn btn--outline"
+          :disabled="myMembership.status !== MembershipStatus.Active || membershipStore.loading"
+          @click="membershipStore.suspend(myMembership.id)">
+          <span class="material-icons btn__icon">pause_circle</span> {{ t('membership.actions.suspend') }}
+        </button>
 
-      <form class="card form-grid" @submit.prevent="submitGrant">
-        <h2 class="form-title">Grant Branch Access</h2>
-        <div class="form-field">
-          <label>Membership ID</label>
-          <input type="number" v-model.number="grantForm.membershipId" placeholder="membershipId" required />
-        </div>
-        <div class="form-field">
-          <label>Branch ID</label>
-          <input type="number" v-model.number="grantForm.branchId" placeholder="branchId" required />
-        </div>
-        <div class="form-field">
-          <label>Granted By Admin ID</label>
-          <input type="number" v-model.number="grantForm.grantedByAdminId" placeholder="adminId" required />
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn--primary" :disabled="branchAccessStore.loading">Grant Access</button>
-        </div>
-      </form>
+        <!-- Cancel -->
+        <button class="btn btn--danger"
+          :disabled="myMembership.status === MembershipStatus.Cancelled || myMembership.status === MembershipStatus.PendingCancellation || membershipStore.loading"
+          @click="membershipStore.cancel(myMembership.id)">
+          <span class="material-icons btn__icon">cancel</span> {{ t('membership.actions.cancel') }}
+        </button>
 
-      <!-- Accesses granted this session -->
-      <div v-if="branchAccessStore.accesses.length" class="card" style="padding:0;overflow:hidden;margin-top:1rem">
-        <table class="data-table">
-          <thead><tr>
-            <th>ID</th><th>Membership</th><th>Branch</th><th>Status</th><th>Granted By</th>
-          </tr></thead>
-          <tbody>
-            <tr v-for="a in branchAccessStore.accesses" :key="a.id">
-              <td class="cell-id">{{ a.id }}</td>
-              <td>{{ a.membershipId }}</td>
-              <td>{{ a.branchId }}</td>
-              <td><span class="badge" :class="`badge--${accessClass(a.status)}`">{{ a.status }}</span></td>
-              <td>{{ a.grantedByAdminId }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="actions-row__divider" />
+
+        <!-- Change Plan -->
+        <button class="btn btn--outline"
+          :class="{ 'btn--active': selectorMode === 'upgrade' }"
+          :disabled="membershipStore.loading"
+          @click="selectorMode === 'upgrade' ? closeSelector() : openSelector('upgrade')">
+          <span class="material-icons btn__icon">swap_horiz</span> {{ t('membership.actions.changePlan') }}
+        </button>
+
+        <!-- Downgrade -->
+        <button v-if="canDowngrade"
+          class="btn btn--outline"
+          :class="{ 'btn--active': selectorMode === 'downgrade' }"
+          :disabled="membershipStore.loading"
+          @click="selectorMode === 'downgrade' ? closeSelector() : openSelector('downgrade')">
+          <span class="material-icons btn__icon">arrow_downward</span> {{ t('membership.actions.downgrade') }}
+        </button>
       </div>
-      <div v-else class="empty-state card" style="margin-top:1rem">
-        <!-- TODO: wire when backend adds GET /branch-accesses -->
-        <span class="material-icons" style="font-size:36px;color:var(--text-secondary)">lock_open</span>
-        <p style="color:var(--text-secondary);font-size:.85rem">No accesses granted this session.</p>
-      </div>
+
+      <!-- Plan selector panel -->
+      <transition name="slide-down">
+        <div v-if="selectorMode" class="selector-panel card">
+          <div class="selector-panel__header">
+            <p class="selector-panel__title">
+              {{ selectorMode === 'downgrade' ? t('membership.selector.titleDowngrade') : t('membership.selector.titleUpgrade') }}
+            </p>
+            <button class="btn btn--ghost btn--sm" @click="closeSelector">
+              <span class="material-icons" style="font-size:18px">close</span>
+            </button>
+          </div>
+
+          <div class="plan-cards">
+            <div v-for="plan in MEMBERSHIP_PLANS" :key="plan.id"
+              class="plan-card"
+              :class="{
+                'plan-card--current':     plan.id === myMembership.plan,
+                'plan-card--popular':     plan.popular,
+                'plan-card--unavailable': !selectorPlans.find(p => p.id === plan.id) && plan.id !== myMembership.plan,
+              }">
+
+              <div v-if="plan.popular" class="popular-pip">{{ t('membership.selector.popular') }}</div>
+
+              <div class="plan-card__head">
+                <span class="plan-card__name">{{ plan.displayName }}</span>
+                <span class="plan-card__price">{{ plan.price }}<span class="plan-card__period">{{ t('membership.perMonth') }}</span></span>
+              </div>
+
+              <ul class="plan-card__features">
+                <li v-for="f in plan.features" :key="f" class="plan-card__feature">
+                  <span class="material-icons plan-card__check">check</span>{{ f }}
+                </li>
+              </ul>
+
+              <button class="btn plan-card__btn"
+                :class="plan.id === myMembership.plan ? 'btn--ghost' : 'btn--primary'"
+                :disabled="plan.id === myMembership.plan || !selectorPlans.find(p => p.id === plan.id) || membershipStore.loading"
+                @click="selectPlan(plan.id)">
+                {{ plan.id === myMembership.plan ? t('membership.selector.currentPlan') : t('membership.selector.select') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </transition>
     </template>
   </div>
 </template>
 
 <style scoped>
-.tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
-.tab-btn { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text-secondary); cursor: pointer; font-size: .8rem; padding: .3rem .9rem; transition: all .15s; }
-.tab-btn--active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
-.form-grid { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; margin-bottom: 1rem; }
-.form-title { color: var(--text-primary); font-size: .95rem; font-weight: 600; grid-column: 1 / -1; margin: 0; }
-.form-field { display: flex; flex-direction: column; gap: .375rem; }
-.form-field label { color: var(--text-secondary); font-size: .8rem; font-weight: 500; }
-.form-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; padding-top: .5rem; }
-.search-row { align-items: center; display: flex; gap: .75rem; margin-bottom: 1rem; }
-.search-row input { flex: 1; }
-.data-table { border-collapse: collapse; font-size: .83rem; width: 100%; }
-.data-table th { background: var(--bg-surface); border-bottom: 1px solid var(--border); color: var(--text-secondary); font-weight: 500; padding: .5rem .75rem; text-align: left; }
-.data-table td { border-bottom: 1px solid rgba(255,255,255,.04); padding: .45rem .75rem; vertical-align: middle; }
-.cell-id { color: var(--text-secondary); font-family: monospace; font-size: .75rem; }
-.actions { align-items: center; display: flex; flex-wrap: wrap; gap: .25rem; }
-.badge { border-radius: 999px; font-size: .7rem; font-weight: 600; padding: 2px 8px; }
+/* ── Membership card ──────────────────────────────────────────────────────── */
+.membership-card { margin-bottom: 1rem; }
+.membership-card__top { align-items: flex-start; display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.membership-card__plan { display: flex; flex-direction: column; gap: .2rem; }
+.plan-name  { font-size: 1.35rem; font-weight: 700; color: var(--text-primary); }
+.plan-price { color: var(--accent); font-size: 1.05rem; font-weight: 600; }
+.plan-price__period { color: var(--text-secondary); font-size: .8rem; font-weight: 400; }
+
+.membership-card__meta { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-bottom: .75rem; }
+.meta-item { align-items: center; display: flex; gap: .35rem; }
+.meta-item__icon  { color: var(--text-secondary); font-size: 15px; }
+.meta-item__label { color: var(--text-secondary); font-size: .78rem; }
+.meta-item__value { color: var(--text-primary); font-size: .85rem; font-weight: 500; }
+
+.downgrade-notice { align-items: center; background: rgba(245,188,54,.1); border: 1px solid rgba(245,188,54,.3); border-radius: 6px; color: var(--accent); display: flex; font-size: .78rem; gap: .35rem; margin-top: .5rem; padding: .45rem .75rem; }
+.downgrade-notice--cancel { background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.3); color: var(--red); }
+
+/* ── Badges ───────────────────────────────────────────────────────────────── */
+.badge { border-radius: 999px; font-size: .7rem; font-weight: 600; padding: 3px 10px; white-space: nowrap; }
 .badge--green { background: rgba(34,197,94,.15); color: var(--green); }
 .badge--amber { background: rgba(245,188,54,.15); color: var(--accent); }
 .badge--red   { background: rgba(239,68,68,.15);  color: var(--red); }
+
+/* ── Action row ───────────────────────────────────────────────────────────── */
+.actions-row { align-items: center; display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.actions-row__divider { background: var(--border); height: 24px; margin: 0 .25rem; width: 1px; }
+.renew-input { font-size: .82rem; padding: .3rem .5rem; width: 130px; }
+
+.btn__icon { font-size: 15px; vertical-align: middle; margin-right: 2px; }
+.btn--sm { font-size: .8rem; padding: .3rem .65rem; }
+.btn--ghost { background: transparent; border: 1px solid transparent; color: var(--text-secondary); }
+.btn--ghost:hover { color: var(--text-primary); }
+.btn--danger { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3); color: var(--red); border-radius: var(--radius); cursor: pointer; font-size: .85rem; font-weight: 600; padding: .4rem .85rem; transition: opacity .15s; }
+.btn--danger:disabled { cursor: not-allowed; opacity: .4; }
+.btn--danger:not(:disabled):hover { opacity: .8; }
+.btn--active { border-color: var(--accent) !important; color: var(--accent) !important; }
+
+/* ── Plan selector panel ──────────────────────────────────────────────────── */
+.selector-panel { overflow: hidden; padding: 1.25rem; }
+.selector-panel__header { align-items: center; display: flex; justify-content: space-between; margin-bottom: 1.1rem; }
+.selector-panel__title  { color: var(--text-primary); font-size: .9rem; font-weight: 600; margin: 0; }
+
+.plan-cards { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+
+.plan-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; gap: .6rem; padding: 1rem; position: relative; transition: border-color .15s; }
+.plan-card--current     { border-color: var(--accent); }
+.plan-card--unavailable { opacity: .45; }
+.popular-pip { background: var(--accent); border-radius: 999px; color: #000; font-size: .65rem; font-weight: 700; left: 50%; padding: 2px 10px; position: absolute; top: -11px; transform: translateX(-50%); white-space: nowrap; }
+
+.plan-card__head  { align-items: baseline; display: flex; justify-content: space-between; }
+.plan-card__name  { color: var(--text-primary); font-size: 1rem; font-weight: 700; }
+.plan-card__price { color: var(--accent); font-size: .95rem; font-weight: 700; }
+.plan-card__period{ color: var(--text-secondary); font-size: .72rem; font-weight: 400; }
+
+.plan-card__features { display: flex; flex-direction: column; flex: 1; gap: .3rem; list-style: none; margin: 0; padding: 0; }
+.plan-card__feature  { align-items: flex-start; color: var(--text-secondary); display: flex; font-size: .76rem; gap: .3rem; line-height: 1.4; }
+.plan-card__check    { color: var(--accent); flex-shrink: 0; font-size: .85rem; margin-top: .05rem; }
+
+.plan-card__btn { margin-top: auto; padding: .45rem; width: 100%; }
+
+/* ── Skeleton ─────────────────────────────────────────────────────────────── */
+.skeleton-card { display: flex; flex-direction: column; gap: .75rem; }
+.skeleton { animation: pulse 1.4s ease-in-out infinite; background: var(--border); border-radius: 4px; }
+.skeleton--title { height: 22px; width: 40%; }
+.skeleton--line  { height: 14px; width: 70%; }
+.skeleton--line.short { width: 45%; }
+@keyframes pulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+
+/* ── Error / empty ────────────────────────────────────────────────────────── */
 .error-banner { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: var(--red); font-size: .85rem; margin-bottom: 1rem; padding: .75rem; }
-.empty-state { align-items: center; display: flex; flex-direction: column; gap: .75rem; padding: 2.5rem; text-align: center; }
-@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+.empty-state  { align-items: center; display: flex; flex-direction: column; gap: .75rem; padding: 2.5rem; text-align: center; }
+
+/* ── Panel transition ─────────────────────────────────────────────────────── */
+.slide-down-enter-active, .slide-down-leave-active { max-height: 600px; overflow: hidden; transition: max-height .25s ease, opacity .2s ease; }
+.slide-down-enter-from, .slide-down-leave-to       { max-height: 0; opacity: 0; }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .plan-cards { grid-template-columns: 1fr; }
+  .actions-row__divider { display: none; }
+}
 </style>

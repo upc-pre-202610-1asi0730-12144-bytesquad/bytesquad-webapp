@@ -5,12 +5,14 @@ import { MaintenanceApi } from '../infrastructure/maintenance-api.js';
 const api = new MaintenanceApi();
 
 export const useMaintenanceStore = defineStore('maintenance', () => {
-  const maintenances = ref([]);
-  const jobs         = ref([]); // TODO: wire when backend adds GET /maintenance-jobs
-  const logs         = ref([]); // TODO: wire when backend adds GET /maintenance-logs
-  const tickets      = ref([]); // TODO: wire when backend adds GET /technical-tickets
-  const loading      = ref(false);
-  const error        = ref(null);
+  const maintenances   = ref([]);
+  const jobs           = ref([]);
+  const logs           = ref([]);
+  const tickets        = ref([]);
+  const technicians    = ref([]);
+  const completionLogs = ref({});
+  const loading        = ref(false);
+  const error          = ref(null);
 
   const openTickets       = computed(() => tickets.value.filter(t => t.status === 'Created' || t.status === 'Assigned'));
   const inProgressTickets = computed(() => tickets.value.filter(t => t.status === 'InProgress'));
@@ -61,7 +63,39 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
     } finally { loading.value = false; }
   }
 
+  // ── Technicians ────────────────────────────────────────────────────────────
+  async function loadTechnicians() {
+    try {
+      technicians.value = await api.getMyTechnicians();
+    } catch (e) { error.value = e.message; }
+  }
+
+  async function registerTechnician(dto) {
+    loading.value = true; error.value = null;
+    try {
+      const created = await api.registerTechnician(dto);
+      technicians.value = [...technicians.value, created];
+      return created;
+    } catch (e) {
+      error.value = e.message || 'Failed to register technician';
+    } finally { loading.value = false; }
+  }
+
   // ── MaintenanceLog ─────────────────────────────────────────────────────────
+  async function loadLogsByAdmin(adminId) {
+    try {
+      logs.value = await api.getLogsByAdmin(adminId);
+    } catch (e) { error.value = e.message; }
+  }
+
+  async function loadCompletionLog(ticketId) {
+    if (completionLogs.value[ticketId]) return;
+    try {
+      const log = await api.getCompletionLog(ticketId);
+      completionLogs.value = { ...completionLogs.value, [ticketId]: log };
+    } catch (e) { error.value = e.message; }
+  }
+
   async function createLog(dto) {
     loading.value = true; error.value = null;
     try {
@@ -74,6 +108,15 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
   }
 
   // ── TechnicalTicket ────────────────────────────────────────────────────────
+  async function loadTickets(adminId) {
+    loading.value = true; error.value = null;
+    try {
+      tickets.value = await api.getTickets(adminId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load tickets';
+    } finally { loading.value = false; }
+  }
+
   async function getTicketById(id) {
     loading.value = true; error.value = null;
     try {
@@ -104,6 +147,7 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
       return updated;
     } catch (e) {
       error.value = e.message || 'Failed to update ticket status';
+      throw e;
     } finally { loading.value = false; }
   }
 
@@ -115,7 +159,13 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
       return updated;
     } catch (e) {
       error.value = e.message || 'Failed to update maintenance progress';
+      throw e;
     } finally { loading.value = false; }
+  }
+
+  async function completeTicketFlow(id, notes = '') {
+    await updateTicketMaintenanceProgress(id, 'Completed');
+    return completeTicket(id, notes);
   }
 
   async function assignTicket(id, technicianId) {
@@ -138,10 +188,10 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
     } finally { loading.value = false; }
   }
 
-  async function completeTicket(id) {
+  async function completeTicket(id, notes = '') {
     loading.value = true; error.value = null;
     try {
-      const updated = await api.completeTicket(id);
+      const updated = await api.completeTicket(id, notes);
       _upsertTicket(updated);
       return updated;
     } catch (e) {
@@ -149,13 +199,32 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
     } finally { loading.value = false; }
   }
 
+  async function createTicketWithMaintenance({ equipmentId, requestedByAdminId, description, priority, type }) {
+    loading.value = true; error.value = null;
+    try {
+      const maintenance = await api.requestMaintenance({
+        equipmentId, requestedByAdminId, reason: description, priority, type,
+      });
+      const ticket = await api.createTicket({
+        maintenanceId: maintenance.id, equipmentId, description,
+      });
+      tickets.value = [...tickets.value, ticket];
+      return ticket;
+    } catch (e) {
+      error.value = e.message || 'Failed to create ticket';
+      throw e;
+    } finally { loading.value = false; }
+  }
+
   return {
-    maintenances, jobs, logs, tickets, loading, error,
+    maintenances, jobs, logs, tickets, technicians, completionLogs, loading, error,
     openTickets, inProgressTickets, resolvedTickets,
     loadMaintenancesByEquipment, requestMaintenance,
     acceptJob, createLog,
-    getTicketById, createTicket,
+    loadTickets, getTicketById, createTicket, createTicketWithMaintenance,
+    loadTechnicians, registerTechnician,
+    loadLogsByAdmin, loadCompletionLog,
     updateTicketStatus, updateTicketMaintenanceProgress,
-    assignTicket, requestTicketStatusUpdate, completeTicket,
+    assignTicket, requestTicketStatusUpdate, completeTicket, completeTicketFlow,
   };
 });

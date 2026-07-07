@@ -5,11 +5,13 @@ export const ExerciseType = Object.freeze({
 });
 
 export class ExerciseBlock {
-  constructor({ id, exerciseName, exerciseType, order }) {
+  constructor({ id, exerciseName, exerciseType, order, sets, reps }) {
     this.id           = id;
     this.exerciseName = exerciseName;
     this.exerciseType = exerciseType;
     this.order        = order;
+    this.sets         = sets;
+    this.reps         = reps;
   }
 }
 
@@ -19,7 +21,5 @@ export class Routine {
     this.routineName        = routineName;
     this.clientId           = clientId;
     this.exerciseBlockCount = exerciseBlockCount;
-    // TODO: exercise blocks are write-only from backend; accumulated locally after POST /exercise-blocks
-    this.exerciseBlocks     = [];
   }
 }

@@ -3,11 +3,13 @@ import { MaintenanceAssembler }      from './maintenance-assembler.js';
 import { MaintenanceJobAssembler }   from './maintenance-job-assembler.js';
 import { MaintenanceLogAssembler }   from './maintenance-log-assembler.js';
 import { TechnicalTicketAssembler }  from './technical-ticket-assembler.js';
+import { TechnicianAssembler }       from './technician-assembler.js';
 
 const maintenanceAssembler = new MaintenanceAssembler();
 const jobAssembler         = new MaintenanceJobAssembler();
 const logAssembler         = new MaintenanceLogAssembler();
 const ticketAssembler      = new TechnicalTicketAssembler();
+const technicianAssembler  = new TechnicianAssembler();
 
 export class MaintenanceApi extends BaseApi {
   // ── Maintenance aggregate ──────────────────────────────────────────────────
@@ -34,6 +36,11 @@ export class MaintenanceApi extends BaseApi {
   }
 
   // ── TechnicalTicket aggregate ──────────────────────────────────────────────
+  async getTickets(adminId) {
+    const { data } = await this.http.get(`technical-tickets/by-admin/${adminId}`);
+    return (Array.isArray(data) ? data : []).map(r => ticketAssembler.toEntityFromResource(r));
+  }
+
   async getTicketById(id) {
     const { data } = await this.http.get(`technical-tickets/${id}`);
     return ticketAssembler.toEntityFromResource(data);
@@ -64,8 +71,30 @@ export class MaintenanceApi extends BaseApi {
     return ticketAssembler.toEntityFromResource(data);
   }
 
-  async completeTicket(id) {
-    const { data } = await this.http.post(`technical-tickets/${id}/complete`);
+  async completeTicket(id, notes = '') {
+    const { data } = await this.http.post(`technical-tickets/${id}/complete`, { notes });
     return ticketAssembler.toEntityFromResource(data);
+  }
+
+  // ── Technicians ────────────────────────────────────────────────────────────
+  async getMyTechnicians() {
+    const { data } = await this.http.get('maintenance/technicians');
+    return (Array.isArray(data) ? data : []).map(r => technicianAssembler.toEntityFromResource(r));
+  }
+
+  async registerTechnician(dto) {
+    const { data } = await this.http.post('maintenance/technicians', technicianAssembler.toResourceFromEntity(dto));
+    return technicianAssembler.toEntityFromResource(data);
+  }
+
+  // ── MaintenanceLogs ────────────────────────────────────────────────────────
+  async getLogsByAdmin(adminId) {
+    const { data } = await this.http.get(`maintenance-logs/by-admin/${adminId}`);
+    return (Array.isArray(data) ? data : []).map(r => logAssembler.toEntityFromResource(r));
+  }
+
+  async getCompletionLog(ticketId) {
+    const { data } = await this.http.get(`technical-tickets/${ticketId}/completion-log`);
+    return logAssembler.toEntityFromResource(data);
   }
 }

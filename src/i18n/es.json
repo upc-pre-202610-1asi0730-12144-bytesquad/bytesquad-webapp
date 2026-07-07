@@ -4,6 +4,13 @@
     "subtitle": "Monitorea máquinas, reserva equipos y gestiona tus rutinas",
     "role": "Cliente"
   },
+  "gymAssociate": {
+    "title": "Elige tu gimnasio",
+    "subtitle": "Selecciona un gimnasio para comenzar",
+    "joinBtn": "Unirse",
+    "alreadyJoined": "Unido",
+    "noGyms": "No hay gimnasios disponibles en este momento."
+  },
   "auth": {
     "login": {
       "title": "Iniciar Sesión",
@@ -49,6 +56,11 @@
     "title": "Mapa de Disponibilidad en Tiempo Real",
     "subtitle": "Visualiza el estado de todas las máquinas del gimnasio",
     "cardTitle": "Mapa de Disponibilidad",
+    "view": {
+      "map": "Mapa",
+      "heat": "Calor",
+      "allBranches": "Sedes"
+    },
     "filter": {
       "all": "Todos",
       "strength": "Fuerza",
@@ -59,59 +71,88 @@
       "inUse": "Ocupado ({count})",
       "reserved": "Reservado ({count})"
     },
-    "gyms": {
-      "gym1": "Gimnasio Centro",
-      "gym2": "Gimnasio Norte",
-      "gym3": "Gimnasio Sur"
+    "stats": {
+      "free": "Libre",
+      "inUse": "En uso",
+      "reserved": "Reservado",
+      "util": "Uso"
+    },
+    "branches": {
+      "allBranches": "Todas las Sedes",
+      "networkOverview": "Vista General",
+      "clickToView": "Haz clic en una sede para ver su mapa",
+      "loading": "Cargando sedes…",
+      "noBranches": "No hay sedes configuradas aún",
+      "noZones": "Sin zonas configuradas para esta sede"
+    },
+    "zone": {
+      "unzoned": "Sin zona"
     },
     "detail": {
       "statusLabel": "Estado",
       "status": {
-        "AVAILABLE": "Disponible",
-        "IN_USE": "En Uso",
+        "Available": "Disponible",
+        "Occupied": "En Uso",
+        "Active": "En Uso",
+        "Maintenance": "Mantenimiento",
+        "OutOfService": "Fuera de servicio",
+        "Decommissioned": "Fuera de servicio",
         "RESERVED": "Reservado"
       },
       "reservedByUser": "Tienes esta máquina reservada",
-      "notifyBtn": "Notificarme cuando esté libre",
       "alternativesBtn": "Ver alternativas",
-      "reportFreeBtn": "Reportar como libre",
-      "reserveBtn": "Reservar",
-      "reportOccupiedBtn": "Reportar como ocupada",
+      "reserveBtn": "Reservar ({minutes} min)",
       "notifications": {
-        "notified": "Te notificaremos cuando esta máquina esté libre",
-        "reportedFree": "Máquina reportada como libre. ¡Gracias!",
-        "reserved": "Máquina reservada con éxito",
-        "reportedOccupied": "Máquina reportada como ocupada. ¡Gracias!"
+        "reserved": "Máquina reservada con éxito"
       }
     },
     "alternatives": {
       "title": "Máquinas Alternativas",
       "subtitle": "Máquinas disponibles de la misma categoría",
       "free": "Libre",
-      "reserveBtn": "Reservar"
-    },
-    "muscleGroups": {
-      "cardio": "Cardio",
-      "legs": "Piernas",
-      "back": "Espalda",
-      "chest": "Pecho"
+      "reserveBtn": "Reservar ({minutes} min)"
+    }
+  },
+  "monitoring": {
+    "anomalyReport": {
+      "title": "Reportar Anomalía",
+      "subtitle": "Reporta manualmente un problema detectado en un equipo",
+      "formTitle": "Nuevo Reporte",
+      "reservation": "Reserva",
+      "selectReservation": "Selecciona una reserva",
+      "noReservations": "No tienes reservas para reportar una anomalía.",
+      "zoneId": "ID de Zona",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe la anomalía observada...",
+      "submit": "Reportar Anomalía",
+      "listTitle": "Anomalías Reportadas",
+      "noneReported": "Aún no se ha reportado ninguna anomalía."
     }
   },
   "booking": {
     "title": "Mis Reservas",
     "subtitle": "Gestiona tus reservas activas y crea nuevas reservas",
     "newBooking": "Nueva Reserva",
+    "reportIssue": "Reportar un problema",
     "timeRemaining": "Tiempo restante",
+    "empty": "No tienes reservas todavía.",
+    "status": {
+      "Initiated": "Creada",
+      "Reserved": "Reservada",
+      "Active": "Activa",
+      "Ended": "Finalizada",
+      "Cancelled": "Cancelada"
+    },
     "expired": {
       "title": "Reserva expirada",
-      "subtitle": "La máquina ha vuelto a estar disponible para otros usuarios"
+      "subtitle": "La máquina ha vuelto a estar disponible para otros usuarios",
+      "dismiss": "Descartar"
     },
     "how": {
       "title": "¿Cómo funcionan las reservas?",
-      "item1": "Puedes reservar una máquina libre por 10-15 minutos",
-      "item2": "Las reservas solo están disponibles en horas pico",
-      "item3": "Si no ocupas la máquina, volverá a estar disponible",
-      "item4": "Cancela tu reserva si cambias de plan"
+      "item1": "Crea una reserva express eligiendo el equipo y cuánto tiempo la vas a usar",
+      "item2": "Actívala cuando llegues al equipo — ahí arranca la cuenta regresiva",
+      "item3": "Al terminar, finaliza la reserva para liberar el equipo (o cancélala en cualquier momento antes)"
     },
     "modal": {
       "title": "Nueva Reserva",
@@ -121,7 +162,7 @@
       "duration": "Duración",
       "minutesSuffix": "minutos",
       "warning": "Las reservas solo están disponibles en horas pico. Si no ocupas la máquina en el tiempo establecido, la reserva expirará automáticamente.",
-      "option10s": "10 segundos",
+      "option1m": "1 minuto",
       "option10m": "10 minutos",
       "option15m": "15 minutos",
       "option20m": "20 minutos",
@@ -129,29 +170,26 @@
       "create": "Crear Reserva"
     },
     "action": {
-      "requestAvailable": "Solicitar Equipo Disponible",
-      "startTimer": "Iniciar Temporizador",
-      "cancel": "Cancelar",
-      "submitRequest": "Enviar Solicitud",
-      "end": "Finalizar Reserva"
+      "activate": "Activar",
+      "end": "Finalizar",
+      "cancel": "Cancelar"
     },
-    "equipmentLabel": "ID de Equipo",
-    "startDate": "Fecha de Inicio",
-    "endDate": "Fecha de Fin",
-    "noReservations": "Aún no hay reservas"
-  },
-  "clientAlerts": {
-    "reservationExpired": {
-      "title": "Reserva Expirada: {machine}",
-      "description": "Tu reserva de {machine} ha finalizado. La máquina ya está disponible para otros usuarios."
+    "history": {
+      "title": "Historial de Reservas",
+      "subtitle": "Todas tus reservas pasadas",
+      "empty": "No se encontraron reservas",
+      "col": {
+        "equipment": "Equipo",
+        "status": "Estado",
+        "started": "Inicio",
+        "window": "Ventana horaria"
+      }
     }
   },
   "alerts": {
     "emptyState": "No tienes alertas pendientes",
-    "reservationExpired": { "title": "Reserva Expirada" },
-    "detailsBtn": "Ver detalles →",
-    "deleteTitle": "Eliminar alerta",
-    "markAllRead": "Marcar todo como leído",
+    "resolve": "Resolver",
+    "resolved": "Resuelta",
     "time": {
       "moment":  "Hace un momento",
       "minute":  "Hace {count} minuto",
@@ -160,20 +198,6 @@
       "hours":   "Hace {count} horas",
       "day":     "Hace {count} día",
       "days":    "Hace {count} días"
-    },
-    "seeded": {
-      "alr001": {
-        "title":       "Alerta de reabastecimiento: Nivel crítico",
-        "description": "El inventario de \"Correa de transmisión XT-500\" ha llegado al nivel mínimo de seguridad tras la última reparación."
-      },
-      "alr002": {
-        "title":       "Desconexión de sensor IoT",
-        "description": "La Cinta de Correr #4 (Sede Central) ha perdido conexión con la red principal."
-      },
-      "alr003": {
-        "title":       "Actualización de rutina de cliente",
-        "description": "El cliente Juan Pérez ha solicitado una revisión de su plan de entrenamiento actual."
-      }
     }
   },
   "nav": {
@@ -189,7 +213,7 @@
     "bookings": "Mis Reservas",
     "reservations": "Mis Reservas",
     "profile": "Mi Perfil",
-    "financial": "Impacto Financiero"
+    "financial": "Impacto Financiero",
   },
   "dashboard": {
     "welcome": "¡Hola de nuevo, {name}!",
@@ -198,127 +222,75 @@
   },
   "iot": {
     "title": "Monitoreo IoT",
-    "subtitle": "Estado en tiempo real de sensores Edge IoT instalados en los equipos",
-    "search": "Buscar por ID sensor, máquina o zona...",
+    "search": "Buscar por identificador...",
     "actions": {
-      "refresh": "Actualizar"
+      "refresh": "Actualizar",
+      "cancel": "Cancelar"
     },
     "filter": {
-      "status": "Estado",
-      "allStatuses": "Todos los Estados"
+      "allTypes": "Todos los Tipos"
     },
     "stats": {
-      "total": "Total Dispositivos",
-      "online": "Sensores en Línea",
-      "offline": "Desconectados",
-      "avgBattery": "Batería Promedio",
-      "activeAlerts": "Alertas Activas",
-      "ofTotal": "de {total} totales"
+      "total": "Total Sensores",
+      "motion": "Sensores de Movimiento",
+      "camera": "Sensores de Cámara",
+      "anomalies": "Anomalías"
     },
-    "table": {
-      "title": "Estado de Sensores",
-      "id": "ID Sensor",
-      "machine": "Máquina",
-      "location": "Ubicación",
-      "status": "Estado",
-      "lastPing": "Último Ping",
-      "battery": "Batería",
-      "signal": "Señal",
-      "firmware": "Firmware",
-      "noData": "No se encontraron dispositivos"
-    },
-    "status": {
-      "ONLINE": "En Línea",
-      "OFFLINE": "Desconectado",
-      "WARNING": "Advertencia",
-      "ACTIVE": "En Línea",
-      "INACTIVE": "Desconectado"
-    },
-    "alerts": {
-      "title": "Alertas Activas",
-      "disconnectedTitle": "{sensor} - Sensor Desconectado",
-      "lowBatteryTitle": "{sensor} - Batería Baja",
-      "lastPing": "Último ping:",
-      "battery": "Batería:",
-      "signal": "Señal:",
-      "investigate": "Investigar",
-      "scheduleReplacement": "Programar Cambio",
-      "severity": {
-        "critical": "Crítico",
-        "warning": "Advertencia"
+    "sensors": {
+      "title": "Sensores Registrados",
+      "register": "Registrar Sensor",
+      "type": "Tipo",
+      "identifier": "Identificador",
+      "equipmentId": "ID Equipo",
+      "captureCount": "Capturas",
+      "registeredAt": "Registrado",
+      "simulate": "Simular",
+      "noData": "No hay sensores registrados",
+      "types": {
+        "MotionSensor": "Movimiento",
+        "CameraSensor": "Cámara"
+      },
+      "form": {
+        "title": "Registrar Nuevo Sensor",
+        "identifierPlaceholder": "ej. SENS-001",
+        "equipmentIdPlaceholder": "ID numérico del equipo",
+        "optional": "opcional",
+        "identifierRequired": "El identificador es obligatorio",
+        "submit": "Registrar"
       }
     },
-    "modal": {
-      "title": "Máquina Reconectada",
-      "close": "Cerrar"
+    "anomalies": {
+      "title": "Registro de Anomalías",
+      "report": "Reportar Anomalía",
+      "type": "Tipo de Anomalía",
+      "description": "Descripción",
+      "sensor": "ID Sensor",
+      "detectedAt": "Detectado",
+      "noData": "No hay anomalías registradas",
+      "form": {
+        "title": "Reportar Anomalía",
+        "typePlaceholder": "ej. INTRUSION_DETECTED",
+        "descriptionPlaceholder": "Describe la anomalía detectada...",
+        "allRequired": "Todos los campos son obligatorios",
+        "submit": "Reportar"
+      }
     }
   },
   "configuration": {
     "title": "Configuración",
-    "subtitle": "Gestiona los parámetros del sistema y preferencias de mantenimiento",
-    "cancel": "Cancelar",
+    "subtitle": "Preferencias de notificación de alertas",
     "saveChanges": "Guardar Cambios",
-    "maintenanceThresholds": {
-      "title": "Umbrales de Mantenimiento",
-      "subtitle": "Configura los límites que activan alertas de mantenimiento preventivo",
-      "criticalHour": "Horas de Uso Críticas",
-      "descriptionCriticalHour": "Genera ticket automático cuando una máquina alcanza este umbral",
-      "inactiveTime": "Tiempo Inactivo Máximo (min)",
-      "descriptionInactiveTime": "Alerta si una máquina está inactiva durante este tiempo en horas pico",
-      "peakHourBuffer": "Buffer de Horas Pico (horas)",
-      "descriptionPeakHourBuffer": "Evita programar mantenimiento dentro de este rango antes/después de horas pico",
-      "note": "Calendario Inteligente",
-      "descriptionNote": "El sistema automáticamente programa mantenimientos evitando las horas pico (6-9am, 6-9pm) y respetando el buffer configurado"
-    },
-    "configurationIoT": {
-      "title": "Configuración IoT",
-      "subtitle": "Parámetros de telemetría y sensores Edge",
-      "lowBattery": "Umbral de Batería Baja (%)",
-      "descriptionLowBattery": "Alerta cuando la batería de un sensor cae por debajo de este nivel",
-      "ping": "Intervalo de Ping (segundos)",
-      "DescriptionPing": "Frecuencia de actualización de estado de sensores",
-      "pingOptions": {
-        "5s": "5 segundos",
-        "10": "10 segundos (recomendado)",
-        "15": "15 segundos",
-        "30": "30 segundos",
-        "60": "60 segundos"
-      },
-      "graceTime": "Tiempo de Gracia Offline (minutos)",
-      "descriptionGraceTime": "Tiempo antes de marcar un sensor como desconectado"
-    },
+    "saved": "Preferencias guardadas",
     "notifications": {
       "title": "Notificaciones",
-      "subtitle": "Configura las alertas y destinatarios",
+      "subtitle": "Elige cuándo quieres que te avisen",
+      "notifyOnCritical": "Alertas Críticas",
+      "descriptionNotifyOnCritical": "Avisar cuando se genere una alerta de severidad crítica",
+      "notifyOnWarning": "Alertas de Advertencia",
+      "descriptionNotifyOnWarning": "Avisar cuando se genere una alerta de severidad advertencia",
       "emailNotification": "Email de Notificaciones",
-      "descriptionEmailNotification": "Dirección principal para recibir alertas del sistema",
-      "alertType": {
-        "title": "Tipos de Alertas Habilitadas",
-        "preventiveMaintenance": "Mantenimiento Preventivo",
-        "descriptionPreventiveMaintenance": "Umbral de horas alcanzado",
-        "offlineSensors": "Sensores Offline",
-        "descriptionOfflineSensors": "Conectividad perdida",
-        "lowBattery": "Batería Baja",
-        "descriptionLowBattery": "Nivel crítico en sensores",
-        "weeklyReports": "Reportes Semanales",
-        "descriptionWeeklyReports": "Resumen de actividad"
-      }
-    },
-    "financialConfiguration": {
-      "title": "Configuración Financiera",
-      "subtitle": "Parámetros para cálculo de ROI e impacto financiero",
-      "averageCostHourDowntime": "Costo Promedio por Hora de Downtime",
-      "descriptionAverageCostHourDowntime": "Pérdida estimada por hora de máquina fuera de servicio",
-      "averageMonthlyMembership": "Membresía Promedio Mensual",
-      "descriptionAverageMonthlyMembership": "Usado para cálculo de ROI en proyecciones",
-      "systemCurrency": "Moneda del Sistema",
-      "moneySystemCurrency": {
-        "USD": "USD - Dólar Estadounidense",
-        "EUR": "EUR - Euro",
-        "PEN": "PEN - Sol Peruano",
-        "MXN": "MXN - Peso Mexicano",
-        "COP": "COP - Peso Colombiano"
-      }
+      "emailPlaceholder": "tu{'@'}correo.com",
+      "descriptionEmailNotification": "Dirección donde recibirás los avisos habilitados arriba"
     }
   },
   "equipment": {
@@ -333,6 +305,7 @@
       "register": "Registrar Equipo",
       "edit": "Editar",
       "delete": "Eliminar",
+      "decommission": "Dar de Baja",
       "save": "Guardar",
       "cancel": "Cancelar",
       "confirm": "Confirmar"
@@ -355,15 +328,22 @@
       "outOfOrder": "Fuera de Servicio"
     },
     "status": {
-      "OPERATIONAL": "Operativo",
-      "MAINTENANCE": "Mantenimiento",
-      "OUT_OF_ORDER": "Fuera de Servicio"
+      "AVAILABLE":      "Disponible",
+      "OPERATIONAL":    "Operativo",
+      "MAINTENANCE":    "En Mantenimiento",
+      "OUT_OF_ORDER":   "Fuera de Servicio",
+      "Available":      "Disponible",
+      "Maintenance":    "En Mantenimiento",
+      "OutOfService":   "Fuera de Servicio",
+      "Decommissioned": "Dado de Baja"
     },
     "dialog": {
       "addTitle": "Registrar Nuevo Equipo",
       "editTitle": "Editar Equipo",
       "deleteTitle": "Eliminar Equipo",
       "deleteMessage": "¿Estás seguro de que deseas eliminar este equipo? Esta acción no se puede deshacer.",
+      "decommissionTitle": "Dar de Baja Equipo",
+      "decommissionMessage": "¿Estás seguro de que deseas dar de baja este equipo? Quedará marcado como inactivo.",
       "fields": {
         "name": "Nombre del equipo",
         "brand": "Marca",
@@ -613,6 +593,29 @@
       "INSPECTION": "Inspección",
       "OVERHAUL": "Revisión General"
     },
+    "technicians": {
+      "title": "Técnicos",
+      "register": "Registrar Técnico",
+      "name": "Nombre",
+      "specialization": "Especialización",
+      "phone": "Teléfono",
+      "noData": "No hay técnicos registrados",
+      "noneYet": "Sin técnicos — registra uno abajo",
+      "form": {
+        "namePlaceholder": "ej. Carlos Ríos",
+        "specializationPlaceholder": "ej. Eléctrico",
+        "phonePlaceholder": "ej. +51 999 000 111",
+        "allRequired": "Todos los campos son obligatorios",
+        "submit": "Registrar"
+      }
+    },
+    "complete": {
+      "notesPlaceholder": "Notas de finalización (opcional)"
+    },
+    "log": {
+      "view": "Ver Log",
+      "noNotes": "Sin notas registradas"
+    },
     "tickets": {
       "t1001": "Fuga de fluido hidráulico detectada en brazo de cargadora",
       "t1002": "Sobrecalentamiento del motor — requiere inspección inmediata",
@@ -628,148 +631,107 @@
   },
   "routines": {
     "title": "Mis Rutinas",
-    "subtitle": "Gestiona tus rutinas de entrenamiento y verifica disponibilidad de máquinas",
+    "subtitle": "Gestiona tus rutinas de entrenamiento",
     "newRoutine": "Nueva Rutina",
     "search": "Buscar rutinas...",
-    "filter": {
-      "all": "Todos",
-      "chest": "Pecho",
-      "legs": "Piernas",
-      "back": "Espalda",
-      "shoulders": "Hombros",
-      "arms": "Brazos"
+    "loading": "Cargando...",
+    "empty": "Aún no tienes rutinas — crea la primera.",
+    "backToList": "Mis Rutinas",
+    "card": {
+      "exercises": "ejercicios"
     },
-    "exercises": {
-      "pressDePecho": "Press de Pecho",
-      "sentadillaConBarra": "Sentadilla con Barra",
-      "pesoMuertoRumano": "Peso Muerto Rumano",
-      "dominadas": "Dominadas",
-      "pressMilitar": "Press Militar"
+    "session": {
+      "start": "Iniciar Rutina",
+      "complete": "Completar",
+      "missed": "Marcar como Perdida",
+      "activeLabel": "En progreso",
+      "status": {
+        "Started": "En progreso",
+        "Completed": "Completada",
+        "Missed": "Perdida"
+      },
+      "history": {
+        "title": "Historial de Sesiones",
+        "empty": "Aún no hay sesiones registradas."
+      }
     },
-    "machines": {
-      "bancoPechoPlano": "Banco Pecho Plano",
-      "rackSentadilla2": "Rack Sentadilla #2",
-      "plataformaPesoMuerto": "Plataforma de Peso Muerto",
-      "barraDeDominadas": "Barra de Dominadas",
-      "rackDeFuerza": "Rack de Fuerza"
+    "exerciseType": {
+      "Cardio": "Cardio",
+      "Strength": "Fuerza",
+      "Flexibility": "Flexibilidad"
     },
-    "tags": {
-      "chest": "Pecho",
-      "legs": "Piernas",
-      "lowerBack": "Zona Lumbar",
-      "back": "Espalda",
-      "shoulders": "Hombros"
-    },
-    "level": {
-      "beginner": "Principiante",
-      "intermediate": "Intermedio",
-      "advanced": "Avanzado"
-    },
-    "status": {
-      "available": "Disponible",
-      "inUse": "En Uso",
-      "maintenance": "Mantenimiento"
-    },
-    "alternatives": {
-      "title": "Sugerencias Inteligentes",
-      "prensaDePiernas": "Prensa de Piernas",
-      "hackSquat": "Hack Squat",
-      "sentadillaGoblet": "Sentadilla Goblet",
-      "poleaAlta": "Polea Alta",
-      "remoConBarra": "Remo con Barra",
-      "maquinaDeRemo": "Máquina de Remo",
-      "free": "Libre",
-      "viewMap": "Ver Mapa"
-    },
-    "suggestion": {
-      "title": "Motor de Sugerencias Inteligentes",
-      "item1": "Las rutinas se adaptan a la disponibilidad en tiempo real",
-      "item2": "Se sugieren alternativas cuando tu máquina está ocupada",
-      "item3": "Optimizado para horas pico y valle",
-      "item4": "Personalizado según tus objetivos de entrenamiento"
+    "detail": {
+      "blocksTitle": "Bloques de Ejercicio",
+      "noBlocks": "Aún no hay bloques de ejercicio.",
+      "notFound": "Rutina no encontrada.",
+      "addBlock": {
+        "title": "Agregar Ejercicio",
+        "name": "Nombre del Ejercicio",
+        "type": "Tipo",
+        "sets": "Series",
+        "reps": "Repeticiones",
+        "setsAbbrev": "series",
+        "repsAbbrev": "reps",
+        "submit": "Agregar"
+      }
     },
     "modal": {
       "title": "Nueva Rutina",
       "subtitle": "Crea una rutina de entrenamiento personalizada",
       "name": "Nombre de la Rutina",
       "namePlaceholder": "Ej. Día A - Tren Superior",
-      "objective": "Objetivo",
-      "selectObjective": "Selecciona un objetivo",
-      "difficulty": "Nivel de Dificultad",
-      "notes": "Notas (opcional)",
-      "notesPlaceholder": "Agrega notas o instrucciones específicas...",
       "cancel": "Cancelar",
-      "create": "Crear Rutina",
-      "successMessage": "Rutina \"{name}\" creada con éxito",
-      "objectives": {
-        "gainStrength": "Ganar Fuerza",
-        "muscleHypertrophy": "Hipertrofia Muscular",
-        "endurance": "Resistencia",
-        "weightLoss": "Pérdida de Peso",
-        "generalFitness": "Fitness General"
-      }
-    },
-    "blocks": "{count} bloques",
-    "addBlock": "+ Agregar Bloque de Ejercicio",
-    "sessions": "Sesiones",
-    "startSession": "▶ Iniciar Sesión",
-    "noBlocks": "Aún no hay bloques de ejercicio",
-    "noRoutines": "Aún no hay rutinas"
+      "create": "Crear Rutina"
+    }
   },
   "profile": {
     "admin": {
       "title": "Panel del Administrador",
       "roleBadge": "Administrador",
-      "memberSince": "Miembro desde",
       "stats": {
-        "locations": "Sedes activas",
-        "equipment": "Equipos monitoreados",
-        "sensors": "Sensores IoT online",
-        "members": "Miembros registrados"
+        "branches": "Sedes",
+        "equipment": "Equipos",
+        "tickets": "Tickets",
+      "members": "Miembros Registrados"
       },
-      "plan": {
-        "active": "Activo",
-        "renewal": "Próxima renovación"
+      "gym": {
+        "title": "Gimnasio"
+      },
+      "membership": {
+        "title": "Membresía",
+        "manage": "Gestionar",
+        "expires": "Expira",
+        "none": "Sin membresía activa",
+        "pendingDowngrade": "Cambio pendiente a"
       }
     },
     "client": {
       "title": "Mi Perfil",
-      "roleBadge": "Cliente",
-      "points": "Puntos Acumulados",
-      "plan": {
-        "name": "Plan Basic",
-        "price": "$69/mes",
-        "upgrade": "Mejorar Plan",
-        "featuresTitle": "Características incluidas:",
-        "feature1": "Hasta 20 máquinas monitoreadas",
-        "feature2": "Mapa de calor en tiempo real",
-        "feature3": "1 sede",
-        "feature4": "Soporte por email",
-        "renewal": "Próxima renovación",
-        "renewalDate": "24 de Mayo, 2026"
-      },
-      "history": "Historial de Puntos",
-      "notifications": {
-        "title": "Notificaciones",
-        "availability": {
-          "title": "Alertas de disponibilidad",
-          "desc": "Cuando una máquina se libera"
-        },
-        "maintenance": {
-          "title": "Mantenimiento programado",
-          "desc": "Cuando un equipo entrará en mantenimiento"
-        },
-        "rewards": {
-          "title": "Puntos de recompensa",
-          "desc": "Cuando ganas puntos nuevos"
-        }
-      }
+      "roleBadge": "Cliente"
+    },
+    "gymSwitcher": {
+      "title": "Tu Gimnasio",
+      "empty": "Todavía no te has unido a ningún gimnasio.",
+      "active": "Activo",
+      "switch": "Cambiar",
+      "joinAnother": "+ Unirme a otro gimnasio"
     },
     "account": {
       "title": "Información de la Cuenta",
+      "name": "Nombre",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
       "email": "Email",
+      "phone": "Teléfono",
+      "dni": "DNI",
       "gymName": "Nombre del Gimnasio",
-      "phone": "Teléfono"
+      "saveSuccess": "Cambios guardados con éxito"
+    },
+    "actions": {
+      "edit": "Editar perfil",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "saveSuccess": "Perfil actualizado correctamente"
     },
     "language": {
       "title": "Preferencias de Idioma",
@@ -779,6 +741,12 @@
     "security": {
       "title": "Seguridad",
       "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "updatePassword": "Actualizar contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "passwordChanged": "Contraseña actualizada correctamente",
       "logout": "Cerrar Sesión"
     },
     "saveChanges": "Guardar Cambios"
@@ -820,5 +788,87 @@
       },
       "empty": "Sin tickets"
     }
-  }
+  },
+  "whitelist": {
+    "title": "Miembros Autorizados",
+    "add": {
+      "title": "Agregar DNI",
+      "placeholder": "ej. 12345678",
+      "btn": "Agregar"
+    },
+    "list": {
+      "dniCol": "DNI",
+      "actionsCol": "Acciones"
+    },
+    "empty": "Aún no hay DNIs autorizados.",
+    "delete": {
+      "btn": "Eliminar",
+      "confirm": "Esto revocará el acceso de cualquier cliente asociado con este DNI.",
+      "ok": "Confirmar",
+      "cancel": "Cancelar"
+    },
+    "error": {
+      "invalid": "Formato de DNI inválido. Debe tener 8 dígitos.",
+      "duplicate": "Este DNI ya está en la lista de autorizados.",
+      "generic": "Algo salió mal. Por favor, intenta de nuevo."
+    }
+  },
+  "membership": {
+    "title": "Mi Membresía",
+    "empty": "No se encontró una membresía para tu cuenta.",
+    "perMonth": "/mes",
+    "card": {
+      "renewal": "Renovación",
+      "startDate": "Inicio",
+      "pendingDowngrade": "Downgrade programado a {plan} al renovar",
+      "pendingCancellation": "Cancelación en curso — acceso activo hasta {date}"
+    },
+    "status": {
+      "Active": "Activo",
+      "Suspended": "Suspendido",
+      "PendingCancellation": "Cancelación Pendiente",
+      "Cancelled": "Cancelado",
+      "Expired": "Expirado"
+    },
+    "actions": {
+      "renew": "Renovar",
+      "suspend": "Suspender",
+      "cancel": "Cancelar",
+      "changePlan": "Cambiar Plan",
+      "downgrade": "Degradar Plan"
+    },
+    "selector": {
+      "titleDowngrade": "Selecciona el plan al que bajar",
+      "titleUpgrade": "Selecciona el nuevo plan",
+      "popular": "Más Popular",
+      "currentPlan": "Plan actual",
+      "select": "Seleccionar"
+    }
+  },
+  "completeProfile": {
+    "title": "Completa tu Perfil",
+    "subtitle": "Necesitamos algunos datos antes de que puedas acceder al gimnasio",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "phone": "Teléfono (opcional)",
+    "dni": "DNI",
+    "dniPlaceholder": "ej. 12345678",
+    "dniHint": "Tu DNI será verificado contra la lista de miembros autorizados del gimnasio",
+    "submit": "Guardar y Continuar"
+  },
+  "joinGym": {
+    "title": "Únete a un Gimnasio",
+    "subtitle": "Selecciona tu gimnasio y verifica tu membresía para comenzar",
+    "gymLabel": "Selecciona un gimnasio",
+    "gymPlaceholder": "Elige tu gimnasio...",
+    "dniLabel": "DNI",
+    "dniPlaceholder": "ej. 12345678",
+    "dniHint": "Tu DNI debe estar en la lista de miembros autorizados del gimnasio",
+    "submit": "Unirse al Gimnasio",
+    "loadingGyms": "Cargando gimnasios...",
+    "error": {
+      "notAuthorized": "Tu DNI no está autorizado en este gimnasio. Contacta al administrador.",
+      "generic": "Algo salió mal. Por favor, intenta de nuevo."
+    }
+  },
 }

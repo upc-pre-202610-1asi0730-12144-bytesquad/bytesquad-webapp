@@ -3,12 +3,15 @@ import { Membership } from '../domain/model/membership.entity.js';
 export class MembershipAssembler {
   toEntityFromResource(r) {
     return new Membership({
-      id:        r.id,
-      clientId:  r.clientId,
-      plan:      r.plan,
-      startDate: r.startDate,
-      endDate:   r.endDate,
-      status:    r.status,
+      id:                   r.id,
+      clientId:             r.clientId,
+      plan:                 r.plan,
+      startDate:            r.startDate,
+      endDate:              r.endDate,
+      status:               r.status,
+      pendingDowngradePlan: r.pendingDowngradePlan ?? null,
+      amount:               r.amount   ?? null,
+      currency:             r.currency ?? null,
     });
   }
 

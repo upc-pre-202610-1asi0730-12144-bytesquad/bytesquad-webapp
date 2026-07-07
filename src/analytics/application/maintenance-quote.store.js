@@ -5,7 +5,6 @@ import { MaintenanceQuoteApi } from '../infrastructure/maintenance-quote-api.js'
 const api = new MaintenanceQuoteApi();
 
 export const useMaintenanceQuoteStore = defineStore('maintenanceQuote', () => {
-  // TODO: no GET endpoint in backend; reading from local mock
   const quotes  = ref([]);
   const loading = ref(false);
   const error   = ref(null);
@@ -45,5 +44,29 @@ export const useMaintenanceQuoteStore = defineStore('maintenanceQuote', () => {
     } catch (e) { error.value = e.message; }
   }
 
-  return { quotes, loading, error, createQuote, updateSparePartsCost, updatePreventiveCost, consolidateTotal };
+  async function createCompleteQuote({ correctiveActionsCost, sparePartsCost, preventiveCost }) {
+    loading.value = true; error.value = null;
+    try {
+      const base = await api.create(correctiveActionsCost);
+      _upsert(base);
+      await api.updateSparePartsCost(base.maintenanceQuoteId, sparePartsCost);
+      await api.updatePreventiveCost(base.maintenanceQuoteId, preventiveCost);
+      const final = await api.consolidateTotal(base.maintenanceQuoteId);
+      _upsert(final);
+      return final;
+    } catch (e) {
+      error.value = e.message || 'Failed to create maintenance quote';
+    } finally { loading.value = false; }
+  }
+
+  async function loadByAdmin(adminId) {
+    loading.value = true; error.value = null;
+    try {
+      quotes.value = await api.getByAdmin(adminId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load maintenance quotes';
+    } finally { loading.value = false; }
+  }
+
+  return { quotes, loading, error, createQuote, updateSparePartsCost, updatePreventiveCost, consolidateTotal, createCompleteQuote, loadByAdmin };
 });

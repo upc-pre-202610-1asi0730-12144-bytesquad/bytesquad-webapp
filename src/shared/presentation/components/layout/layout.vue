@@ -1,9 +1,9 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/authentication/application/auth.store.js';
-import { useAlertsStore } from '@/monitoring/application/alerts.service.js';
+import { useAlertsStore } from '@/monitoring/application/alerts.store.js';
 import SidebarComponent from '../sidebar/sidebar.vue';
 import BottomBar from '../bottom-bar/bottom-bar.vue';
 import UserProfile from '../user-profile/user-profile.vue';
@@ -19,14 +19,10 @@ const sidebarOpen = ref(false);
 const isAdmin  = computed(() => auth.isAdmin);
 const isClient = computed(() => auth.isClient);
 
-const unreadCount = computed(() => {
-  const role = auth.isAdmin ? 'admin' : 'client';
-  return alertsStore.alerts.filter(a => {
-    const visible = role === 'admin'
-      ? a.type === 'admin' || a.type === 'system'
-      : a.type === 'client';
-    return visible && !a.read[role];
-  }).length;
+const unreadCount = computed(() => alertsStore.unresolvedCount);
+
+onMounted(() => {
+  if (isAdmin.value) alertsStore.load();
 });
 
 function logout() {
@@ -47,7 +43,7 @@ function logout() {
         </button>
         <span class="topbar__brand" v-if="isClient">SpotTrack</span>
         <div class="topbar__right">
-          <button class="topbar__icon-btn" @click="router.push('/alerts')">
+          <button v-if="isAdmin" class="topbar__icon-btn" @click="router.push('/alerts')">
             <span class="material-icons">notifications</span>
             <span v-if="unreadCount > 0" class="badge-dot">{{ unreadCount }}</span>
           </button>
