@@ -29,7 +29,7 @@ const availableZones = computed(() =>
 watch(selectedBranchId, (branchId) => {
   form.value.zoneId = null;
   if (branchId && gymStore.zonesMap[branchId] === undefined) {
-    gymStore.loadZones(gymId.value, branchId);
+    gymStore.loadZonesForBranch(gymId.value, branchId);
   }
 });
 
@@ -49,7 +49,7 @@ onMounted(async () => {
       await Promise.all(
         gymStore.branches
           .filter(b => gymStore.zonesMap[b.id] === undefined)
-          .map(b => gymStore.loadZones(gymId.value, b.id))
+          .map(b => gymStore.loadZonesForBranch(gymId.value, b.id))
       );
 
       for (const branch of gymStore.branches) {
