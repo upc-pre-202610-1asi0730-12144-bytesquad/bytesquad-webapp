@@ -21,4 +21,8 @@ export class EquipmentApi extends BaseApi {
   registerEquipment(entity)        { return this.#endpoint.create(entity); }
   updateEquipment(entity)          { return this.#endpoint.update(entity.id, entity); }
   deleteEquipment(id)              { return this.#endpoint.delete(id); }
+
+  async decommissionEquipment(id) {
+    await this.http.patch(`equipment/${id}/decomission`);
+  }
 }
