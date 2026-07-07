@@ -246,66 +246,58 @@
   },
   "iot": {
     "title": "Monitoreo IoT",
-    "subtitle": "Estado en tiempo real de sensores Edge IoT instalados en los equipos",
-    "search": "Buscar por ID sensor, máquina o zona...",
+    "search": "Buscar por identificador...",
     "actions": {
       "refresh": "Actualizar",
-      "register": "Registrar Sensor"
+      "cancel": "Cancelar"
     },
     "filter": {
-      "status": "Estado",
-      "allStatuses": "Todos los Estados"
+      "allTypes": "Todos los Tipos"
     },
     "stats": {
-      "total": "Total Dispositivos",
-      "online": "Sensores en Línea",
-      "offline": "Desconectados",
-      "avgBattery": "Batería Promedio",
-      "activeAlerts": "Alertas Activas",
-      "ofTotal": "de {total} totales"
+      "total": "Total Sensores",
+      "motion": "Sensores de Movimiento",
+      "camera": "Sensores de Cámara",
+      "anomalies": "Anomalías"
     },
-    "table": {
-      "title": "Estado de Sensores",
-      "id": "ID Sensor",
-      "machine": "Máquina",
-      "location": "Ubicación",
-      "status": "Estado",
-      "lastPing": "Último Ping",
-      "battery": "Batería",
-      "signal": "Señal",
-      "firmware": "Firmware",
-      "noData": "No se encontraron dispositivos"
-    },
-    "status": {
-      "Online": "En Línea",
-      "Offline": "Desconectado"
-    },
-    "register": {
-      "title": "Registrar Sensor",
-      "equipment": "Equipo",
-      "selectEquipment": "Selecciona un equipo",
-      "macAddress": "Dirección MAC",
-      "location": "Ubicación",
-      "cancel": "Cancelar",
-      "submit": "Registrar"
-    },
-    "alerts": {
-      "title": "Alertas Activas",
-      "disconnectedTitle": "{sensor} - Sensor Desconectado",
-      "lowBatteryTitle": "{sensor} - Batería Baja",
-      "lastPing": "Último ping:",
-      "battery": "Batería:",
-      "signal": "Señal:",
-      "investigate": "Investigar",
-      "scheduleReplacement": "Programar Cambio",
-      "severity": {
-        "critical": "Crítico",
-        "warning": "Advertencia"
+    "sensors": {
+      "title": "Sensores Registrados",
+      "register": "Registrar Sensor",
+      "type": "Tipo",
+      "identifier": "Identificador",
+      "equipmentId": "ID Equipo",
+      "captureCount": "Capturas",
+      "registeredAt": "Registrado",
+      "simulate": "Simular",
+      "noData": "No hay sensores registrados",
+      "types": {
+        "MotionSensor": "Movimiento",
+        "CameraSensor": "Cámara"
+      },
+      "form": {
+        "title": "Registrar Nuevo Sensor",
+        "identifierPlaceholder": "ej. SENS-001",
+        "equipmentIdPlaceholder": "ID numérico del equipo",
+        "optional": "opcional",
+        "identifierRequired": "El identificador es obligatorio",
+        "submit": "Registrar"
       }
     },
-    "modal": {
-      "title": "Máquina Reconectada",
-      "close": "Cerrar"
+    "anomalies": {
+      "title": "Registro de Anomalías",
+      "report": "Reportar Anomalía",
+      "type": "Tipo de Anomalía",
+      "description": "Descripción",
+      "sensor": "ID Sensor",
+      "detectedAt": "Detectado",
+      "noData": "No hay anomalías registradas",
+      "form": {
+        "title": "Reportar Anomalía",
+        "typePlaceholder": "ej. INTRUSION_DETECTED",
+        "descriptionPlaceholder": "Describe la anomalía detectada...",
+        "allRequired": "Todos los campos son obligatorios",
+        "submit": "Reportar"
+      }
     }
   },
   "configuration": {
@@ -410,8 +402,9 @@
       "outOfOrder": "Fuera de Servicio"
     },
     "status": {
-      "OPERATIONAL": "Operativo",
-      "MAINTENANCE": "Mantenimiento",
+      "AVAILABLE":    "Disponible",
+      "OPERATIONAL":  "Operativo",
+      "MAINTENANCE":  "En Mantenimiento",
       "OUT_OF_ORDER": "Fuera de Servicio"
     },
     "dialog": {
