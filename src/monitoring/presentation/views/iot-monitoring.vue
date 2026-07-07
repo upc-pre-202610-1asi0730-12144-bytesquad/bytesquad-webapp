@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useIotStore } from '@/monitoring/application/iot.store.js';
 import { IotStatus } from '@/monitoring/domain/model/iot.entity.js';
@@ -15,8 +15,16 @@ const search        = ref('');
 const filterStatus  = ref('');
 const showRegister  = ref(false);
 const equipmentOptions = ref([]);
+const zoneOptions      = ref([]);
 const form = ref({ equipmentId: '', macAddress: '', location: '', batteryLevel: 100, signalStrength: -50, firmwareVersion: 'v1.0.0' });
 const registerError = ref(null);
+
+// The sensor's location is derived from the zone of whichever equipment it's linked to.
+watch(() => form.value.equipmentId, (equipmentId) => {
+  const eq = equipmentOptions.value.find(e => e.id === equipmentId);
+  const zone = eq ? zoneOptions.value.find(z => z.id === eq.zoneId) : null;
+  form.value.location = zone?.name ?? '';
+});
 
 const filteredDevices = computed(() => {
   let list = store.devices;
@@ -36,6 +44,7 @@ async function loadEquipmentOptions() {
   const gym = await gymApi.getGymByAdmin(auth.user.id);
   if (!gym) return;
   equipmentOptions.value = await gymApi.getEquipmentsByGymId(gym.id);
+  zoneOptions.value = await gymApi.getZonesByGymId(gym.id);
 }
 
 function openRegister() {
@@ -151,7 +160,7 @@ onUnmounted(() => clearInterval(refreshTimer));
         </div>
         <div class="form-field">
           <label>{{ t('iot.register.location') }}</label>
-          <input v-model="form.location" placeholder="Zone A — Bay 1" />
+          <input :value="form.location" disabled placeholder="—" />
         </div>
 
         <p v-if="registerError" class="error-msg">{{ registerError }}</p>
