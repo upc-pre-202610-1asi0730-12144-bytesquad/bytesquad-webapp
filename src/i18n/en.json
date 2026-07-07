@@ -179,7 +179,6 @@
     "reservations": "My Reservations",
     "profile": "My Profile",
     "financial": "Financial Impact",
-    "analyticsRecords": "Analytics Records"
   },
   "dashboard": {
     "welcome": "Welcome back, {name}!",
@@ -938,40 +937,4 @@
       "generic": "Something went wrong. Please try again."
     }
   },
-  "analyticsRecords": {
-    "title": "Analytics Records",
-    "subtitle": "Create and view activity reports, maintenance quotes and ROI projections",
-    "submit": "Submit",
-    "successMessage": "Record created successfully",
-    "recentRecords": "Recent Records",
-    "noRecords": "No records yet",
-    "date": "Date",
-    "placeholderNumber": "e.g. 120",
-    "placeholderMoney": "e.g. 1500.00",
-    "placeholderPercent": "e.g. 12.5",
-    "activityReport": {
-      "title": "Activity Report",
-      "formTitle": "New Activity Report",
-      "totalUsageTime": "Total Usage Time (h)",
-      "downtimeCost": "Downtime Cost ($)",
-      "percentageComparison": "% Comparison"
-    },
-    "maintenanceQuote": {
-      "title": "Maintenance Quote",
-      "formTitle": "New Maintenance Quote",
-      "correctiveActionsCost": "Corrective Actions Cost ($)",
-      "sparePartsCost": "Spare Parts Cost ($)",
-      "preventiveCost": "Preventive Cost ($)",
-      "total": "Total",
-      "autoConsolidate": "Total will be automatically consolidated after submission."
-    },
-    "roiProjection": {
-      "title": "ROI Projection",
-      "formTitle": "New ROI Projection",
-      "projectedDowntimeCost": "Projected Downtime Cost ($)",
-      "projectedEarnings": "Projected Earnings ($)",
-      "demand": "Demand",
-      "autoGenerate": "ROI index and demand status will be generated automatically."
-    }
-  }
 }
