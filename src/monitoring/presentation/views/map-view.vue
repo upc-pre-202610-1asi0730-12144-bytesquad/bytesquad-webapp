@@ -257,7 +257,6 @@ async function reserveMachine() {
 
 function notifyWhenFree()   { closeMachineDetail(); showToast(t('map.detail.notifications.notified')); }
 function reportAsFree()     { closeMachineDetail(); showToast(t('map.detail.notifications.reportedFree')); }
-function reportAsOccupied() { closeMachineDetail(); showToast(t('map.detail.notifications.reportedOccupied')); }
 </script>
 
 <template>
@@ -456,7 +455,6 @@ function reportAsOccupied() { closeMachineDetail(); showToast(t('map.detail.noti
 
         <div v-else class="detail-actions">
           <button class="btn btn--primary" @click="reserveMachine">{{ t('map.detail.reserveBtn') }}</button>
-          <button class="btn btn--outline" @click="reportAsOccupied">{{ t('map.detail.reportOccupiedBtn') }}</button>
         </div>
       </div>
 

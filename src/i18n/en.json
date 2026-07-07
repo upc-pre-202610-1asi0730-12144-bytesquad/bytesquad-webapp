@@ -104,12 +104,10 @@
       "alternativesBtn": "See alternatives",
       "reportFreeBtn": "Report as free",
       "reserveBtn": "Reserve",
-      "reportOccupiedBtn": "Report as occupied",
       "notifications": {
         "notified": "You'll be notified when this machine is free",
         "reportedFree": "Machine reported as free. Thank you!",
-        "reserved": "Machine reserved successfully",
-        "reportedOccupied": "Machine reported as occupied. Thank you!"
+        "reserved": "Machine reserved successfully"
       }
     },
     "alternatives": {
