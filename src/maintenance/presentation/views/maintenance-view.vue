@@ -51,7 +51,7 @@ async function submitAssign(ticket) {
 const completeForm = ref({ ticketId: null, notes: '' });
 
 async function submitComplete(ticket) {
-  await store.completeTicket(ticket.id, completeForm.value.notes);
+  await store.completeTicketFlow(ticket.id, completeForm.value.notes);
   completeForm.value = { ticketId: null, notes: '' };
 }
 
