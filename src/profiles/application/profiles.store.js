@@ -18,11 +18,8 @@ export const useProfilesStore = defineStore('profiles', () => {
     if (!userId) return;
     loading.value = true; error.value = null;
     try {
-      // TODO: replace with GET /profiles/admins?userId={id} or /profiles/clients?userId={id}
-      //       when backend exposes a by-userId endpoint
       if (auth.isAdmin) {
-        const list = await api.getAdmins();
-        myProfile.value = list.find(p => p.userId === userId) ?? null;
+        myProfile.value = await api.getMyAdminProfile();
       } else {
         const list = await api.getClients();
         myProfile.value = list.find(p => p.userId === userId) ?? null;
