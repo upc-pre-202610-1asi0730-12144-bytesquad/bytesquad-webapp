@@ -70,7 +70,7 @@ async function submit() {
   } else {
     await store.addEquipment(entity);
   }
-  router.push('/equipment');
+  if (!store.error) router.push('/equipment');
 }
 </script>
 
@@ -86,6 +86,11 @@ async function submit() {
       <div class="form-field">
         <label>{{ t('equipment.dialog.fields.name') }}</label>
         <input v-model="form.name" required :disabled="store.loading" />
+      </div>
+
+      <div class="form-field">
+        <label>{{ t('equipment.dialog.fields.model') }}</label>
+        <input v-model="form.model" required :disabled="store.loading" placeholder="e.g. Technogym Run 900" />
       </div>
 
       <div class="form-field">
@@ -131,7 +136,7 @@ async function submit() {
       <div class="form-actions">
         <button type="button" class="btn btn--outline" @click="router.push('/equipment')">{{ t('equipment.actions.cancel') }}</button>
         <button type="submit" class="btn btn--primary"
-          :disabled="store.loading || !form.zoneId">
+          :disabled="store.loading || !form.zoneId || !form.name.trim() || !form.model.trim()">
           {{ isEdit ? t('equipment.actions.save') : t('equipment.actions.register') }}
         </button>
       </div>
