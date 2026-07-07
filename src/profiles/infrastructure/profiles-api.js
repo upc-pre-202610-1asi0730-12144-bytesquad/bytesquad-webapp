@@ -11,6 +11,11 @@ export class ProfilesApi extends BaseApi {
     return (Array.isArray(data) ? data : []).map(r => adminAssembler.toEntityFromResource(r));
   }
 
+  async getMyAdminProfile() {
+    const { data } = await this.http.get('profiles/admins/me');
+    return adminAssembler.toEntityFromResource(data);
+  }
+
   async getAdminById(id) {
     const { data } = await this.http.get(`profiles/admins/${id}`);
     return adminAssembler.toEntityFromResource(data);
