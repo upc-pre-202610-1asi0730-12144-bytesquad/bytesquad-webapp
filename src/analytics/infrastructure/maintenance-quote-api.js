@@ -23,4 +23,9 @@ export class MaintenanceQuoteApi extends BaseApi {
     const { data } = await this.http.post('maintenance-quotes/total-cost', { maintenanceQuoteId });
     return asm.toEntityFromResource(data);
   }
+
+  async getByAdmin(adminId) {
+    const { data } = await this.http.get(`maintenance-quotes/by-admin/${adminId}`);
+    return Array.isArray(data) ? data.map(r => asm.toEntityFromResource(r)) : [];
+  }
 }
