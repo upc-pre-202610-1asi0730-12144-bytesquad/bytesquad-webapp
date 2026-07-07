@@ -1,69 +1,45 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { AlertType } from '../domain/model/configuration.entity.js';
-import { ConfigurationApi } from '../infrastructure/configuration-api.js';
+import { ref } from 'vue';
+import { NotificationPreferencesApi } from '../infrastructure/notification-preferences-api.js';
 
-const api = new ConfigurationApi();
+const api = new NotificationPreferencesApi();
 
 export const useConfigurationStore = defineStore('configuration', () => {
-  const maintenanceThresholds = ref({ criticalUsageHours: 500, maxInactiveTime: 15, peakHoursBuffer: 32 });
-  const iotConfig             = ref({ lowBatteryThreshold: 20, pingInterval: 10, offlineGracePeriod: 3 });
-  const financialConfig       = ref({ costPerHourDowntime: 25, monthlyMembership: 89, systemCurrency: 'USD - Dólar Estadounidense' });
-  const notificationEmail     = ref('admin@spottrack.com');
-  const enabledAlertTypes     = ref(Object.values(AlertType));
-  const intelligentScheduling = ref(true);
-  const loading               = ref(false);
-  const isDirty               = ref(false);
+  const notifyOnCritical  = ref(true);
+  const notifyOnWarning   = ref(true);
+  const notificationEmail = ref('');
+  const loading           = ref(false);
+  const error             = ref(null);
 
-  const configuration = computed(() => ({
-    maintenanceThresholds: maintenanceThresholds.value,
-    iotConfig:             iotConfig.value,
-    financialConfig:       financialConfig.value,
-    notificationEmail:     notificationEmail.value,
-    enabledAlertTypes:     enabledAlertTypes.value,
-    intelligentScheduling: intelligentScheduling.value,
-    lastUpdated:           new Date(),
-  }));
-
-  function updateMaintenanceThresholds(patch) {
-    maintenanceThresholds.value = { ...maintenanceThresholds.value, ...patch };
-    isDirty.value = true;
-  }
-  function updateIoTConfig(patch) {
-    iotConfig.value = { ...iotConfig.value, ...patch };
-    isDirty.value = true;
-  }
-  function updateFinancialConfig(patch) {
-    financialConfig.value = { ...financialConfig.value, ...patch };
-    isDirty.value = true;
-  }
-  function setNotificationEmail(email) { notificationEmail.value = email; isDirty.value = true; }
-  function setEnabledAlertTypes(types) { enabledAlertTypes.value = types; isDirty.value = true; }
-  function setIntelligentScheduling(v) { intelligentScheduling.value = v; isDirty.value = true; }
-
-  async function saveConfiguration() {
-    loading.value = true;
+  async function load() {
+    loading.value = true; error.value = null;
     try {
-      await api.saveConfiguration(configuration.value);
-      isDirty.value = false;
-    } catch { /* use local state on failure */ }
-    finally { loading.value = false; }
+      const prefs = await api.getCurrentUser();
+      notifyOnCritical.value  = prefs.notifyOnCritical;
+      notifyOnWarning.value   = prefs.notifyOnWarning;
+      notificationEmail.value = prefs.notificationEmail;
+    } catch (e) {
+      error.value = e.message || 'Failed to load notification preferences';
+    } finally { loading.value = false; }
   }
 
-  async function reloadConfiguration() {
-    loading.value = true;
+  async function save() {
+    loading.value = true; error.value = null;
     try {
-      const cfg = await api.getConfiguration();
-      maintenanceThresholds.value = cfg.maintenanceThresholds;
-      iotConfig.value             = cfg.iotConfig;
-      financialConfig.value       = cfg.financialConfig;
-      notificationEmail.value     = cfg.notificationEmail;
-      enabledAlertTypes.value     = cfg.enabledAlertTypes;
-      intelligentScheduling.value = cfg.intelligentScheduling;
-      isDirty.value               = false;
-    } catch { /* keep defaults */ }
-    finally { loading.value = false; }
+      const prefs = await api.updatePreferences({
+        notifyOnCritical: notifyOnCritical.value,
+        notifyOnWarning:  notifyOnWarning.value,
+        notificationEmail: notificationEmail.value,
+      });
+      notifyOnCritical.value  = prefs.notifyOnCritical;
+      notifyOnWarning.value   = prefs.notifyOnWarning;
+      notificationEmail.value = prefs.notificationEmail;
+      return true;
+    } catch (e) {
+      error.value = e.message || 'Failed to save notification preferences';
+      return false;
+    } finally { loading.value = false; }
   }
 
-  return { maintenanceThresholds, iotConfig, financialConfig, notificationEmail, enabledAlertTypes, intelligentScheduling, loading, isDirty, configuration, updateMaintenanceThresholds, updateIoTConfig, updateFinancialConfig, setNotificationEmail, setEnabledAlertTypes, setIntelligentScheduling, saveConfiguration, reloadConfiguration };
+  return { notifyOnCritical, notifyOnWarning, notificationEmail, loading, error, load, save };
 });
