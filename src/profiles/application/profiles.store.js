@@ -21,12 +21,13 @@ export const useProfilesStore = defineStore('profiles', () => {
       if (auth.isAdmin) {
         myProfile.value = await api.getMyAdminProfile();
       } else {
-        const list = await api.getClients();
-        myProfile.value = list.find(p => p.userId === userId) ?? null;
+        myProfile.value = await api.getMyClientProfile();
       }
     } catch (e) {
       error.value = e.message || 'Failed to load profile';
-    } finally { loading.value = false; }
+    } finally {
+      loading.value = false;
+    }
   }
 
   async function loadAllAdmins() {
@@ -76,7 +77,7 @@ export const useProfilesStore = defineStore('profiles', () => {
     try {
       const updated = auth.isAdmin
         ? await api.updateAdmin(myProfile.value.id, dto)
-        : await api.updateClient(myProfile.value.id, dto);
+        : await api.updateMyClientProfile(dto);
       myProfile.value = updated;
       return updated;
     } catch (e) {
@@ -84,9 +85,20 @@ export const useProfilesStore = defineStore('profiles', () => {
     } finally { loading.value = false; }
   }
 
+  async function saveMyClientProfile(dto) {
+    loading.value = true; error.value = null;
+    try {
+      const saved = await api.updateMyClientProfile(dto);
+      myProfile.value = saved;
+      return saved;
+    } catch (e) {
+      error.value = e.message || 'Failed to save profile';
+    } finally { loading.value = false; }
+  }
+
   return {
     myProfile, adminProfiles, clientProfiles, loading, error,
     loadMyProfile, loadAllAdmins, loadAllClients,
-    createAdmin, createClient, updateMyProfile,
+    createAdmin, createClient, updateMyProfile, saveMyClientProfile,
   };
 });

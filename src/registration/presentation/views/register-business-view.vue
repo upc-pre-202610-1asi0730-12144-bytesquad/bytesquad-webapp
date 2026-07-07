@@ -3,13 +3,15 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useRegistrationStore } from '@/registration/application/registration.store.js';
-import { useAuthStore } from '@/authentication/application/auth.store.js';
-import { MembershipPlan } from '@/membership/domain/model/membership.entity.js';
+import { useAuthStore }          from '@/authentication/application/auth.store.js';
+import { useProfilesStore }      from '@/profiles/application/profiles.store.js';
+import { MEMBERSHIP_PLANS } from '@/membership/domain/model/membership-plans.js';
 
 const { locale } = useI18n();
 const router           = useRouter();
 const registrationStore = useRegistrationStore();
-const authStore        = useAuthStore();
+const authStore         = useAuthStore();
+const profilesStore     = useProfilesStore();
 
 const role        = ref('client');
 const step        = ref(1);
@@ -25,29 +27,13 @@ const form = ref({
 
 const LEGAL_STRUCTURES = ['SRL', 'SA', 'EIRL', 'SAC'];
 
-const PLANS = [
-  {
-    id: MembershipPlan.Basic,
-    price: '$69',
-    features: ['Hasta 20 máquinas monitoreadas', 'Mapa de calor en tiempo real', '1 sede', 'Soporte por email'],
-    popular: false,
-    spark: { line: 'M0,70 Q60,62 120,45 Q160,35 200,22', end: [200, 22], start: [0, 70] },
-  },
-  {
-    id: MembershipPlan.Mid,
-    price: '$109',
-    features: ['Hasta 50 máquinas monitoreadas', 'Mantenimiento predictivo', 'Hasta 3 sedes', 'Dashboard analítico completo', 'Soporte prioritario 24/7'],
-    popular: true,
-    spark: { line: 'M0,75 Q40,65 100,40 Q160,22 200,12', end: [200, 12], start: [0, 75] },
-  },
-  {
-    id: MembershipPlan.Premium,
-    price: '$189',
-    features: ['Máquinas ilimitadas', 'Análisis predictivo de ROI', 'Sedes ilimitadas', 'API personalizada', 'Gestor de cuenta dedicado'],
-    popular: false,
-    spark: { line: 'M0,72 Q50,58 110,34 Q165,16 200,8', end: [200, 8], start: [0, 72] },
-  },
-];
+const SPARK_BY_PLAN = {
+  Basic:   { line: 'M0,70 Q60,62 120,45 Q160,35 200,22', end: [200, 22], start: [0, 70] },
+  Mid:     { line: 'M0,75 Q40,65 100,40 Q160,22 200,12', end: [200, 12], start: [0, 75] },
+  Premium: { line: 'M0,72 Q50,58 110,34 Q165,16 200,8',  end: [200, 8],  start: [0, 72] },
+};
+
+const PLANS = MEMBERSHIP_PLANS.map(p => ({ ...p, spark: SPARK_BY_PLAN[p.id] }));
 
 const passwordError = computed(() => {
   if (!form.value.password) return null;
@@ -79,11 +65,30 @@ function onContinue() {
 }
 
 async function submitClient() {
-  // Personal info fields are collected for UX consistency but not sent to the backend —
-  // sign-up only accepts { username, password }. Profile fields (firstName, etc.) would
-  // require a separate PUT /profiles/clients call. See TODO.md.
+  // Step 1: create the authentication account
   await authStore.signUp(form.value.email, form.value.password);
-  if (!authStore.error) router.push('/login');
+  if (authStore.error) return; // e.g. 409 duplicate username — show error in form, stop here
+
+  // Step 2: sign in immediately with the same credentials to obtain a session token
+  await authStore.signIn(form.value.email, form.value.password);
+  if (authStore.error) {
+    // Unlikely right after a successful sign-up, but guard against network issues
+    router.push('/login');
+    return;
+  }
+
+  // Step 3: persist the profile fields captured in the same form
+  // Uses saveMyClientProfile (no myProfile guard) — failure does NOT abort the flow:
+  // the user already has a valid session and the /complete-profile gate acts as fallback
+  await profilesStore.saveMyClientProfile({
+    firstName:   form.value.firstName,
+    lastName:    form.value.lastName,
+    phoneNumber: form.value.phoneNumber,
+    dni:         form.value.dni,
+  });
+
+  // Step 4: proceed to gym selection — guard will redirect to /complete-profile if step 3 failed
+  router.push('/join-gym');
 }
 
 async function selectPlan(planId) {
@@ -285,7 +290,7 @@ function setLang(l) { locale.value = l; localStorage.setItem('spottrack_lang', l
         </div>
 
         <div class="plan-card__body">
-          <p class="plan-name">{{ plan.id }}</p>
+          <p class="plan-name">{{ plan.displayName }}</p>
           <p class="plan-price">
             <span class="plan-price__amount">{{ plan.price }}</span>
             <span class="plan-price__period">/mes</span>
