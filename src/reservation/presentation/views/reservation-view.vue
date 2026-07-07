@@ -22,7 +22,7 @@ const showModal  = ref(false);
 const form       = ref({ equipmentId: '', windowSeconds: 600 });
 
 const windowOptions = [
-  { seconds: 10,   label: t('booking.modal.option10s') },
+  { seconds: 60,   label: t('booking.modal.option1m') },
   { seconds: 600,  label: t('booking.modal.option10m') },
   { seconds: 900,  label: t('booking.modal.option15m') },
   { seconds: 1200, label: t('booking.modal.option20m') },

@@ -146,7 +146,7 @@
       "duration": "Duración",
       "minutesSuffix": "minutos",
       "warning": "Las reservas solo están disponibles en horas pico. Si no ocupas la máquina en el tiempo establecido, la reserva expirará automáticamente.",
-      "option10s": "10 segundos",
+      "option1m": "1 minuto",
       "option10m": "10 minutos",
       "option15m": "15 minutos",
       "option20m": "20 minutos",

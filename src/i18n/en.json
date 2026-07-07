@@ -146,7 +146,7 @@
       "duration": "Duration",
       "minutesSuffix": "minutes",
       "warning": "Reservations are only available during peak hours. If you don't use the machine within the set time, the reservation will expire automatically.",
-      "option10s": "10 seconds",
+      "option1m": "1 minute",
       "option10m": "10 minutes",
       "option15m": "15 minutes",
       "option20m": "20 minutes",
