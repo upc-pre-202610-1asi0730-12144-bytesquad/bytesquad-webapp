@@ -46,6 +46,19 @@ export const useReservationStore = defineStore('reservation', () => {
     } finally { loading.value = false; }
   }
 
+  // Same as loadMine(), but without toggling loading/error — for background polling
+  // that picks up server-side changes (e.g. the auto-end-on-expiry job) without
+  // flashing the loading state on an already-visible list.
+  async function refreshMine() {
+    const clientId = await _resolveClientId();
+    if (!clientId) return;
+    try {
+      reservations.value = await api.getByClient(clientId);
+    } catch {
+      // Silent: this is a background refresh, the last known state stays on screen.
+    }
+  }
+
   async function expressCreate(equipmentId, startDate, endDate) {
     const clientId = await _resolveClientId();
     if (!clientId) return;
@@ -106,7 +119,7 @@ export const useReservationStore = defineStore('reservation', () => {
     reservations, loading, error, usageCounts,
     activeReservations, initiatedReservations, reservedReservations, endedReservations,
     historyReservations, hasOpenReservation,
-    loadMine, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
+    loadMine, refreshMine, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
     loadUsageCounts,
   };
 });

@@ -35,11 +35,18 @@ const openReservations = computed(() => store.reservations.filter(
 
 const now = ref(Date.now());
 let clock;
+let refreshTimer;
 onMounted(() => {
   store.loadMine();
   clock = setInterval(() => { now.value = Date.now(); }, 1000);
+  // The backend auto-ends expired reservations in the background; poll so this
+  // screen picks up that change instead of getting stuck showing a stale "expired" card.
+  refreshTimer = setInterval(() => { store.refreshMine(); }, 15000);
 });
-onUnmounted(() => clearInterval(clock));
+onUnmounted(() => {
+  clearInterval(clock);
+  clearInterval(refreshTimer);
+});
 
 function openModal() {
   form.value = { equipmentId: '', windowSeconds: 600 };
