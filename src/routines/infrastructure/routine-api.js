@@ -4,8 +4,8 @@ import { RoutineAssembler } from './routine-assembler.js';
 const asm = new RoutineAssembler();
 
 export class RoutineApi extends BaseApi {
-  async create(routineName, clientId) {
-    const { data } = await this.http.post('routines', { routineName, clientId });
+  async create(routineName) {
+    const { data } = await this.http.post('routines', { routineName });
     return asm.toEntityFromResource(data);
   }
 
@@ -14,13 +14,19 @@ export class RoutineApi extends BaseApi {
     return asm.toEntityFromResource(data);
   }
 
-  async getByClient(clientId) {
-    const { data } = await this.http.get('routines', { params: { clientId } });
+  async getAll() {
+    const { data } = await this.http.get('routines');
     return Array.isArray(data) ? data.map(r => asm.toEntityFromResource(r)) : [];
   }
 
-  async addExerciseBlock(routineId, exerciseName, exerciseType, order) {
-    const { data } = await this.http.post(`routines/${routineId}/exercise-blocks`, { exerciseName, exerciseType, order });
+  async getExerciseBlocks(routineId) {
+    const { data } = await this.http.get(`routines/${routineId}/exercise-blocks`);
+    return Array.isArray(data) ? data.map(r => asm.toBlockEntityFromResource(r)) : [];
+  }
+
+  async addExerciseBlock(routineId, exerciseName, exerciseType, order, sets, reps) {
+    const { data } = await this.http.post(
+      `routines/${routineId}/exercise-blocks`, { exerciseName, exerciseType, order, sets, reps });
     return asm.toBlockEntityFromResource(data);
   }
 }

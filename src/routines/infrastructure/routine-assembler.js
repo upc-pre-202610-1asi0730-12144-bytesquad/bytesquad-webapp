@@ -10,8 +10,8 @@ export class RoutineAssembler {
     });
   }
 
-  toCreateResource(dto) {
-    return { routineName: dto.routineName, clientId: dto.clientId };
+  toCreateResource(resource) {
+    return { routineName: resource.routineName };
   }
 
   toBlockEntityFromResource(r) {
@@ -20,10 +20,15 @@ export class RoutineAssembler {
       exerciseName: r.exerciseName,
       exerciseType: r.exerciseType,
       order:        r.order,
+      sets:         r.sets,
+      reps:         r.reps,
     });
   }
 
-  toBlockCreateResource(dto) {
-    return { exerciseName: dto.exerciseName, exerciseType: dto.exerciseType, order: dto.order };
+  toBlockCreateResource(resource) {
+    return {
+      exerciseName: resource.exerciseName, exerciseType: resource.exerciseType,
+      order: resource.order, sets: resource.sets, reps: resource.reps,
+    };
   }
 }
