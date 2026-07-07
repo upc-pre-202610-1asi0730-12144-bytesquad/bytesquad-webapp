@@ -78,7 +78,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page profile-page">
 
     <!-- ── ADMIN PROFILE ─────────────────────────────────────── -->
     <template v-if="isAdmin">
@@ -176,7 +176,10 @@ onMounted(() => {
 
       <!-- Gym switcher -->
       <div class="card section">
-        <h2 class="section-title">{{ t('profile.gymSwitcher.title') }}</h2>
+        <div class="card-header">
+          <span class="material-icons card-header__icon">storefront</span>
+          <h2 class="section-title">{{ t('profile.gymSwitcher.title') }}</h2>
+        </div>
         <p v-if="!activeGymStore.associations.length" class="section-hint">{{ t('profile.gymSwitcher.empty') }}</p>
         <ul v-else class="gym-list">
           <li v-for="assoc in activeGymStore.associations" :key="assoc.gymId" class="gym-item">
@@ -193,7 +196,10 @@ onMounted(() => {
 
       <!-- Edit form -->
       <div class="card section">
-        <h2 class="section-title">{{ t('profile.account.title') }}</h2>
+        <div class="card-header">
+          <span class="material-icons card-header__icon">manage_accounts</span>
+          <h2 class="section-title">{{ t('profile.account.title') }}</h2>
+        </div>
         <div class="account-grid">
           <div class="account-field">
             <label>{{ t('profile.account.email') }}</label>
@@ -237,7 +243,10 @@ onMounted(() => {
 
       <!-- Notifications -->
       <div class="card section">
-        <h2 class="section-title">{{ t('profile.client.notifications.title') }}</h2>
+        <div class="card-header">
+          <span class="material-icons card-header__icon">notifications</span>
+          <h2 class="section-title">{{ t('profile.client.notifications.title') }}</h2>
+        </div>
         <div class="notif-list">
           <div class="notif-row">
             <div class="notif-info">
@@ -277,7 +286,10 @@ onMounted(() => {
 
     <!-- Language -->
     <div class="card section">
-      <h2 class="section-title">{{ t('profile.language.title') }}</h2>
+      <div class="card-header">
+        <span class="material-icons card-header__icon">language</span>
+        <h2 class="section-title">{{ t('profile.language.title') }}</h2>
+      </div>
       <label class="section-sub">{{ t('profile.language.label') }}</label>
       <div class="lang-options">
         <button class="btn lang-btn" :class="locale === 'es' ? 'btn--accent' : 'btn--outline'" @click="setLocale('es')">Español</button>
@@ -288,13 +300,16 @@ onMounted(() => {
 
     <!-- Security -->
     <div class="card section">
-      <h2 class="section-title">{{ t('profile.security.title') }}</h2>
+      <div class="card-header">
+        <span class="material-icons card-header__icon">shield</span>
+        <h2 class="section-title">{{ t('profile.security.title') }}</h2>
+      </div>
       <div class="security-actions">
-        <button class="btn btn--outline">
+        <button class="btn btn--outline security-btn">
           <span class="material-icons" style="font-size:16px">lock</span>
           {{ t('profile.security.changePassword') }}
         </button>
-        <button class="btn btn--danger" @click="logout">
+        <button class="btn btn--danger security-btn" @click="logout">
           <span class="material-icons" style="font-size:16px">logout</span>
           {{ t('profile.security.logout') }}
         </button>
@@ -304,6 +319,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.profile-page { margin: 0 auto; max-width: 800px; }
+.card-header { align-items: center; display: flex; gap: .6rem; margin-bottom: .9rem; }
+.card-header__icon { color: var(--accent); font-size: 20px; }
+.card-header .section-title { margin-bottom: 0; }
 .page__header { align-items: center; display: flex; gap: .75rem; margin-bottom: 1.25rem; }
 .gym-list { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .5rem; }
 .gym-item { align-items: center; background: var(--bg-surface); border-radius: 8px; display: flex; gap: .6rem; padding: .5rem .75rem; }
@@ -357,6 +376,7 @@ onMounted(() => {
 .toggle input:checked + .toggle-track::after { transform: translateX(22px); }
 .lang-options { display: flex; gap: .5rem; margin-top: .5rem; }
 .lang-btn { font-size: .85rem; padding: .35rem .9rem; }
-.security-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .25rem; }
+.security-actions { display: flex; flex-direction: column; gap: .6rem; margin-top: .25rem; }
+.security-btn { align-items: center; display: flex; gap: .4rem; justify-content: flex-start; width: 100%; }
 @media (max-width: 600px) { .stat-grid, .account-grid, .edit-grid { grid-template-columns: 1fr 1fr; } }
 </style>
