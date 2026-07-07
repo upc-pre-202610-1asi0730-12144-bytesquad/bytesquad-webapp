@@ -8,7 +8,7 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
   const maintenances = ref([]);
   const jobs         = ref([]); // TODO: wire when backend adds GET /maintenance-jobs
   const logs         = ref([]); // TODO: wire when backend adds GET /maintenance-logs
-  const tickets      = ref([]); // TODO: wire when backend adds GET /technical-tickets
+  const tickets      = ref([]);
   const loading      = ref(false);
   const error        = ref(null);
 
@@ -74,6 +74,15 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
   }
 
   // ── TechnicalTicket ────────────────────────────────────────────────────────
+  async function loadTickets(adminId) {
+    loading.value = true; error.value = null;
+    try {
+      tickets.value = await api.getTickets(adminId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load tickets';
+    } finally { loading.value = false; }
+  }
+
   async function getTicketById(id) {
     loading.value = true; error.value = null;
     try {
@@ -154,7 +163,7 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
     openTickets, inProgressTickets, resolvedTickets,
     loadMaintenancesByEquipment, requestMaintenance,
     acceptJob, createLog,
-    getTicketById, createTicket,
+    loadTickets, getTicketById, createTicket,
     updateTicketStatus, updateTicketMaintenanceProgress,
     assignTicket, requestTicketStatusUpdate, completeTicket,
   };
