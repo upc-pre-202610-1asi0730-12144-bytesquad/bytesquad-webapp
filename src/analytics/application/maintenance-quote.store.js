@@ -5,7 +5,6 @@ import { MaintenanceQuoteApi } from '../infrastructure/maintenance-quote-api.js'
 const api = new MaintenanceQuoteApi();
 
 export const useMaintenanceQuoteStore = defineStore('maintenanceQuote', () => {
-  // TODO: no GET endpoint in backend; reading from local mock
   const quotes  = ref([]);
   const loading = ref(false);
   const error   = ref(null);
@@ -45,5 +44,14 @@ export const useMaintenanceQuoteStore = defineStore('maintenanceQuote', () => {
     } catch (e) { error.value = e.message; }
   }
 
-  return { quotes, loading, error, createQuote, updateSparePartsCost, updatePreventiveCost, consolidateTotal };
+  async function loadByAdmin(adminId) {
+    loading.value = true; error.value = null;
+    try {
+      quotes.value = await api.getByAdmin(adminId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load maintenance quotes';
+    } finally { loading.value = false; }
+  }
+
+  return { quotes, loading, error, createQuote, updateSparePartsCost, updatePreventiveCost, consolidateTotal, loadByAdmin };
 });

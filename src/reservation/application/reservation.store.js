@@ -68,7 +68,11 @@ export const useReservationStore = defineStore('reservation', () => {
       _upsert(created);
       return created;
     } catch (e) {
-      error.value = e.message || 'Failed to create reservation';
+      if (e.status === 400 && (e.message === 'GymMembershipInactive' || e.apiError?.error === 'GymMembershipInactive')) {
+        error.value = 'Your gym membership is not active. Activate it to make reservations.';
+      } else {
+        error.value = e.message || 'Failed to create reservation';
+      }
     } finally { loading.value = false; }
   }
 

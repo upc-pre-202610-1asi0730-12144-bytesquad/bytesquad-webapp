@@ -8,13 +8,13 @@ const store = useGymStore();
 
 const activeTab = ref('gym');
 
-const gymForm    = ref({ name: '', street: '', district: '', city: '' });
+const gymForm    = ref({ name: '' });
 const branchForm = ref({ gymId: '', name: '', street: '', district: '', city: '' });
 const zoneForm   = ref({ gymId: '', branchId: '', name: '' });
 
 async function submitGym() {
   await store.addGym({ ...gymForm.value });
-  gymForm.value = { name: '', street: '', district: '', city: '' };
+  gymForm.value = { name: '' };
 }
 
 async function submitBranch() {
@@ -53,9 +53,6 @@ async function submitZone() {
     <form v-if="activeTab === 'gym'" class="card form-grid" @submit.prevent="submitGym">
       <h2 class="form-title">Create Gym</h2>
       <div class="form-field"><label>Name</label><input v-model="gymForm.name" required /></div>
-      <div class="form-field"><label>Street</label><input v-model="gymForm.street" required /></div>
-      <div class="form-field"><label>District</label><input v-model="gymForm.district" required /></div>
-      <div class="form-field"><label>City</label><input v-model="gymForm.city" required /></div>
       <div class="form-actions">
         <button type="submit" class="btn btn--primary" :disabled="store.loading">Create Gym</button>
       </div>

@@ -1,18 +1,16 @@
 import { BaseApi } from '@/shared/infrastructure/base-api.js';
-import { EquipmentUsageStatEndpoint } from './equipment-usage-stat-endpoint.js';
+import { EquipmentUsageStatAssembler } from './equipment-usage-stat-assembler.js';
+
+const asm = new EquipmentUsageStatAssembler();
 
 export class DashboardApi extends BaseApi {
-  #statsEndpoint;
-
-  constructor() {
-    super();
-    this.#statsEndpoint = new EquipmentUsageStatEndpoint(this);
+  async getUsageStatsByAdmin(adminId) {
+    const { data } = await this.http.get(`equipment-usage-stats/by-admin/${adminId}`);
+    return Array.isArray(data) ? data.map(r => asm.toEntityFromResource(r)) : [];
   }
 
-  getEquipmentUsageStats() { return this.#statsEndpoint.getAll(); }
-
-  async getUsageSessions() {
-    const { data } = await this.http.get('usage_sessions');
+  async getPeakCapacityByAdmin(adminId) {
+    const { data } = await this.http.get(`equipment-usage-stats/peak-capacity/by-admin/${adminId}`);
     return Array.isArray(data) ? data : [];
   }
 }

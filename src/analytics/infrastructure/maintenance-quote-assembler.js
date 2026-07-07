@@ -9,6 +9,7 @@ export class MaintenanceQuoteAssembler {
       sparePartsCost:        r.sparePartsCost,
       preventiveCost:        r.preventiveCost,
       totalMaintenanceCost:  r.totalMaintenanceCost,
+      createdAt:             r.createdAt,
     });
   }
 }

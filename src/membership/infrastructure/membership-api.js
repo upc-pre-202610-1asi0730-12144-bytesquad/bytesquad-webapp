@@ -38,4 +38,9 @@ export class MembershipApi extends BaseApi {
     const { data } = await this.http.delete(`memberships/${id}/cancel`);
     return assembler.toEntityFromResource(data);
   }
+
+  async downgrade(id, newPlan) {
+    const { data } = await this.http.put(`memberships/${id}/plan/downgrade`, { newPlan });
+    return assembler.toEntityFromResource(data);
+  }
 }
