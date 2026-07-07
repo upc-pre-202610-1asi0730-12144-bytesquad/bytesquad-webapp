@@ -27,6 +27,11 @@ export class GymApi extends BaseApi {
     return this.#endpoint.create(entity);
   }
 
+  async getBranches(gymId) {
+    const { data } = await this.http.get(`gyms/${gymId}/branches`);
+    return (Array.isArray(data) ? data : []).map(r => this.#branchAssembler.toEntityFromResource(r));
+  }
+
   async createBranch(gymId, entity) {
     const resource = this.#branchAssembler.toResourceFromEntity(entity);
     const { data } = await this.http.post(`gyms/${gymId}/branches`, resource);
