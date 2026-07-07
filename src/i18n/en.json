@@ -100,13 +100,9 @@
         "RESERVED": "Reserved"
       },
       "reservedByUser": "You have reserved this machine",
-      "notifyBtn": "Notify me when free",
       "alternativesBtn": "See alternatives",
-      "reportFreeBtn": "Report as free",
       "reserveBtn": "Reserve",
       "notifications": {
-        "notified": "You'll be notified when this machine is free",
-        "reportedFree": "Machine reported as free. Thank you!",
         "reserved": "Machine reserved successfully"
       }
     },

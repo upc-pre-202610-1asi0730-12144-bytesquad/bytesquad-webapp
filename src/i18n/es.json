@@ -100,13 +100,9 @@
         "RESERVED": "Reservado"
       },
       "reservedByUser": "Tienes esta máquina reservada",
-      "notifyBtn": "Notificarme cuando esté libre",
       "alternativesBtn": "Ver alternativas",
-      "reportFreeBtn": "Reportar como libre",
       "reserveBtn": "Reservar",
       "notifications": {
-        "notified": "Te notificaremos cuando esta máquina esté libre",
-        "reportedFree": "Máquina reportada como libre. ¡Gracias!",
         "reserved": "Máquina reservada con éxito"
       }
     },

@@ -254,9 +254,6 @@ async function reserveMachine() {
   const created = await reservationStore.expressCreate(sel.eq.id, start.toISOString(), end.toISOString());
   if (created) showToast(t('map.detail.notifications.reserved'));
 }
-
-function notifyWhenFree()   { closeMachineDetail(); showToast(t('map.detail.notifications.notified')); }
-function reportAsFree()     { closeMachineDetail(); showToast(t('map.detail.notifications.reportedFree')); }
 </script>
 
 <template>
@@ -444,9 +441,7 @@ function reportAsFree()     { closeMachineDetail(); showToast(t('map.detail.noti
         <p v-if="isPending(selectedEquipment.eq.id)" class="detail-msg">{{ t('map.detail.reservedByUser') }}</p>
 
         <div v-else-if="isInUse(selectedEquipment.eq.status)" class="detail-actions">
-          <button class="btn btn--outline" @click="notifyWhenFree">{{ t('map.detail.notifyBtn') }}</button>
           <button class="btn btn--outline" @click="openAlternatives">{{ t('map.detail.alternativesBtn') }}</button>
-          <button class="btn btn--outline" @click="reportAsFree">{{ t('map.detail.reportFreeBtn') }}</button>
         </div>
 
         <p v-else-if="['Maintenance', 'OutOfService', 'Decommissioned'].includes(selectedEquipment.eq.status)" class="detail-msg">
