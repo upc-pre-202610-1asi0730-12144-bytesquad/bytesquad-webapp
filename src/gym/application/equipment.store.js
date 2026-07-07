@@ -3,7 +3,6 @@ import { ref, computed } from 'vue';
 import { EquipmentApi } from '../infrastructure/equipment-api.js';
 import { EquipmentStatus } from '../domain/model/equipment.entity.js';
 import { useActiveGymStore } from '@/profiles/application/active-gym.store.js';
-import { useGymStore } from './gym.store.js';
 import { useAuthStore } from '@/authentication/application/auth.store.js';
 
 const api = new EquipmentApi();
@@ -14,29 +13,22 @@ export const useEquipmentStore = defineStore('equipment', () => {
   const error     = ref(null);
 
   const equipmentCount   = computed(() => equipment.value.length);
-  const operationalCount = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OPERATIONAL).length);
+  const operationalCount = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OPERATIONAL || e.status === EquipmentStatus.AVAILABLE).length);
   const maintenanceCount = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.MAINTENANCE).length);
   const outOfOrderCount  = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OUT_OF_ORDER).length);
 
   async function loadEquipment() {
     const auth = useAuthStore();
-    let gymId;
-
-    if (auth.isAdmin) {
-      const gymStore = useGymStore();
-      if (!gymStore.gymChecked) await gymStore.loadAdminGym(auth.user.id);
-      gymId = gymStore.currentGym?.id;
-    } else {
-      const activeGymStore = useActiveGymStore();
-      if (!activeGymStore.loaded) await activeGymStore.loadAssociations();
-      gymId = activeGymStore.activeGymId;
-    }
-
-    if (!gymId) { equipment.value = []; return; }
-
     loading.value = true; error.value = null;
     try {
-      equipment.value = await api.getByGymId(gymId);
+      if (auth.isAdmin) {
+        equipment.value = await api.getByAdmin(auth.user.id);
+      } else {
+        const activeGymStore = useActiveGymStore();
+        if (!activeGymStore.loaded) await activeGymStore.loadAssociations();
+        const gymId = activeGymStore.activeGymId;
+        equipment.value = gymId ? await api.getByGymId(gymId) : [];
+      }
     } catch (e) {
       error.value = e.message || 'Failed to load equipment';
     } finally { loading.value = false; }

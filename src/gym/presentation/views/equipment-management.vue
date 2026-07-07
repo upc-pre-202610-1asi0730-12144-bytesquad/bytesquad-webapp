@@ -3,13 +3,15 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEquipmentStore } from '@/gym/application/equipment.store.js';
+import { useAuthStore }      from '@/authentication/application/auth.store.js';
 import { EquipmentStatus } from '@/gym/domain/model/equipment.entity.js';
 
 const { t }  = useI18n();
 const store  = useEquipmentStore();
+const auth   = useAuthStore();
 const router = useRouter();
 
-onMounted(() => store.loadEquipment());
+onMounted(() => store.loadEquipment(auth.user.id));
 
 const searchQuery    = ref('');
 const selectedStatus = ref('');
@@ -17,7 +19,7 @@ const selectedStatus = ref('');
 const filteredEquipment = computed(() => {
   let list = store.equipment;
   const q = searchQuery.value.toLowerCase().trim();
-  if (q) list = list.filter(e => e.name.toLowerCase().includes(q) || e.brand.toLowerCase().includes(q) || e.model.toLowerCase().includes(q));
+  if (q) list = list.filter(e => e.name?.toLowerCase().includes(q));
   if (selectedStatus.value) list = list.filter(e => e.status === selectedStatus.value);
   return list;
 });
@@ -26,7 +28,9 @@ function statusLabel(s) {
   return t(`equipment.status.${s}`) || s;
 }
 function statusClass(s) {
-  return s === EquipmentStatus.OPERATIONAL ? 'green' : s === EquipmentStatus.MAINTENANCE ? 'amber' : 'red';
+  if (s === EquipmentStatus.OPERATIONAL || s === EquipmentStatus.AVAILABLE) return 'green';
+  if (s === EquipmentStatus.MAINTENANCE) return 'amber';
+  return 'red';
 }
 function deleteEquipment(id) {
   if (confirm(t('equipment.dialog.deleteMessage'))) store.deleteEquipment(id);
@@ -61,19 +65,18 @@ function deleteEquipment(id) {
     <div v-else class="card" style="padding:0;overflow:hidden">
       <table class="data-table">
         <thead><tr>
-          <th>ID</th><th>{{ t('equipment.table.name') }}</th><th>{{ t('equipment.table.brand') }}</th><!-- TODO: UI-only -->
-          <th>{{ t('equipment.table.model') }}</th><!-- TODO: UI-only --><th>{{ t('equipment.table.zoneId') }}</th>
-          <th>{{ t('equipment.table.purchasePrice') }}</th><!-- TODO: UI-only --><th>{{ t('equipment.table.status') }}</th><th></th>
+          <th>ID</th>
+          <th>{{ t('equipment.table.name') }}</th>
+          <th>{{ t('equipment.table.zoneId') }}</th>
+          <th>{{ t('equipment.table.status') }}</th>
+          <th></th>
         </tr></thead>
         <tbody>
-          <tr v-if="!filteredEquipment.length"><td colspan="8" class="table-empty">{{ t('equipment.table.noData') }}</td></tr>
+          <tr v-if="!filteredEquipment.length"><td colspan="5" class="table-empty">{{ t('equipment.table.noData') }}</td></tr>
           <tr v-for="eq in filteredEquipment" :key="eq.id">
             <td class="cell-id">{{ eq.id }}</td>
             <td>{{ eq.name }}</td>
-            <td>{{ eq.brand }}</td>
-            <td>{{ eq.model }}</td>
             <td>{{ eq.zoneId }}</td>
-            <td>${{ eq.purchasePrice?.toLocaleString() }}</td>
             <td><span class="badge" :class="`badge--${statusClass(eq.status)}`">{{ statusLabel(eq.status) }}</span></td>
             <td class="actions">
               <button class="btn btn--icon" @click="router.push(`/equipment/${eq.id}/edit`)"><span class="material-icons">edit</span></button>

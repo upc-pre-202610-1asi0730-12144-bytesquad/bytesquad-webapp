@@ -246,66 +246,58 @@
   },
   "iot": {
     "title": "IoT Monitoring",
-    "subtitle": "Real-time status of Edge IoT sensors installed on equipment",
-    "search": "Search by sensor ID, machine or zone...",
+    "search": "Search by identifier...",
     "actions": {
       "refresh": "Refresh",
-      "register": "Register Sensor"
+      "cancel": "Cancel"
     },
     "filter": {
-      "status": "Status",
-      "allStatuses": "All Statuses"
+      "allTypes": "All Types"
     },
     "stats": {
-      "total": "Total Devices",
-      "online": "Sensors Online",
-      "offline": "Disconnected",
-      "avgBattery": "Average Battery",
-      "activeAlerts": "Active Alerts",
-      "ofTotal": "of {total} total"
+      "total": "Total Sensors",
+      "motion": "Motion Sensors",
+      "camera": "Camera Sensors",
+      "anomalies": "Anomalies"
     },
-    "table": {
-      "title": "Sensor Status",
-      "id": "Sensor ID",
-      "machine": "Machine",
-      "location": "Location",
-      "status": "Status",
-      "lastPing": "Last Ping",
-      "battery": "Battery",
-      "signal": "Signal",
-      "firmware": "Firmware",
-      "noData": "No devices found"
-    },
-    "status": {
-      "Online": "Online",
-      "Offline": "Disconnected"
-    },
-    "register": {
-      "title": "Register Sensor",
-      "equipment": "Equipment",
-      "selectEquipment": "Select an equipment",
-      "macAddress": "MAC Address",
-      "location": "Location",
-      "cancel": "Cancel",
-      "submit": "Register"
-    },
-    "alerts": {
-      "title": "Active Alerts",
-      "disconnectedTitle": "{sensor} - Sensor Disconnected",
-      "lowBatteryTitle": "{sensor} - Low Battery",
-      "lastPing": "Last ping:",
-      "battery": "Battery:",
-      "signal": "Signal:",
-      "investigate": "Investigate",
-      "scheduleReplacement": "Schedule Replacement",
-      "severity": {
-        "critical": "Critical",
-        "warning": "Warning"
+    "sensors": {
+      "title": "Registered Sensors",
+      "register": "Register Sensor",
+      "type": "Type",
+      "identifier": "Identifier",
+      "equipmentId": "Equipment ID",
+      "captureCount": "Captures",
+      "registeredAt": "Registered",
+      "simulate": "Simulate",
+      "noData": "No sensors registered yet",
+      "types": {
+        "MotionSensor": "Motion",
+        "CameraSensor": "Camera"
+      },
+      "form": {
+        "title": "Register New Sensor",
+        "identifierPlaceholder": "e.g. SENS-001",
+        "equipmentIdPlaceholder": "Equipment numeric ID",
+        "optional": "optional",
+        "identifierRequired": "Identifier is required",
+        "submit": "Register"
       }
     },
-    "modal": {
-      "title": "Machine Reconnected",
-      "close": "Close"
+    "anomalies": {
+      "title": "Anomaly Log",
+      "report": "Report Anomaly",
+      "type": "Anomaly Type",
+      "description": "Description",
+      "sensor": "Sensor ID",
+      "detectedAt": "Detected At",
+      "noData": "No anomalies recorded",
+      "form": {
+        "title": "Report Anomaly",
+        "typePlaceholder": "e.g. INTRUSION_DETECTED",
+        "descriptionPlaceholder": "Describe the detected anomaly...",
+        "allRequired": "All fields are required",
+        "submit": "Report"
+      }
     }
   },
   "configuration": {
@@ -410,8 +402,9 @@
       "outOfOrder": "Out of Order"
     },
     "status": {
-      "OPERATIONAL": "Operational",
-      "MAINTENANCE": "Maintenance",
+      "AVAILABLE":    "Available",
+      "OPERATIONAL":  "Operational",
+      "MAINTENANCE":  "In Maintenance",
       "OUT_OF_ORDER": "Out of Order"
     },
     "dialog": {
