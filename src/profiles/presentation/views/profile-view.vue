@@ -437,16 +437,6 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- Security (client) -->
-      <div class="card section">
-        <h2 class="section-title">{{ t('profile.security.title') }}</h2>
-        <div class="security-actions">
-          <button class="btn btn--outline">
-            <span class="material-icons" style="font-size:16px">lock</span>
-            {{ t('profile.security.changePassword') }}
-          </button>
-        </div>
-      </div>
     </template>
 
     <!-- ── SHARED: Language ───────────────────────────────────────────────── -->
