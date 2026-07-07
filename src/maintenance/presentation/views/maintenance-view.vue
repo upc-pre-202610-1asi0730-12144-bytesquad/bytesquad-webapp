@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore }         from '@/authentication/application/auth.store.js';
 import { useMaintenanceStore }  from '@/maintenance/application/maintenance.store.js';
-import { TechnicalTicketStatus, MaintenanceProgress } from '@/maintenance/domain/model/technical-ticket.entity.js';
+import { TechnicalTicketStatus } from '@/maintenance/domain/model/technical-ticket.entity.js';
 import { useEquipmentStore }    from '@/gym/application/equipment.store.js';
 
 const { t }      = useI18n();
@@ -83,6 +83,18 @@ async function submitTechnician() {
   } finally { techSubmitting.value = false; }
 }
 
+// ── Start ticket (with error feedback) ────────────────────────────────────
+const ticketActionError = ref('');
+
+async function startTicket(id) {
+  ticketActionError.value = '';
+  try {
+    await store.updateTicketStatus(id, 'InProgress');
+  } catch (e) {
+    ticketActionError.value = e.message || 'Failed to start ticket';
+  }
+}
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 function eq(id)       { return equipStore.equipment.find(e => e.id === id)?.name ?? `EQ-${id}`; }
 function ticketId(id) { return `#${String(id).slice(-4).padStart(4, '0')}`; }
@@ -155,6 +167,11 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
       </select>
     </div>
 
+    <div v-if="ticketActionError" class="action-error card">
+      <span class="material-icons" style="font-size:16px">error_outline</span>
+      {{ ticketActionError }}
+    </div>
+
     <!-- Kanban -->
     <div class="kanban-board">
 
@@ -173,14 +190,11 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
           <p class="ticket-desc">{{ ticket.description }}</p>
           <div class="progress-row">
             <span class="progress-label">Progress:</span>
-            <select class="progress-select" :value="ticket.maintenanceProgress"
-              @change="store.updateTicketMaintenanceProgress(ticket.id, $event.target.value)">
-              <option v-for="p in Object.values(MaintenanceProgress)" :key="p" :value="p">{{ p }}</option>
-            </select>
+            <span class="badge badge--prog-done">{{ ticket.maintenanceProgress }}</span>
           </div>
           <div class="ticket-actions">
             <button class="btn btn--outline" style="font-size:.75rem"
-              @click="store.updateTicketStatus(ticket.id, 'InProgress')" :disabled="store.loading">
+              @click="startTicket(ticket.id)" :disabled="store.loading">
               Start
             </button>
             <template v-if="assignForm.ticketId === ticket.id">
@@ -215,10 +229,7 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
           <p class="ticket-desc">{{ ticket.description }}</p>
           <div class="progress-row">
             <span class="progress-label">Progress:</span>
-            <select class="progress-select" :value="ticket.maintenanceProgress"
-              @change="store.updateTicketMaintenanceProgress(ticket.id, $event.target.value)">
-              <option v-for="p in Object.values(MaintenanceProgress)" :key="p" :value="p">{{ p }}</option>
-            </select>
+            <span class="badge badge--prog-done">{{ ticket.maintenanceProgress }}</span>
           </div>
           <div class="ticket-actions">
             <template v-if="completeForm.ticketId === ticket.id">
@@ -361,8 +372,8 @@ const resolvedFiltered   = computed(() => filter(store.resolvedTickets));
 .ticket-desc     { color: var(--text-secondary); font-size: .78rem; }
 .progress-row    { align-items: center; display: flex; gap: .5rem; }
 .progress-label  { color: var(--text-secondary); font-size: .75rem; }
-.progress-select { font-size: .75rem; padding: 1px 4px; }
 .ticket-actions  { align-items: center; display: flex; flex-wrap: wrap; gap: .3rem; }
+.action-error    { align-items: center; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: var(--red); display: flex; font-size: .85rem; gap: .5rem; margin-bottom: 1rem; padding: .6rem .75rem; }
 .log-panel       { background: rgba(255,255,255,.03); border-radius: 4px; padding: .5rem .6rem; }
 .log-date        { color: var(--text-secondary); font-size: .72rem; }
 .log-notes       { font-size: .78rem; margin-top: .2rem; }
