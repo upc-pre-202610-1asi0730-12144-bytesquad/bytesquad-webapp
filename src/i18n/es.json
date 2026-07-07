@@ -602,6 +602,29 @@
       "INSPECTION": "Inspección",
       "OVERHAUL": "Revisión General"
     },
+    "technicians": {
+      "title": "Técnicos",
+      "register": "Registrar Técnico",
+      "name": "Nombre",
+      "specialization": "Especialización",
+      "phone": "Teléfono",
+      "noData": "No hay técnicos registrados",
+      "noneYet": "Sin técnicos — registra uno abajo",
+      "form": {
+        "namePlaceholder": "ej. Carlos Ríos",
+        "specializationPlaceholder": "ej. Eléctrico",
+        "phonePlaceholder": "ej. +51 999 000 111",
+        "allRequired": "Todos los campos son obligatorios",
+        "submit": "Registrar"
+      }
+    },
+    "complete": {
+      "notesPlaceholder": "Notas de finalización (opcional)"
+    },
+    "log": {
+      "view": "Ver Log",
+      "noNotes": "Sin notas registradas"
+    },
     "tickets": {
       "t1001": "Fuga de fluido hidráulico detectada en brazo de cargadora",
       "t1002": "Sobrecalentamiento del motor — requiere inspección inmediata",
