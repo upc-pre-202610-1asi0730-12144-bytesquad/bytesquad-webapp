@@ -54,21 +54,9 @@ export const useEquipmentStore = defineStore('equipment', () => {
     } finally { loading.value = false; }
   }
 
-  async function decommissionEquipment(id) {
-    loading.value = true; error.value = null;
-    try {
-      await api.decommissionEquipment(id);
-      equipment.value = equipment.value.map(e =>
-        e.id === id ? { ...e, status: EquipmentStatus.DECOMMISSIONED } : e
-      );
-    } catch (e) {
-      error.value = e.message || 'Failed to decommission equipment';
-    } finally { loading.value = false; }
-  }
-
   function getById(id) {
     return computed(() => equipment.value.find(e => e.id === id));
   }
 
-  return { equipment, loading, error, equipmentCount, operationalCount, maintenanceCount, outOfOrderCount, loadEquipment, addEquipment, updateEquipment, deleteEquipment, decommissionEquipment, getById };
+  return { equipment, loading, error, equipmentCount, operationalCount, maintenanceCount, outOfOrderCount, loadEquipment, addEquipment, updateEquipment, deleteEquipment, getById };
 });
