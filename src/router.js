@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/authentication/application/auth.store.js';
+import { useGymStore }  from '@/gym/application/gym.store.js';
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -38,6 +39,7 @@ const routes = [
       { path: 'routines', component: () => import('@/routines/presentation/views/routines-view.vue'),   meta: { requiresClient: true } },
     ],
   },
+  { path: '/setup-gym', component: () => import('@/gym/presentation/views/setup-gym-view.vue'), meta: { requiresAuth: true } },
   { path: '/register-business', component: () => import('@/registration/presentation/views/register-business-view.vue'), meta: { public: true } },
   { path: '/payment/success',   component: () => import('@/registration/presentation/views/payment-success-view.vue'),   meta: { public: true } },
   { path: '/payment/cancel',    component: () => import('@/registration/presentation/views/payment-cancel-view.vue'),    meta: { public: true } },
@@ -49,19 +51,25 @@ export const router = createRouter({
   routes,
 });
 
-router.beforeEach((to) => {
-  const auth = useAuthStore();
+router.beforeEach(async (to) => {
+  const auth     = useAuthStore();
+  const gymStore = useGymStore();
 
   if (to.meta.public) return true;
 
-  if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    return '/login';
+  if (to.meta.requiresAuth && !auth.isAuthenticated) return '/login';
+  if (to.meta.requiresAdmin && !auth.isAdmin)        return '/client';
+  if (to.meta.requiresClient && !auth.isClient)      return '/dashboard';
+
+  // Gym onboarding gate — admin only, silent check cached for the session
+  if (auth.isAdmin && to.path !== '/setup-gym') {
+    if (!gymStore.gymChecked) await gymStore.loadAdminGym(auth.user.id);
+    if (!gymStore.currentGym) return '/setup-gym';
   }
-  if (to.meta.requiresAdmin && !auth.isAdmin) {
-    return '/client';
-  }
-  if (to.meta.requiresClient && !auth.isClient) {
+  // Admin who already has a gym should not reach the setup page
+  if (auth.isAdmin && to.path === '/setup-gym' && gymStore.currentGym) {
     return '/dashboard';
   }
+
   return true;
 });
