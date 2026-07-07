@@ -16,7 +16,7 @@ const isEdit = computed(() => !!route.params.id);
 const gymId  = computed(() => gymStore.currentGym?.id);
 
 const form = ref({
-  id: null, zoneId: null, name: '', status: EquipmentStatus.OPERATIONAL,
+  id: null, zoneId: null, name: '', model: '', status: EquipmentStatus.OPERATIONAL, purchasePrice: null,
 });
 
 // ── Branch / Zone cascade ──────────────────────────────────────────────────
@@ -43,7 +43,7 @@ onMounted(async () => {
   if (isEdit.value) {
     const eq = store.equipment.find(e => e.id === Number(route.params.id));
     if (eq) {
-      Object.assign(form.value, { id: eq.id, name: eq.name, zoneId: eq.zoneId, status: eq.status });
+      Object.assign(form.value, { id: eq.id, name: eq.name, model: eq.model, zoneId: eq.zoneId, status: eq.status, purchasePrice: eq.purchasePrice });
 
       // pre-load all branch zones to find which branch owns this zone
       await Promise.all(
@@ -93,6 +93,13 @@ async function submit() {
         <select v-model="form.status" :disabled="store.loading">
           <option v-for="s in Object.values(EquipmentStatus)" :key="s" :value="s">{{ t(`equipment.status.${s}`) || s }}</option>
         </select>
+      </div>
+
+      <div class="form-field">
+        <label>{{ t('equipment.dialog.fields.purchasePrice') }}</label>
+        <input v-model.number="form.purchasePrice" type="number" min="0" step="0.01"
+               placeholder="e.g. 1200.00"
+               :disabled="store.loading" />
       </div>
 
       <!-- Branch selector -->
