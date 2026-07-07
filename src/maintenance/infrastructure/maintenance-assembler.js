@@ -5,11 +5,12 @@ export class MaintenanceAssembler {
     return new Maintenance({
       id: r.id, equipmentId: r.equipmentId,
       requestedByAdminId: r.requestedByAdminId,
-      reason: r.reason, status: r.status,
+      reason: r.reason, status: r.status, priority: r.priority, type: r.type,
     });
   }
 
   toResourceFromEntity(e) {
-    return { equipmentId: e.equipmentId, requestedByAdminId: e.requestedByAdminId, reason: e.reason };
+    return { equipmentId: e.equipmentId, requestedByAdminId: e.requestedByAdminId,
+             reason: e.reason, priority: e.priority, type: e.type };
   }
 }
