@@ -11,7 +11,7 @@ export const useEquipmentStore = defineStore('equipment', () => {
   const error     = ref(null);
 
   const equipmentCount   = computed(() => equipment.value.length);
-  const operationalCount = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OPERATIONAL).length);
+  const operationalCount = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OPERATIONAL || e.status === EquipmentStatus.AVAILABLE).length);
   const maintenanceCount = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.MAINTENANCE).length);
   const outOfOrderCount  = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OUT_OF_ORDER).length);
 
