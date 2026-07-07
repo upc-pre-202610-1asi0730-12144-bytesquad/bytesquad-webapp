@@ -28,6 +28,8 @@ const windowOptions = [
   { seconds: 1200, label: t('booking.modal.option20m') },
 ];
 
+const availableEquipment = computed(() => equipStore.equipment.filter(e => e.status === 'Available'));
+
 const openReservations = computed(() => store.reservations.filter(
   r => r.status !== ReservationStatus.Ended && r.status !== ReservationStatus.Cancelled));
 
@@ -227,7 +229,7 @@ function remaining(r) {
           <label>{{ t('booking.modal.machine') }}</label>
           <select v-model="form.equipmentId" required>
             <option value="" disabled>— {{ t('booking.modal.selectMachine') }} —</option>
-            <option v-for="eq in equipStore.equipment" :key="eq.id" :value="eq.id">{{ eq.name }}</option>
+            <option v-for="eq in availableEquipment" :key="eq.id" :value="eq.id">{{ eq.name }}</option>
           </select>
         </div>
 
