@@ -15,10 +15,10 @@ export const useEquipmentStore = defineStore('equipment', () => {
   const maintenanceCount = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.MAINTENANCE).length);
   const outOfOrderCount  = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OUT_OF_ORDER).length);
 
-  async function loadEquipment() {
+  async function loadEquipment(adminId) {
     loading.value = true; error.value = null;
     try {
-      equipment.value = await api.getEquipment();
+      equipment.value = await api.getByAdmin(adminId);
     } catch (e) {
       error.value = e.message || 'Failed to load equipment';
     } finally { loading.value = false; }

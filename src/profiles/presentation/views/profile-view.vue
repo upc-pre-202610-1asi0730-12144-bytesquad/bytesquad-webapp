@@ -112,7 +112,7 @@ onMounted(async () => {
     await Promise.all([
       gymId ? gymStore.loadBranches(gymId) : Promise.resolve(),
       gymId ? dniStore.load(gymId) : Promise.resolve(),
-      equipStore.loadEquipment(),
+      equipStore.loadEquipment(id),
       mainStore.loadTickets(id),
       memberStore.loadByClient(id),
     ]);
