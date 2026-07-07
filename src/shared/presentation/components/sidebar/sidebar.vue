@@ -13,7 +13,6 @@ const ADMIN_NAV = [
   { path: '/iot',              icon: 'sensors',           labelKey: 'nav.iot' },
   { path: '/maintenance',      icon: 'build',             labelKey: 'nav.maintenance' },
   { path: '/analytics',         icon: 'bar_chart',         labelKey: 'nav.analytics' },
-  { path: '/analytics/records', icon: 'edit_note',         labelKey: 'nav.analyticsRecords' },
   { path: '/financial-impact', icon: 'trending_up',       labelKey: 'nav.financial' },
   { path: '/configuration',    icon: 'settings',          labelKey: 'nav.configuration' },
 ];

@@ -26,4 +26,8 @@ export class EquipmentApi extends BaseApi {
     const { data } = await this.http.get(`gyms/${gymId}/equipments`);
     return (Array.isArray(data) ? data : []).map(r => this.#assembler.toEntityFromResource(r));
   }
+
+  async decommissionEquipment(id) {
+    await this.http.patch(`equipment/${id}/decomission`);
+  }
 }
