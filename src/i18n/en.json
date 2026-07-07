@@ -759,7 +759,9 @@
       "firstName": "First name",
       "lastName": "Last name",
       "email": "Email",
-      "phone": "Phone"
+      "phone": "Phone",
+      "dni": "National ID (DNI)",
+      "gymName": "Gym"
     },
     "actions": {
       "edit": "Edit profile",
