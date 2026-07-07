@@ -179,7 +179,6 @@
     "reservations": "Mis Reservas",
     "profile": "Mi Perfil",
     "financial": "Impacto Financiero",
-    "analyticsRecords": "Registros Analíticos"
   },
   "dashboard": {
     "welcome": "¡Hola de nuevo, {name}!",
@@ -322,6 +321,7 @@
       "register": "Registrar Equipo",
       "edit": "Editar",
       "delete": "Eliminar",
+      "decommission": "Dar de Baja",
       "save": "Guardar",
       "cancel": "Cancelar",
       "confirm": "Confirmar"
@@ -344,16 +344,22 @@
       "outOfOrder": "Fuera de Servicio"
     },
     "status": {
-      "AVAILABLE":    "Disponible",
-      "OPERATIONAL":  "Operativo",
-      "MAINTENANCE":  "En Mantenimiento",
-      "OUT_OF_ORDER": "Fuera de Servicio"
+      "AVAILABLE":      "Disponible",
+      "OPERATIONAL":    "Operativo",
+      "MAINTENANCE":    "En Mantenimiento",
+      "OUT_OF_ORDER":   "Fuera de Servicio",
+      "Available":      "Disponible",
+      "Maintenance":    "En Mantenimiento",
+      "OutOfService":   "Fuera de Servicio",
+      "Decommissioned": "Dado de Baja"
     },
     "dialog": {
       "addTitle": "Registrar Nuevo Equipo",
       "editTitle": "Editar Equipo",
       "deleteTitle": "Eliminar Equipo",
       "deleteMessage": "¿Estás seguro de que deseas eliminar este equipo? Esta acción no se puede deshacer.",
+      "decommissionTitle": "Dar de Baja Equipo",
+      "decommissionMessage": "¿Estás seguro de que deseas dar de baja este equipo? Quedará marcado como inactivo.",
       "fields": {
         "name": "Nombre del equipo",
         "brand": "Marca",
@@ -602,6 +608,29 @@
       "LUBRICATION": "Lubricación",
       "INSPECTION": "Inspección",
       "OVERHAUL": "Revisión General"
+    },
+    "technicians": {
+      "title": "Técnicos",
+      "register": "Registrar Técnico",
+      "name": "Nombre",
+      "specialization": "Especialización",
+      "phone": "Teléfono",
+      "noData": "No hay técnicos registrados",
+      "noneYet": "Sin técnicos — registra uno abajo",
+      "form": {
+        "namePlaceholder": "ej. Carlos Ríos",
+        "specializationPlaceholder": "ej. Eléctrico",
+        "phonePlaceholder": "ej. +51 999 000 111",
+        "allRequired": "Todos los campos son obligatorios",
+        "submit": "Registrar"
+      }
+    },
+    "complete": {
+      "notesPlaceholder": "Notas de finalización (opcional)"
+    },
+    "log": {
+      "view": "Ver Log",
+      "noNotes": "Sin notas registradas"
     },
     "tickets": {
       "t1001": "Fuga de fluido hidráulico detectada en brazo de cargadora",
@@ -908,40 +937,4 @@
       "generic": "Algo salió mal. Por favor, intenta de nuevo."
     }
   },
-  "analyticsRecords": {
-    "title": "Registros Analíticos",
-    "subtitle": "Crea y consulta reportes de actividad, cotizaciones de mantenimiento y proyecciones ROI",
-    "submit": "Registrar",
-    "successMessage": "Registro creado exitosamente",
-    "recentRecords": "Registros Recientes",
-    "noRecords": "Sin registros aún",
-    "date": "Fecha",
-    "placeholderNumber": "ej. 120",
-    "placeholderMoney": "ej. 1500.00",
-    "placeholderPercent": "ej. 12.5",
-    "activityReport": {
-      "title": "Reporte de Actividad",
-      "formTitle": "Nuevo Reporte de Actividad",
-      "totalUsageTime": "Tiempo de Uso Total (h)",
-      "downtimeCost": "Costo de Inactividad ($)",
-      "percentageComparison": "% Comparación"
-    },
-    "maintenanceQuote": {
-      "title": "Cotización de Mantenimiento",
-      "formTitle": "Nueva Cotización de Mantenimiento",
-      "correctiveActionsCost": "Costo de Acciones Correctivas ($)",
-      "sparePartsCost": "Costo de Repuestos ($)",
-      "preventiveCost": "Costo Preventivo ($)",
-      "total": "Total",
-      "autoConsolidate": "El total se consolidará automáticamente tras enviar."
-    },
-    "roiProjection": {
-      "title": "Proyección ROI",
-      "formTitle": "Nueva Proyección ROI",
-      "projectedDowntimeCost": "Costo de Inactividad Proyectado ($)",
-      "projectedEarnings": "Ganancias Proyectadas ($)",
-      "demand": "Demanda",
-      "autoGenerate": "El índice ROI y el estado de demanda se generarán automáticamente."
-    }
-  }
 }
