@@ -101,7 +101,7 @@
       },
       "reservedByUser": "Tienes esta máquina reservada",
       "alternativesBtn": "Ver alternativas",
-      "reserveBtn": "Reservar",
+      "reserveBtn": "Reservar ({minutes} min)",
       "notifications": {
         "reserved": "Máquina reservada con éxito"
       }
@@ -110,7 +110,7 @@
       "title": "Máquinas Alternativas",
       "subtitle": "Máquinas disponibles de la misma categoría",
       "free": "Libre",
-      "reserveBtn": "Reservar"
+      "reserveBtn": "Reservar ({minutes} min)"
     }
   },
   "booking": {

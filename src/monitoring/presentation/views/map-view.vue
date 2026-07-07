@@ -245,12 +245,14 @@ function showToast(message) {
   setTimeout(() => { toast.value = null; }, 3000);
 }
 
+const QUICK_RESERVE_MINUTES = 15;
+
 async function reserveMachine() {
   const sel = selectedEquipment.value;
   if (!sel) return;
   closeMachineDetail();
   const start = new Date();
-  const end   = new Date(start.getTime() + 15 * 60 * 1000);
+  const end   = new Date(start.getTime() + QUICK_RESERVE_MINUTES * 60 * 1000);
   const created = await reservationStore.expressCreate(sel.eq.id, start.toISOString(), end.toISOString());
   if (created) showToast(t('map.detail.notifications.reserved'));
 }
@@ -449,7 +451,9 @@ async function reserveMachine() {
         </p>
 
         <div v-else class="detail-actions">
-          <button class="btn btn--primary" @click="reserveMachine">{{ t('map.detail.reserveBtn') }}</button>
+          <button class="btn btn--primary" @click="reserveMachine">
+            {{ t('map.detail.reserveBtn', { minutes: QUICK_RESERVE_MINUTES }) }}
+          </button>
         </div>
       </div>
 
@@ -465,7 +469,9 @@ async function reserveMachine() {
             <span class="badge badge--green">{{ t('map.alternatives.free') }}</span>
           </div>
         </div>
-        <button class="btn btn--primary" style="width:100%" @click="reserveMachine">{{ t('map.alternatives.reserveBtn') }}</button>
+        <button class="btn btn--primary" style="width:100%" @click="reserveMachine">
+          {{ t('map.alternatives.reserveBtn', { minutes: QUICK_RESERVE_MINUTES }) }}
+        </button>
       </div>
     </div>
 
