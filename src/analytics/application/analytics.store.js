@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { AnalyticsApi } from '../infrastructure/analytics-api.js';
+import { useEquipmentStore } from '@/gym/application/equipment.store.js';
+import { useAuthStore }      from '@/authentication/application/auth.store.js';
 
 const api = new AnalyticsApi();
 const SVG_W = 1100, SVG_H = 200;
@@ -38,8 +40,8 @@ const RELOCATION_FALLBACK = [
 ];
 
 export const useAnalyticsStore = defineStore('analytics', () => {
+  const equipStore     = useEquipmentStore();
   const usageStats     = ref([]);
-  const equipments     = ref([]);
   const loading        = ref(false);
   const error          = ref(null);
   const selectedBranch = ref('all');
@@ -82,15 +84,15 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   });
 
   const machineTypes = computed(() => {
-    const eq = equipments.value;
+    const eq = equipStore.equipment;
     if (!eq.length) return [
       { label: 'Cardio',    pct: 45, color: '#f5bc36' },
       { label: 'Fuerza',   pct: 35, color: '#00ccb2' },
       { label: 'Funcional',pct: 20, color: '#22c55e' },
     ];
     const total    = eq.length || 1;
-    const cardio   = eq.filter(e => e.zone_id === 1).length;
-    const fuerza   = eq.filter(e => e.zone_id === 2).length;
+    const cardio   = eq.filter(e => e.zoneId === 1).length;
+    const fuerza   = eq.filter(e => e.zoneId === 2).length;
     const funcional= total - cardio - fuerza;
     return [
       { label: 'Cardio',    pct: Math.round((cardio    / total) * 100), color: '#f5bc36' },
@@ -105,7 +107,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   }
 
   const relocationData = computed(() => {
-    const s = usageStats.value, eq = equipments.value;
+    const s = usageStats.value, eq = equipStore.equipment;
     if (!s.length || !eq.length) return RELOCATION_FALLBACK;
     const BRANCHES = ['Sede Miraflores', 'Sede San Isidro', 'Sede Surco', 'Sede Barranco'];
     return s.filter(stat => stat.totalUsageHours < 100 && eq.find(e => e.id === stat.equipmentId)?.status === 'OPERATIONAL')
@@ -136,15 +138,14 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   const threshold90Y = SVG_H - 0.9 * SVG_H;
 
   async function load() {
+    const adminId = useAuthStore().user?.id;
+    if (!adminId) return;
     loading.value = true; error.value = null;
     try {
-      const [s, eq] = await Promise.all([api.getUsageStats(), api.getEquipments()]);
-      usageStats.value = s; equipments.value = eq;
+      usageStats.value = await api.getUsageStatsByAdmin(adminId);
     } catch (e) { error.value = e.message || 'Error loading analytics'; }
     finally { loading.value = false; }
   }
-
-  load();
 
   return {
     loading, error, selectedBranch, selectedPeriod,
