@@ -321,6 +321,7 @@
       "register": "Registrar Equipo",
       "edit": "Editar",
       "delete": "Eliminar",
+      "decommission": "Dar de Baja",
       "save": "Guardar",
       "cancel": "Cancelar",
       "confirm": "Confirmar"
@@ -343,16 +344,22 @@
       "outOfOrder": "Fuera de Servicio"
     },
     "status": {
-      "AVAILABLE":    "Disponible",
-      "OPERATIONAL":  "Operativo",
-      "MAINTENANCE":  "En Mantenimiento",
-      "OUT_OF_ORDER": "Fuera de Servicio"
+      "AVAILABLE":      "Disponible",
+      "OPERATIONAL":    "Operativo",
+      "MAINTENANCE":    "En Mantenimiento",
+      "OUT_OF_ORDER":   "Fuera de Servicio",
+      "Available":      "Disponible",
+      "Maintenance":    "En Mantenimiento",
+      "OutOfService":   "Fuera de Servicio",
+      "Decommissioned": "Dado de Baja"
     },
     "dialog": {
       "addTitle": "Registrar Nuevo Equipo",
       "editTitle": "Editar Equipo",
       "deleteTitle": "Eliminar Equipo",
       "deleteMessage": "¿Estás seguro de que deseas eliminar este equipo? Esta acción no se puede deshacer.",
+      "decommissionTitle": "Dar de Baja Equipo",
+      "decommissionMessage": "¿Estás seguro de que deseas dar de baja este equipo? Quedará marcado como inactivo.",
       "fields": {
         "name": "Nombre del equipo",
         "brand": "Marca",
@@ -601,6 +608,29 @@
       "LUBRICATION": "Lubricación",
       "INSPECTION": "Inspección",
       "OVERHAUL": "Revisión General"
+    },
+    "technicians": {
+      "title": "Técnicos",
+      "register": "Registrar Técnico",
+      "name": "Nombre",
+      "specialization": "Especialización",
+      "phone": "Teléfono",
+      "noData": "No hay técnicos registrados",
+      "noneYet": "Sin técnicos — registra uno abajo",
+      "form": {
+        "namePlaceholder": "ej. Carlos Ríos",
+        "specializationPlaceholder": "ej. Eléctrico",
+        "phonePlaceholder": "ej. +51 999 000 111",
+        "allRequired": "Todos los campos son obligatorios",
+        "submit": "Registrar"
+      }
+    },
+    "complete": {
+      "notesPlaceholder": "Notas de finalización (opcional)"
+    },
+    "log": {
+      "view": "Ver Log",
+      "noNotes": "Sin notas registradas"
     },
     "tickets": {
       "t1001": "Fuga de fluido hidráulico detectada en brazo de cargadora",
