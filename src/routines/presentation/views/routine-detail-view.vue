@@ -7,10 +7,19 @@ import { useRoutineSessionStore } from '@/routines/application/routine-session.s
 import { ExerciseType } from '@/routines/domain/model/routine.entity.js';
 import { RoutineSessionStatus } from '@/routines/domain/model/routine-session.entity.js';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const routineStore = useRoutineStore();
 const sessionStore  = useRoutineSessionStore();
+
+const sessionDateFormatter = computed(() => new Intl.DateTimeFormat(locale.value, {
+  day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
+}));
+
+function formatSessionDate(value) {
+  if (!value) return '—';
+  return sessionDateFormatter.value.format(new Date(value));
+}
 
 const routineId = computed(() => Number(route.params.id));
 const routine    = computed(() => routineStore.routines.find(r => r.id === routineId.value) ?? null);
@@ -134,12 +143,15 @@ function statusClass(status) {
         </div>
       </div>
 
-      <div class="history-section">
+      <div class="card history-section">
         <h2 class="section-title">{{ t('routines.session.history.title') }}</h2>
         <p v-if="!routineSessions.length" class="empty-msg">{{ t('routines.session.history.empty') }}</p>
         <div v-else class="history-list">
           <div v-for="session in routineSessions" :key="session.id" class="history-item">
-            <span class="history-date">{{ session.startedAt?.slice(0, 16).replace('T', ' ') ?? '—' }}</span>
+            <div class="history-item__left">
+              <span class="material-icons history-icon">event</span>
+              <span class="history-date">{{ formatSessionDate(session.startedAt) }}</span>
+            </div>
             <span class="badge" :class="statusClass(session.status)">{{ t(`routines.session.status.${session.status}`) }}</span>
           </div>
         </div>
@@ -211,9 +223,13 @@ function statusClass(status) {
 .block-order { color: var(--text-secondary); font-family: monospace; font-size: .75rem; }
 .block-name { flex: 1; font-size: .85rem; }
 .empty-msg { color: var(--text-secondary); font-size: .82rem; }
-.history-list { display: flex; flex-direction: column; gap: .4rem; }
-.history-item { align-items: center; display: flex; gap: .75rem; }
-.history-date { color: var(--text-secondary); font-size: .78rem; min-width: 140px; }
+.history-section { padding: 1.25rem; }
+.history-section .section-title { margin-bottom: .75rem; }
+.history-list { display: flex; flex-direction: column; gap: .5rem; }
+.history-item { align-items: center; background: var(--bg-surface); border-radius: 8px; display: flex; justify-content: space-between; padding: .6rem .9rem; }
+.history-item__left { align-items: center; display: flex; gap: .5rem; }
+.history-icon { color: var(--text-secondary); font-size: 16px; }
+.history-date { color: var(--text-secondary); font-size: .82rem; }
 .empty-state { align-items: center; display: flex; flex-direction: column; gap: .5rem; padding: 2.5rem; text-align: center; }
 .empty-icon { color: var(--text-secondary); font-size: 40px; }
 .btn--sm { font-size: .75rem; padding: .25rem .6rem; }
