@@ -147,6 +147,7 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
       return updated;
     } catch (e) {
       error.value = e.message || 'Failed to update ticket status';
+      throw e;
     } finally { loading.value = false; }
   }
 
