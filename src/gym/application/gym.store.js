@@ -8,18 +8,31 @@ import { Zone } from '../domain/model/zone.entity.js';
 const api = new GymApi();
 
 export const useGymStore = defineStore('gym', () => {
-  // TODO: wire when backend adds GET /gyms
+  const currentGym = ref(null);  // null = no gym | Gym entity = has gym
+  const gymChecked = ref(false); // true after first getByAdmin call this session
   const gyms     = ref([]);
   const branches = ref([]);
   const zones    = ref([]);
   const loading  = ref(false);
   const error    = ref(null);
 
+  async function loadAdminGym(adminId) {
+    try {
+      currentGym.value = await api.getByAdmin(adminId);
+    } catch {
+      currentGym.value = null; // 404 = no gym yet, not a UI error
+    } finally {
+      gymChecked.value = true;
+    }
+  }
+
   async function addGym(data) {
     loading.value = true; error.value = null;
     try {
       const entity  = new Gym(data);
       const created = await api.createGym(entity);
+      currentGym.value = created;
+      gymChecked.value = true;
       gyms.value = [...gyms.value, created];
       return created;
     } catch (e) {
@@ -51,5 +64,5 @@ export const useGymStore = defineStore('gym', () => {
     } finally { loading.value = false; }
   }
 
-  return { gyms, branches, zones, loading, error, addGym, addBranch, addZone };
+  return { currentGym, gymChecked, gyms, branches, zones, loading, error, loadAdminGym, addGym, addBranch, addZone };
 });
