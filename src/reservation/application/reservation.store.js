@@ -82,12 +82,6 @@ export const useReservationStore = defineStore('reservation', () => {
     } catch (e) { error.value = e.message; }
   }
 
-  async function requestEquipmentAvailable(id) {
-    try {
-      _upsert(await api.requestEquipmentAvailable(id));
-    } catch (e) { error.value = e.message; }
-  }
-
   async function startTimer(id, durationMinutes) {
     try {
       _upsert(await api.startTimer(id, durationMinutes));
@@ -123,7 +117,7 @@ export const useReservationStore = defineStore('reservation', () => {
     reservations, loading, error, usageCounts,
     activeReservations, initiatedReservations, reservedReservations, endedReservations,
     historyReservations, hasOpenReservation,
-    loadMine, refreshMine, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
+    loadMine, refreshMine, expressCreate, submitRequest, startTimer, end, cancel,
     loadUsageCounts,
   };
 });
