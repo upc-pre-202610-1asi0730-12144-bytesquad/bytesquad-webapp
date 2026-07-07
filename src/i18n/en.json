@@ -603,6 +603,29 @@
       "INSPECTION": "Inspection",
       "OVERHAUL": "Overhaul"
     },
+    "technicians": {
+      "title": "Technicians",
+      "register": "Register Technician",
+      "name": "Name",
+      "specialization": "Specialization",
+      "phone": "Phone",
+      "noData": "No technicians registered yet",
+      "noneYet": "No technicians — register one below",
+      "form": {
+        "namePlaceholder": "e.g. Carlos Ríos",
+        "specializationPlaceholder": "e.g. Electrical",
+        "phonePlaceholder": "e.g. +51 999 000 111",
+        "allRequired": "All fields are required",
+        "submit": "Register"
+      }
+    },
+    "complete": {
+      "notesPlaceholder": "Completion notes (optional)"
+    },
+    "log": {
+      "view": "View Log",
+      "noNotes": "No notes recorded"
+    },
     "tickets": {
       "t1001": "Hydraulic fluid leak detected on loader arm",
       "t1002": "Engine overheating — requires immediate inspection",
