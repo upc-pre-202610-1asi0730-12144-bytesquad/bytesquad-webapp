@@ -40,6 +40,15 @@ export const useGymStore = defineStore('gym', () => {
     } finally { loading.value = false; }
   }
 
+  async function loadBranches(gymId) {
+    loading.value = true; error.value = null;
+    try {
+      branches.value = await api.getBranches(gymId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load branches';
+    } finally { loading.value = false; }
+  }
+
   async function addBranch(gymId, data) {
     loading.value = true; error.value = null;
     try {
@@ -64,5 +73,5 @@ export const useGymStore = defineStore('gym', () => {
     } finally { loading.value = false; }
   }
 
-  return { currentGym, gymChecked, gyms, branches, zones, loading, error, loadAdminGym, addGym, addBranch, addZone };
+  return { currentGym, gymChecked, gyms, branches, zones, loading, error, loadAdminGym, loadBranches, addGym, addBranch, addZone };
 });
