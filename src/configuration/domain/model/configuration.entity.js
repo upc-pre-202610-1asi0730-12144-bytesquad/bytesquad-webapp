@@ -1,7 +1,0 @@
-export const AlertType = Object.freeze({
-  SENSOR_DISCONNECTED: 'SENSOR_DISCONNECTED',
-  LOW_BATTERY:         'LOW_BATTERY',
-  MAINTENANCE_DUE:     'MAINTENANCE_DUE',
-  HIGH_WEAR:           'HIGH_WEAR',
-  SYSTEM_ERROR:        'SYSTEM_ERROR',
-});
