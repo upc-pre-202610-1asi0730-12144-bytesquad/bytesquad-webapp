@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore }         from '@/authentication/application/auth.store.js';
@@ -12,6 +12,8 @@ const store      = useMaintenanceStore();
 const equipStore = useEquipmentStore();
 const auth       = useAuthStore();
 const router     = useRouter();
+
+onMounted(() => store.loadTickets(auth.user?.id));
 
 const search  = ref('');
 const statusF = ref('');

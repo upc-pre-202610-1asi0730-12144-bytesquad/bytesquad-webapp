@@ -4,7 +4,7 @@ export class AdminProfileAssembler {
   toEntityFromResource(r) {
     return new AdminProfile({
       id: r.id, userId: r.userId, email: r.email,
-      fullName: r.fullName, phoneNumber: r.phoneNumber, dni: r.dni,
+      firstName: r.firstName, lastName: r.lastName, phoneNumber: r.phoneNumber, dni: r.dni,
     });
   }
 
