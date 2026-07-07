@@ -34,6 +34,9 @@ export const useAuthStore = defineStore('auth', () => {
     loading.value = true; error.value = null;
     try {
       const data  = await api.signIn(username.trim(), password);
+      // TODO: if backend stops returning `role` in the sign-in response body, decode it from
+      // the JWT instead (claim: http://schemas.microsoft.com/ws/2008/06/identity/claims/role).
+      // Add jwt-decode (or native atob base64 split) and derive user.role from the token payload.
       user.value  = new User(data);
       token.value = data.token;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -42,10 +45,10 @@ export const useAuthStore = defineStore('auth', () => {
     } finally { loading.value = false; }
   }
 
-  async function signUp(username, password, role) {
+  async function signUp(username, password) {
     loading.value = true; error.value = null;
     try {
-      await api.signUp(username, password, role);
+      await api.signUp(username, password);
     } catch {
       error.value = 'auth.error.signUpFailed';
     } finally { loading.value = false; }

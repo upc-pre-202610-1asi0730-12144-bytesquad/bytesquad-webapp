@@ -35,7 +35,7 @@ export const useGymStore = defineStore('gym', () => {
       branches.value = [...branches.value, created];
       return created;
     } catch (e) {
-      error.value = e.message || 'Failed to create branch';
+      error.value = e.message || 'Branch could not be created. Check your plan branch limit.';
     } finally { loading.value = false; }
   }
 

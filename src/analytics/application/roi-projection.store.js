@@ -5,7 +5,6 @@ import { RoiProjectionApi } from '../infrastructure/roi-projection-api.js';
 const api = new RoiProjectionApi();
 
 export const useRoiProjectionStore = defineStore('roiProjection', () => {
-  // TODO: no GET endpoint in backend; reading from local mock
   const projections = ref([]);
   const loading     = ref(false);
   const error       = ref(null);
@@ -39,5 +38,14 @@ export const useRoiProjectionStore = defineStore('roiProjection', () => {
     } catch (e) { error.value = e.message; }
   }
 
-  return { projections, loading, error, createProjection, updateProjectedEarnings, generate };
+  async function loadByAdmin(adminId) {
+    loading.value = true; error.value = null;
+    try {
+      projections.value = await api.getByAdmin(adminId);
+    } catch (e) {
+      error.value = e.message || 'Failed to load ROI projections';
+    } finally { loading.value = false; }
+  }
+
+  return { projections, loading, error, createProjection, updateProjectedEarnings, generate, loadByAdmin };
 });

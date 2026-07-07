@@ -22,7 +22,10 @@ const navItems = computed(() => ADMIN_NAV);
 
 <template>
   <aside class="sidebar" :class="{ 'sidebar--open': open }">
-    <div class="sidebar__brand">SpotTrack</div>
+    <div class="sidebar__brand">
+      <span class="sidebar__brand-name">SpotTrack</span>
+      <img src="/MOscuroSinBG.png" alt="SpotTrack logo" class="sidebar__logo"/>
+    </div>
     <nav class="sidebar__nav">
       <RouterLink
         v-for="item in navItems"
@@ -41,7 +44,9 @@ const navItems = computed(() => ADMIN_NAV);
 
 <style scoped>
 .sidebar { background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; width: 220px; min-height: 100vh; flex-shrink: 0; }
-.sidebar__brand { border-bottom: 1px solid var(--border); font-size: 1.1rem; font-weight: 700; padding: 1.25rem 1.5rem; }
+.sidebar__brand { align-items: center; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; justify-content: space-between; padding: 1.25rem 1.5rem; }
+.sidebar__brand-name { font-size: 1.1rem; font-weight: 700; }
+.sidebar__logo { height: 30px; width: auto; object-fit: contain; }
 .sidebar__nav { display: flex; flex-direction: column; gap: 2px; padding: 0.75rem 0.5rem; }
 .sidebar__item { align-items: center; border-radius: 8px; color: var(--text-secondary); display: flex; gap: 0.75rem; font-size: 0.875rem; padding: 0.625rem 1rem; text-decoration: none; transition: background .15s, color .15s; }
 .sidebar__item:hover { background: rgba(255,255,255,.05); color: var(--text-primary); }

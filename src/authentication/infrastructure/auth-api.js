@@ -9,8 +9,8 @@ export class AuthApi extends BaseApi {
     return data; // { id, username, role, token }
   }
 
-  async signUp(username, password, role) {
-    await this.http.post('authentication/sign-up', { username, password, role });
+  async signUp(username, password) {
+    await this.http.post('authentication/sign-up', { username, password });
   }
 
   async getUsers() {
