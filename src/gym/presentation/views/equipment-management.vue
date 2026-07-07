@@ -4,26 +4,14 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEquipmentStore } from '@/gym/application/equipment.store.js';
 import { useAuthStore }      from '@/authentication/application/auth.store.js';
-import { useGymStore }       from '@/gym/application/gym.store.js';
 import { EquipmentStatus } from '@/gym/domain/model/equipment.entity.js';
 
-const { t }    = useI18n();
-const store    = useEquipmentStore();
-const gymStore = useGymStore();
-const auth     = useAuthStore();
-const router   = useRouter();
+const { t }  = useI18n();
+const store  = useEquipmentStore();
+const auth   = useAuthStore();
+const router = useRouter();
 
-onMounted(async () => {
-  store.loadEquipment(auth.user.id);
-  const gymId = gymStore.currentGym?.id;
-  if (!gymId) return;
-  if (!gymStore.branches.length) await gymStore.loadBranches(gymId);
-  await Promise.all(
-    gymStore.branches
-      .filter(b => gymStore.zonesMap[b.id] === undefined)
-      .map(b => gymStore.loadZones(gymId, b.id))
-  );
-});
+onMounted(() => store.loadEquipment(auth.user.id));
 
 const searchQuery    = ref('');
 const selectedStatus = ref('');
@@ -40,21 +28,13 @@ function statusLabel(s) {
   return t(`equipment.status.${s}`) || s;
 }
 function statusClass(s) {
-  const l = s?.toLowerCase();
-  if (l === 'operational' || l === 'available') return 'green';
-  if (l === 'maintenance') return 'amber';
+  if (s === EquipmentStatus.OPERATIONAL || s === EquipmentStatus.AVAILABLE) return 'green';
+  if (s === EquipmentStatus.MAINTENANCE) return 'amber';
   return 'red';
 }
 function deleteEquipment(id) {
   if (confirm(t('equipment.dialog.deleteMessage'))) store.deleteEquipment(id);
 }
-function decommissionEquipment(id) {
-  if (confirm(t('equipment.dialog.decommissionMessage'))) store.decommissionEquipment(id);
-}
-
-const flatZones = computed(() => Object.values(gymStore.zonesMap).flat());
-function zoneName(id) { return flatZones.value.find(z => z.id === id)?.name ?? `Zone ${id}`; }
-function fmtPrice(v)  { return v == null ? '—' : 'USD ' + Number(v).toLocaleString('en-US'); }
 </script>
 
 <template>
@@ -88,26 +68,19 @@ function fmtPrice(v)  { return v == null ? '—' : 'USD ' + Number(v).toLocaleSt
           <th>ID</th>
           <th>{{ t('equipment.table.name') }}</th>
           <th>{{ t('equipment.table.zoneId') }}</th>
-          <th>{{ t('equipment.table.purchasePrice') }}</th>
           <th>{{ t('equipment.table.status') }}</th>
           <th></th>
         </tr></thead>
         <tbody>
-          <tr v-if="!filteredEquipment.length"><td colspan="6" class="table-empty">{{ t('equipment.table.noData') }}</td></tr>
+          <tr v-if="!filteredEquipment.length"><td colspan="5" class="table-empty">{{ t('equipment.table.noData') }}</td></tr>
           <tr v-for="eq in filteredEquipment" :key="eq.id">
             <td class="cell-id">{{ eq.id }}</td>
             <td>{{ eq.name }}</td>
-            <td>{{ zoneName(eq.zoneId) }}</td>
-            <td class="cell-price">{{ fmtPrice(eq.purchasePrice) }}</td>
+            <td>{{ eq.zoneId }}</td>
             <td><span class="badge" :class="`badge--${statusClass(eq.status)}`">{{ statusLabel(eq.status) }}</span></td>
             <td class="actions">
               <button class="btn btn--icon" @click="router.push(`/equipment/${eq.id}/edit`)"><span class="material-icons">edit</span></button>
-              <button class="btn btn--icon" style="color:var(--red)"
-                      :disabled="eq.status === EquipmentStatus.DECOMMISSIONED"
-                      :title="t('equipment.actions.decommission')"
-                      @click="decommissionEquipment(eq.id)">
-                <span class="material-icons">power_settings_new</span>
-              </button>
+              <button class="btn btn--icon" style="color:var(--red)" @click="deleteEquipment(eq.id)"><span class="material-icons">delete</span></button>
             </td>
           </tr>
         </tbody>
@@ -126,8 +99,7 @@ function fmtPrice(v)  { return v == null ? '—' : 'USD ' + Number(v).toLocaleSt
 .data-table { border-collapse: collapse; font-size: 0.85rem; width: 100%; }
 .data-table th { background: var(--bg-surface); border-bottom: 1px solid var(--border); color: var(--text-secondary); font-weight: 500; padding: 0.625rem 1rem; text-align: left; }
 .data-table td { border-bottom: 1px solid rgba(255,255,255,.04); padding: 0.625rem 1rem; }
-.cell-id    { color: var(--text-secondary); font-size: 0.8rem; }
-.cell-price { color: var(--text-secondary); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.cell-id { color: var(--text-secondary); font-size: 0.8rem; }
 .table-empty { color: var(--text-secondary); padding: 1.5rem; text-align: center; }
 .actions { display: flex; gap: 4px; }
 .loading-state { align-items: center; display: flex; height: 200px; justify-content: center; color: var(--text-secondary); }

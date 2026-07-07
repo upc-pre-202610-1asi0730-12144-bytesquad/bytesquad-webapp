@@ -322,7 +322,6 @@
       "register": "Register Equipment",
       "edit": "Edit",
       "delete": "Delete",
-      "decommission": "Decommission",
       "save": "Save",
       "cancel": "Cancel",
       "confirm": "Confirm"
@@ -345,22 +344,16 @@
       "outOfOrder": "Out of Order"
     },
     "status": {
-      "AVAILABLE":      "Available",
-      "OPERATIONAL":    "Operational",
-      "MAINTENANCE":    "In Maintenance",
-      "OUT_OF_ORDER":   "Out of Order",
-      "Available":      "Available",
-      "Maintenance":    "In Maintenance",
-      "OutOfService":   "Out of Service",
-      "Decommissioned": "Decommissioned"
+      "AVAILABLE":    "Available",
+      "OPERATIONAL":  "Operational",
+      "MAINTENANCE":  "In Maintenance",
+      "OUT_OF_ORDER": "Out of Order"
     },
     "dialog": {
       "addTitle": "Register New Equipment",
       "editTitle": "Edit Equipment",
       "deleteTitle": "Delete Equipment",
       "deleteMessage": "Are you sure you want to delete this equipment? This action cannot be undone.",
-      "decommissionTitle": "Decommission Equipment",
-      "decommissionMessage": "Are you sure you want to decommission this equipment? It will be marked as inactive.",
       "fields": {
         "name": "Equipment name",
         "brand": "Brand",
@@ -609,29 +602,6 @@
       "LUBRICATION": "Lubrication",
       "INSPECTION": "Inspection",
       "OVERHAUL": "Overhaul"
-    },
-    "technicians": {
-      "title": "Technicians",
-      "register": "Register Technician",
-      "name": "Name",
-      "specialization": "Specialization",
-      "phone": "Phone",
-      "noData": "No technicians registered yet",
-      "noneYet": "No technicians — register one below",
-      "form": {
-        "namePlaceholder": "e.g. Carlos Ríos",
-        "specializationPlaceholder": "e.g. Electrical",
-        "phonePlaceholder": "e.g. +51 999 000 111",
-        "allRequired": "All fields are required",
-        "submit": "Register"
-      }
-    },
-    "complete": {
-      "notesPlaceholder": "Completion notes (optional)"
-    },
-    "log": {
-      "view": "View Log",
-      "noNotes": "No notes recorded"
     },
     "tickets": {
       "t1001": "Hydraulic fluid leak detected on loader arm",
