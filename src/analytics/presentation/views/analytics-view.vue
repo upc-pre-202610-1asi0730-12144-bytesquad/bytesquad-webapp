@@ -1,11 +1,13 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAnalyticsStore } from '@/analytics/application/analytics.store.js';
 
 const { t } = useI18n();
 const store = useAnalyticsStore();
 const showComparison = ref(false);
+
+onMounted(() => store.load());
 
 // ── Bar chart (Weekly Usage vs Capacity) ─────────────────────────────────────
 const BAR_W = 540, BAR_H = 180, BAR_MAX = 600, BAR_CAPACITY = 500;
