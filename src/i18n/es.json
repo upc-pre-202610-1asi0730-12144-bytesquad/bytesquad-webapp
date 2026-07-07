@@ -751,22 +751,7 @@
     },
     "client": {
       "title": "Mi Perfil",
-      "roleBadge": "Cliente",
-      "notifications": {
-        "title": "Notificaciones",
-        "availability": {
-          "title": "Alertas de disponibilidad",
-          "desc": "Cuando una máquina se libera"
-        },
-        "maintenance": {
-          "title": "Mantenimiento programado",
-          "desc": "Cuando un equipo entrará en mantenimiento"
-        },
-        "rewards": {
-          "title": "Puntos de recompensa",
-          "desc": "Cuando ganas puntos nuevos"
-        }
-      }
+      "roleBadge": "Cliente"
     },
     "gymSwitcher": {
       "title": "Tu Gimnasio",
