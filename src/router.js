@@ -25,6 +25,7 @@ const routes = [
       { path: 'maintenance',     component: () => import('@/maintenance/presentation/views/maintenance-view.vue'),          meta: { requiresAdmin: true } },
       { path: 'maintenance/new-ticket', component: () => import('@/maintenance/presentation/views/new-ticket-view.vue'),   meta: { requiresAdmin: true } },
       { path: 'analytics',       component: () => import('@/analytics/presentation/views/analytics-view.vue'),             meta: { requiresAdmin: true } },
+      { path: 'analytics/records', component: () => import('@/analytics/presentation/views/analytics-forms-view.vue'), meta: { requiresAdmin: true } },
       { path: 'financial-impact',component: () => import('@/analytics/presentation/views/financial-impact-view.vue'),  meta: { requiresAdmin: true } },
       { path: 'configuration',   component: () => import('@/configuration/presentation/views/configuration-view.vue'),     meta: { requiresAdmin: true } },
       { path: 'gym',             component: () => import('@/gym/presentation/views/gym-management.vue'),                   meta: { requiresAdmin: true } },
