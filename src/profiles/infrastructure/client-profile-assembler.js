@@ -4,7 +4,7 @@ export class ClientProfileAssembler {
   toEntityFromResource(r) {
     return new ClientProfile({
       id: r.id, userId: r.userId, email: r.email,
-      fullName: r.fullName, firstName: r.firstName, lastName: r.lastName,
+      firstName: r.firstName, lastName: r.lastName, fullName: r.fullName,
       phoneNumber: r.phoneNumber, dni: r.dni,
     });
   }
@@ -14,6 +14,11 @@ export class ClientProfileAssembler {
   }
 
   toUpdateResource(dto) {
-    return { firstName: dto.firstName, lastName: dto.lastName, phoneNumber: dto.phoneNumber };
+    const resource = {};
+    if (dto.firstName   !== undefined) resource.firstName   = dto.firstName;
+    if (dto.lastName    !== undefined) resource.lastName    = dto.lastName;
+    if (dto.phoneNumber !== undefined) resource.phoneNumber = dto.phoneNumber;
+    if (dto.dni         !== undefined) resource.dni         = dto.dni;
+    return resource;
   }
 }

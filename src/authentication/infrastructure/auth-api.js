@@ -17,4 +17,8 @@ export class AuthApi extends BaseApi {
     const { data } = await this.http.get('users');
     return (Array.isArray(data) ? data : []).map(r => assembler.toEntityFromResource(r));
   }
+
+  async changePassword(currentPassword, newPassword) {
+    await this.http.patch('authentication/me/password', { currentPassword, newPassword });
+  }
 }

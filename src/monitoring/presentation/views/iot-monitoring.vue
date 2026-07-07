@@ -41,7 +41,7 @@ function batteryIcon(b) { return b > 60 ? 'battery_full' : b > 20 ? 'battery_3_b
 function batteryClass(b){ return b > 60 ? 'green' : b > 20 ? 'amber' : 'red'; }
 
 async function loadEquipmentOptions() {
-  const gym = await gymApi.getGymByAdmin(auth.user.id);
+  const gym = await gymApi.getByAdmin(auth.user.id);
   if (!gym) return;
   equipmentOptions.value = await gymApi.getEquipmentsByGymId(gym.id);
   zoneOptions.value = await gymApi.getZonesByGymId(gym.id);

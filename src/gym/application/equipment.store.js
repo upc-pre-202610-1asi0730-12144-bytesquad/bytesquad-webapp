@@ -3,6 +3,8 @@ import { ref, computed } from 'vue';
 import { EquipmentApi } from '../infrastructure/equipment-api.js';
 import { EquipmentStatus } from '../domain/model/equipment.entity.js';
 import { useActiveGymStore } from '@/profiles/application/active-gym.store.js';
+import { useGymStore } from './gym.store.js';
+import { useAuthStore } from '@/authentication/application/auth.store.js';
 
 const api = new EquipmentApi();
 
@@ -17,9 +19,19 @@ export const useEquipmentStore = defineStore('equipment', () => {
   const outOfOrderCount  = computed(() => equipment.value.filter(e => e.status === EquipmentStatus.OUT_OF_ORDER).length);
 
   async function loadEquipment() {
-    const activeGymStore = useActiveGymStore();
-    if (!activeGymStore.loaded) await activeGymStore.loadAssociations();
-    const gymId = activeGymStore.activeGymId;
+    const auth = useAuthStore();
+    let gymId;
+
+    if (auth.isAdmin) {
+      const gymStore = useGymStore();
+      if (!gymStore.gymChecked) await gymStore.loadAdminGym(auth.user.id);
+      gymId = gymStore.currentGym?.id;
+    } else {
+      const activeGymStore = useActiveGymStore();
+      if (!activeGymStore.loaded) await activeGymStore.loadAssociations();
+      gymId = activeGymStore.activeGymId;
+    }
+
     if (!gymId) { equipment.value = []; return; }
 
     loading.value = true; error.value = null;
@@ -40,21 +52,29 @@ export const useEquipmentStore = defineStore('equipment', () => {
     } finally { loading.value = false; }
   }
 
-  // TODO: wire when backend adds PUT /equipment/{id}
-  function updateEquipment(entity) {
-    equipment.value = equipment.value.map(e => e.id === entity.id ? entity : e);
+  async function updateEquipment(entity) {
+    loading.value = true; error.value = null;
+    try {
+      const updated = await api.updateEquipment(entity);
+      equipment.value = equipment.value.map(e => e.id === updated.id ? updated : e);
+    } catch (e) {
+      error.value = e.message || 'Failed to update equipment';
+    } finally { loading.value = false; }
   }
 
-  // TODO: wire when backend adds DELETE /equipment/{id}
-  function deleteEquipment(id) {
-    equipment.value = equipment.value.filter(e => e.id !== id);
+  async function deleteEquipment(id) {
+    loading.value = true; error.value = null;
+    try {
+      await api.deleteEquipment(id);
+      equipment.value = equipment.value.filter(e => e.id !== id);
+    } catch (e) {
+      error.value = e.message || 'Failed to delete equipment';
+    } finally { loading.value = false; }
   }
 
   function getById(id) {
     return computed(() => equipment.value.find(e => e.id === id));
   }
-
-  loadEquipment();
 
   return { equipment, loading, error, equipmentCount, operationalCount, maintenanceCount, outOfOrderCount, loadEquipment, addEquipment, updateEquipment, deleteEquipment, getById };
 });

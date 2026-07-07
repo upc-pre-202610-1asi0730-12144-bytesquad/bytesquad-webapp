@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEquipmentStore } from '@/gym/application/equipment.store.js';
@@ -8,6 +8,8 @@ import { EquipmentStatus } from '@/gym/domain/model/equipment.entity.js';
 const { t }  = useI18n();
 const store  = useEquipmentStore();
 const router = useRouter();
+
+onMounted(() => store.loadEquipment());
 
 const searchQuery    = ref('');
 const selectedStatus = ref('');
