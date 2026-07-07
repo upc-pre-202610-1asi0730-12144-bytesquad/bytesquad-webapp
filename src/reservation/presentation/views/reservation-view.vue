@@ -82,6 +82,10 @@ function statusClass(status) {
   }[status] ?? 'badge--gray';
 }
 
+function statusLabel(status) {
+  return t(`booking.status.${status}`);
+}
+
 function isExpired(r) {
   return r.status === ReservationStatus.Active && r.timerExpiry && new Date(r.timerExpiry).getTime() <= now.value;
 }
@@ -139,7 +143,7 @@ function remaining(r) {
       <div v-for="r in openReservations" :key="r.id" class="card reservation-card">
         <div class="res-main">
           <span class="res-eq">{{ eqName(r.equipmentId) }}</span>
-          <span class="badge" :class="statusClass(r.status)">{{ r.status }}</span>
+          <span class="badge" :class="statusClass(r.status)">{{ statusLabel(r.status) }}</span>
         </div>
 
         <div v-if="isExpired(r)" class="res-expired">
@@ -200,7 +204,7 @@ function remaining(r) {
         <tbody>
           <tr v-for="r in store.historyReservations" :key="r.id">
             <td>{{ eqName(r.equipmentId) }}</td>
-            <td><span class="badge" :class="statusClass(r.status)">{{ r.status }}</span></td>
+            <td><span class="badge" :class="statusClass(r.status)">{{ statusLabel(r.status) }}</span></td>
             <td>{{ formatDateTime(r.startDate) }}</td>
             <td>{{ formatDateTime(r.startDate) }} → {{ formatDateTime(r.endDate) }}</td>
           </tr>

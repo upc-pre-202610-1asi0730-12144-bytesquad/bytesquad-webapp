@@ -111,6 +111,13 @@
     "reportIssue": "Report a problem",
     "timeRemaining": "Time remaining",
     "empty": "You don't have any reservations yet.",
+    "status": {
+      "Initiated": "Created",
+      "Reserved": "Reserved",
+      "Active": "Active",
+      "Ended": "Ended",
+      "Cancelled": "Cancelled"
+    },
     "expired": {
       "title": "Reservation expired",
       "subtitle": "The machine is now available for other users",
