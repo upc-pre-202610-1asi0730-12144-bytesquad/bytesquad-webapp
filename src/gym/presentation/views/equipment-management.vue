@@ -28,12 +28,16 @@ function statusLabel(s) {
   return t(`equipment.status.${s}`) || s;
 }
 function statusClass(s) {
-  if (s === EquipmentStatus.OPERATIONAL || s === EquipmentStatus.AVAILABLE) return 'green';
-  if (s === EquipmentStatus.MAINTENANCE) return 'amber';
+  const l = s?.toLowerCase();
+  if (l === 'operational' || l === 'available') return 'green';
+  if (l === 'maintenance') return 'amber';
   return 'red';
 }
 function deleteEquipment(id) {
   if (confirm(t('equipment.dialog.deleteMessage'))) store.deleteEquipment(id);
+}
+function decommissionEquipment(id) {
+  if (confirm(t('equipment.dialog.decommissionMessage'))) store.decommissionEquipment(id);
 }
 </script>
 
@@ -80,7 +84,12 @@ function deleteEquipment(id) {
             <td><span class="badge" :class="`badge--${statusClass(eq.status)}`">{{ statusLabel(eq.status) }}</span></td>
             <td class="actions">
               <button class="btn btn--icon" @click="router.push(`/equipment/${eq.id}/edit`)"><span class="material-icons">edit</span></button>
-              <button class="btn btn--icon" style="color:var(--red)" @click="deleteEquipment(eq.id)"><span class="material-icons">delete</span></button>
+              <button class="btn btn--icon" style="color:var(--red)"
+                      :disabled="eq.status === EquipmentStatus.DECOMMISSIONED"
+                      :title="t('equipment.actions.decommission')"
+                      @click="decommissionEquipment(eq.id)">
+                <span class="material-icons">power_settings_new</span>
+              </button>
             </td>
           </tr>
         </tbody>
