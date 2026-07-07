@@ -9,6 +9,6 @@ export class ZoneAssembler {
   }
 
   toResourceFromEntity(e) {
-    return { name: e.name };
+    return { name: e.name, maximumOccupancy: e.maximumOccupancy };
   }
 }
