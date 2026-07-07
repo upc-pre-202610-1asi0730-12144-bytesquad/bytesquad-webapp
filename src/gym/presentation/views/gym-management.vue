@@ -22,17 +22,19 @@ function toggleBranch(branch) {
   const wasOpen   = !!expanded.value[id];
   expanded.value  = { ...expanded.value, [id]: !wasOpen };
   if (!wasOpen) {
-    if (zoneInputs.value[id] === undefined) zoneInputs.value[id] = '';
+    if (zoneInputs.value[id] === undefined) zoneInputs.value[id] = { name: '', maximumOccupancy: '' };
     if (store.zonesMap[id] === undefined)   store.loadZonesForBranch(gymId.value, id);
   }
 }
 
 // ── Zone form ──────────────────────────────────────────────────────────────
 async function submitZone(branchId) {
-  const name = (zoneInputs.value[branchId] || '').trim();
-  if (!name) return;
-  const created = await store.addZone(gymId.value, branchId, { name });
-  if (created) zoneInputs.value[branchId] = '';
+  const input = zoneInputs.value[branchId] || {};
+  const name = (input.name || '').trim();
+  const maximumOccupancy = Number(input.maximumOccupancy);
+  if (!name || !maximumOccupancy || maximumOccupancy <= 0) return;
+  const created = await store.addZone(gymId.value, branchId, { name, maximumOccupancy });
+  if (created) zoneInputs.value[branchId] = { name: '', maximumOccupancy: '' };
 }
 
 onMounted(() => {
@@ -144,15 +146,23 @@ onMounted(() => {
             <!-- Add zone row -->
             <div class="zone-add-row">
               <input
-                :value="zoneInputs[branch.id]"
-                @input="zoneInputs[branch.id] = $event.target.value"
+                :value="zoneInputs[branch.id]?.name"
+                @input="zoneInputs[branch.id] = { ...zoneInputs[branch.id], name: $event.target.value }"
                 placeholder="Zone name (e.g. Cardio)"
+                @keydown.enter.prevent="submitZone(branch.id)"
+                :disabled="store.loading"
+              />
+              <input
+                type="number" min="1" style="width:6rem"
+                :value="zoneInputs[branch.id]?.maximumOccupancy"
+                @input="zoneInputs[branch.id] = { ...zoneInputs[branch.id], maximumOccupancy: $event.target.value }"
+                placeholder="Max. aforo"
                 @keydown.enter.prevent="submitZone(branch.id)"
                 :disabled="store.loading"
               />
               <button
                 class="btn btn--primary btn--sm"
-                :disabled="store.loading || !zoneInputs[branch.id]?.trim()"
+                :disabled="store.loading || !zoneInputs[branch.id]?.name?.trim() || !zoneInputs[branch.id]?.maximumOccupancy"
                 @click="submitZone(branch.id)"
               >
                 <span class="material-icons btn__icon" style="font-size:14px">add</span>
