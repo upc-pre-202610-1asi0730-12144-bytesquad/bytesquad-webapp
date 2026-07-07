@@ -16,7 +16,7 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       { path: 'profile', component: () => import('@/profiles/presentation/views/profile-view.vue') },
-      { path: 'alerts',  component: () => import('@/monitoring/presentation/views/alerts-view.vue') },
+      { path: 'alerts',  component: () => import('@/monitoring/presentation/views/alerts-view.vue'), meta: { requiresAdmin: true } },
 
       // Admin routes
       { path: 'dashboard',       component: () => import('@/dashboard/presentation/views/dashboard-view.vue'),             meta: { requiresAdmin: true } },
