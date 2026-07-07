@@ -3,18 +3,16 @@ import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useReservationStore } from '@/reservation/application/reservation.store.js';
 import { useEquipmentStore } from '@/gym/application/equipment.store.js';
-import { useAuthStore } from '@/authentication/application/auth.store.js';
 import { ReservationStatus } from '@/reservation/domain/model/reservation.entity.js';
 
 const { t }       = useI18n();
 const store       = useReservationStore();
 const equipStore  = useEquipmentStore();
-const auth        = useAuthStore();
 
 const showModal  = ref(false);
 const form       = ref({ equipmentId: '', startDate: '', endDate: '' });
 
-onMounted(() => store.loadByClient(auth.user?.id));
+onMounted(() => store.loadMine());
 
 function openModal() {
   form.value = { equipmentId: '', startDate: '', endDate: '' };

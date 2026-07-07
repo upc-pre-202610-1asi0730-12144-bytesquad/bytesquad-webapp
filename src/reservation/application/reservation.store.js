@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { ReservationApi } from '../infrastructure/reservation-api.js';
 import { ReservationStatus } from '../domain/model/reservation.entity.js';
-import { useAuthStore } from '@/authentication/application/auth.store.js';
+import { useProfilesStore } from '@/profiles/application/profiles.store.js';
 
 const api = new ReservationApi();
 
@@ -23,7 +23,15 @@ export const useReservationStore = defineStore('reservation', () => {
     else reservations.value = [updated, ...reservations.value];
   }
 
-  async function loadByClient(clientId) {
+  // The backend identifies a client by their Profiles Client.Id, not their IAM user id.
+  async function _resolveClientId() {
+    const profilesStore = useProfilesStore();
+    if (!profilesStore.myProfile) await profilesStore.loadMyProfile();
+    return profilesStore.myProfile?.id ?? null;
+  }
+
+  async function loadMine() {
+    const clientId = await _resolveClientId();
     if (!clientId) return;
     loading.value = true; error.value = null;
     try {
@@ -34,11 +42,11 @@ export const useReservationStore = defineStore('reservation', () => {
   }
 
   async function expressCreate(equipmentId, startDate, endDate) {
-    const auth = useAuthStore();
-    if (!auth.user?.id) return;
+    const clientId = await _resolveClientId();
+    if (!clientId) return;
     loading.value = true; error.value = null;
     try {
-      const created = await api.expressCreate(auth.user.id, equipmentId, startDate, endDate);
+      const created = await api.expressCreate(clientId, equipmentId, startDate, endDate);
       _upsert(created);
       return created;
     } catch (e) {
@@ -79,6 +87,6 @@ export const useReservationStore = defineStore('reservation', () => {
   return {
     reservations, loading, error,
     activeReservations, initiatedReservations, reservedReservations, endedReservations,
-    loadByClient, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
+    loadMine, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
   };
 });
