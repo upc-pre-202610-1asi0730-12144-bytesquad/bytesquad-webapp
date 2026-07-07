@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useAuthStore }        from '@/authentication/application/auth.store.js';
@@ -21,32 +21,28 @@ const memberStore    = useMembershipStore();
 
 const isAdmin = computed(() => auth.isAdmin);
 
-// ── Admin: edit profile ──────────────────────────────────────────────────────
-const editMode    = ref(false);
+// ── Admin: edit profile (always-on form) ─────────────────────────────────────
 const editForm    = ref({ firstName: '', lastName: '', phoneNumber: '' });
 const editSuccess = ref(false);
 
-function openEdit() {
-  const p = profilesStore.myProfile;
+watch(() => profilesStore.myProfile, (p) => {
+  if (!p || !auth.isAdmin) return;
   editForm.value = {
-    firstName:   p?.firstName   ?? '',
-    lastName:    p?.lastName    ?? '',
-    phoneNumber: p?.phoneNumber ?? '',
+    firstName:   p.firstName   ?? '',
+    lastName:    p.lastName    ?? '',
+    phoneNumber: p.phoneNumber ?? '',
   };
-  editMode.value = true;
-}
+}, { immediate: true });
 
 async function submitEdit() {
   await profilesStore.updateMyProfile(editForm.value);
   if (!profilesStore.error) {
-    editMode.value    = false;
     editSuccess.value = true;
     setTimeout(() => { editSuccess.value = false; }, 3000);
   }
 }
 
-// ── Admin: change password ───────────────────────────────────────────────────
-const openPassword = ref(false);
+// ── Admin: change password (fixed section, no accordion) ─────────────────────
 const pwForm       = ref({ current: '', next: '', confirm: '' });
 const pwSuccess    = ref(false);
 const pwMatchError = ref(false);
@@ -57,9 +53,8 @@ async function submitPassword() {
   if (pwForm.value.next !== pwForm.value.confirm) { pwMatchError.value = true; return; }
   try {
     await auth.changePassword(pwForm.value.current, pwForm.value.next);
-    pwForm.value       = { current: '', next: '', confirm: '' };
-    openPassword.value = false;
-    pwSuccess.value    = true;
+    pwForm.value    = { current: '', next: '', confirm: '' };
+    pwSuccess.value = true;
     setTimeout(() => { pwSuccess.value = false; }, 4000);
   } catch { /* auth.error set by store */ }
 }
@@ -67,19 +62,24 @@ async function submitPassword() {
 // ── Admin: membership ────────────────────────────────────────────────────────
 const activeMembership = computed(() =>
   memberStore.memberships.find(m =>
-    m.status === MembershipStatus.Active || m.status === MembershipStatus.PendingCancellation
+    m.status !== MembershipStatus.Cancelled && m.status !== MembershipStatus.Expired
   ) ?? null
 );
 
 function memberStatusClass(status) {
-  if (status === MembershipStatus.Active)              return 'badge--green';
-  if (status === MembershipStatus.PendingCancellation) return 'badge--amber';
-  return 'badge--outline';
+  if (status === MembershipStatus.Active)                                                        return 'badge--green';
+  if (status === MembershipStatus.Suspended || status === MembershipStatus.PendingCancellation)  return 'badge--amber';
+  return 'badge--red'; // Cancelled, Expired
 }
 
 function fmtDate(iso) {
   if (!iso) return '—';
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function fmtPrice(m) {
+  if (!m || m.amount == null || !m.currency) return null;
+  return `${m.currency} ${Number(m.amount).toLocaleString('en-US')}/mes`;
 }
 
 // ── Admin: stats ─────────────────────────────────────────────────────────────
@@ -127,82 +127,52 @@ onMounted(async () => {
         <span class="role-badge role-badge--admin">{{ t('profile.admin.roleBadge') }}</span>
       </div>
 
-      <!-- 1. Datos Personales -->
+      <!-- 1. Account Information — always-on form -->
       <div class="card section">
-        <div class="section-row">
+        <div class="section-row" style="margin-bottom:1.25rem">
           <div class="avatar-circle">{{ initials(profilesStore.myProfile?.fullName) }}</div>
           <div class="profile-info">
-            <p class="profile-name">
-              {{ profilesStore.loading ? '…' : (profilesStore.myProfile?.fullName || '—') }}
-            </p>
+            <p class="profile-name">{{ profilesStore.loading ? '…' : (profilesStore.myProfile?.fullName || '—') }}</p>
             <p class="profile-sub">{{ profilesStore.myProfile?.email ?? '—' }}</p>
-            <p class="profile-sub">{{ profilesStore.myProfile?.dni ? `DNI: ${profilesStore.myProfile.dni}` : '' }}</p>
           </div>
         </div>
 
-        <div v-if="!editMode" class="account-grid" style="margin-top:1rem">
-          <div class="account-field">
-            <label>{{ t('profile.account.name') }}</label>
-            <p>{{ profilesStore.myProfile?.firstName ?? '—' }} {{ profilesStore.myProfile?.lastName ?? '' }}</p>
-          </div>
-          <div class="account-field">
-            <label>{{ t('profile.account.phone') }}</label>
-            <p>{{ profilesStore.myProfile?.phoneNumber ?? '—' }}</p>
-          </div>
-          <div class="account-field">
+        <h2 class="section-title">{{ t('profile.account.title') }}</h2>
+
+        <form class="account-form" @submit.prevent="submitEdit">
+          <div class="form-field">
             <label>{{ t('profile.account.email') }}</label>
-            <p class="readonly-val">{{ profilesStore.myProfile?.email ?? '—' }}</p>
+            <input :value="profilesStore.myProfile?.email ?? ''" disabled />
           </div>
-        </div>
-
-        <template v-if="editMode">
-          <form class="edit-form" @submit.prevent="submitEdit">
-            <div class="edit-grid">
-              <div class="form-field">
-                <label>{{ t('profile.account.firstName') }}</label>
-                <input v-model="editForm.firstName" required />
-              </div>
-              <div class="form-field">
-                <label>{{ t('profile.account.lastName') }}</label>
-                <input v-model="editForm.lastName" required />
-              </div>
-              <div class="form-field">
-                <label>{{ t('profile.account.phone') }}</label>
-                <input v-model="editForm.phoneNumber" />
-              </div>
-            </div>
-            <div v-if="profilesStore.error" class="alert alert--error">{{ profilesStore.error }}</div>
-            <div class="edit-actions">
-              <button type="submit" class="btn btn--primary" :disabled="profilesStore.loading">
-                {{ t('profile.actions.save') }}
-              </button>
-              <button type="button" class="btn btn--outline" @click="editMode = false">
-                {{ t('profile.actions.cancel') }}
-              </button>
-            </div>
-          </form>
-        </template>
-
-        <div v-if="editSuccess" class="alert alert--success" style="margin-top:.75rem">
-          {{ t('profile.actions.saveSuccess') }}
-        </div>
-
-        <button v-if="!editMode" class="btn btn--outline edit-btn" @click="openEdit">
-          <span class="material-icons" style="font-size:15px">edit</span>
-          {{ t('profile.actions.edit') }}
-        </button>
+          <div class="form-field">
+            <label>{{ t('profile.account.dni') }}</label>
+            <input :value="profilesStore.myProfile?.dni ?? ''" disabled />
+          </div>
+          <div class="form-field">
+            <label>{{ t('profile.account.firstName') }}</label>
+            <input v-model="editForm.firstName" required />
+          </div>
+          <div class="form-field">
+            <label>{{ t('profile.account.lastName') }}</label>
+            <input v-model="editForm.lastName" required />
+          </div>
+          <div class="form-field">
+            <label>{{ t('profile.account.phone') }}</label>
+            <input v-model="editForm.phoneNumber" />
+          </div>
+          <div class="form-field">
+            <label>{{ t('profile.account.gymName') }}</label>
+            <input :value="gymStore.currentGym?.name ?? ''" disabled />
+          </div>
+          <div v-if="profilesStore.error" class="alert alert--error">{{ profilesStore.error }}</div>
+          <div v-if="editSuccess"         class="alert alert--success">{{ t('profile.actions.saveSuccess') }}</div>
+          <button type="submit" class="btn btn--primary" :disabled="profilesStore.loading">
+            {{ t('profile.actions.save') }}
+          </button>
+        </form>
       </div>
 
-      <!-- 2. Gym -->
-      <div class="card section">
-        <h2 class="section-title">{{ t('profile.admin.gym.title') }}</h2>
-        <div class="gym-row">
-          <span class="material-icons gym-icon">fitness_center</span>
-          <span class="gym-name">{{ gymStore.currentGym?.name ?? '—' }}</span>
-        </div>
-      </div>
-
-      <!-- 3. Estadísticas -->
+      <!-- 2. Stats -->
       <div class="stat-grid">
         <button class="card stat-card" @click="router.push('/gym')">
           <div class="stat-icon-wrap stat-icon-wrap--blue">
@@ -236,11 +206,11 @@ onMounted(async () => {
         </button>
       </div>
 
-      <!-- 4. Membership Card -->
+      <!-- 3. Membership Card -->
       <div class="card section">
-        <div class="section-row" style="justify-content:space-between">
+        <div class="section-row" style="justify-content:space-between;margin-bottom:.75rem">
           <h2 class="section-title" style="margin:0">{{ t('profile.admin.membership.title') }}</h2>
-          <button class="btn btn--outline" style="font-size:.8rem" @click="router.push('/membership')">
+          <button class="btn btn--primary" style="font-size:.8rem" @click="router.push('/membership')">
             {{ t('profile.admin.membership.manage') }}
             <span class="material-icons" style="font-size:14px;vertical-align:middle">open_in_new</span>
           </button>
@@ -252,7 +222,10 @@ onMounted(async () => {
         </div>
         <div v-else class="membership-body">
           <div class="membership-row">
-            <span class="plan-name">{{ activeMembership.plan }}</span>
+            <span class="plan-name">
+              {{ activeMembership.plan }}
+              <span v-if="fmtPrice(activeMembership)" class="plan-price-inline">· {{ fmtPrice(activeMembership) }}</span>
+            </span>
             <span class="badge" :class="memberStatusClass(activeMembership.status)">
               {{ activeMembership.status }}
             </span>
@@ -267,47 +240,29 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- 5. Cambio de contraseña -->
+      <!-- 4. Change Password — fixed section, no accordion -->
       <div class="card section">
-        <button class="pw-header" @click="openPassword = !openPassword">
-          <div class="section-row" style="gap:.6rem">
-            <span class="material-icons" style="color:var(--text-secondary);font-size:20px">lock</span>
-            <h2 class="section-title" style="margin:0">{{ t('profile.security.changePassword') }}</h2>
-          </div>
-          <span class="material-icons chevron" :class="{ 'chevron--open': openPassword }">expand_more</span>
-        </button>
+        <h2 class="section-title">{{ t('profile.security.changePassword') }}</h2>
 
-        <div v-if="pwSuccess" class="alert alert--success" style="margin-top:.75rem">
-          {{ t('profile.security.passwordChanged') }}
-        </div>
-
-        <form v-if="openPassword" class="edit-form" @submit.prevent="submitPassword">
-          <div class="edit-grid" style="grid-template-columns:1fr 1fr 1fr">
-            <div class="form-field">
-              <label>{{ t('profile.security.currentPassword') }}</label>
-              <input v-model="pwForm.current" type="password" required autocomplete="current-password" />
-            </div>
-            <div class="form-field">
-              <label>{{ t('profile.security.newPassword') }}</label>
-              <input v-model="pwForm.next" type="password" required autocomplete="new-password" />
-            </div>
-            <div class="form-field">
-              <label>{{ t('profile.security.confirmPassword') }}</label>
-              <input v-model="pwForm.confirm" type="password" required autocomplete="new-password" />
-            </div>
+        <form class="account-form" @submit.prevent="submitPassword">
+          <div class="form-field">
+            <label>{{ t('profile.security.currentPassword') }}</label>
+            <input v-model="pwForm.current" type="password" required autocomplete="current-password" />
           </div>
-          <div v-if="pwMatchError" class="alert alert--error">
-            {{ t('profile.security.passwordMismatch') }}
+          <div class="form-field">
+            <label>{{ t('profile.security.newPassword') }}</label>
+            <input v-model="pwForm.next" type="password" required autocomplete="new-password" />
           </div>
-          <div v-if="auth.error" class="alert alert--error">{{ auth.error }}</div>
-          <div class="edit-actions">
-            <button type="submit" class="btn btn--primary" :disabled="auth.loading">
-              {{ t('profile.security.updatePassword') }}
-            </button>
-            <button type="button" class="btn btn--outline" @click="openPassword = false">
-              {{ t('profile.actions.cancel') }}
-            </button>
+          <div class="form-field">
+            <label>{{ t('profile.security.confirmPassword') }}</label>
+            <input v-model="pwForm.confirm" type="password" required autocomplete="new-password" />
           </div>
+          <div v-if="pwMatchError" class="alert alert--error">{{ t('profile.security.passwordMismatch') }}</div>
+          <div v-if="auth.error"   class="alert alert--error">{{ auth.error }}</div>
+          <div v-if="pwSuccess"    class="alert alert--success">{{ t('profile.security.passwordChanged') }}</div>
+          <button type="submit" class="btn btn--primary" :disabled="auth.loading">
+            {{ t('profile.security.updatePassword') }}
+          </button>
         </form>
       </div>
     </template>
@@ -365,31 +320,6 @@ onMounted(async () => {
             <p>{{ profilesStore.myProfile?.phoneNumber ?? '—' }}</p>
           </div>
         </div>
-        <template v-if="editMode">
-          <form class="edit-form" @submit.prevent="submitEdit">
-            <div class="edit-grid">
-              <div class="form-field">
-                <label>First name</label>
-                <input v-model="editForm.firstName" placeholder="First name" required />
-              </div>
-              <div class="form-field">
-                <label>Last name</label>
-                <input v-model="editForm.lastName" placeholder="Last name" required />
-              </div>
-              <div class="form-field">
-                <label>Phone</label>
-                <input v-model="editForm.phoneNumber" placeholder="+51 999 000 000" />
-              </div>
-            </div>
-            <div class="edit-actions">
-              <button type="submit" class="btn btn--primary" :disabled="profilesStore.loading">Save</button>
-              <button type="button" class="btn btn--outline" @click="editMode = false">Cancel</button>
-            </div>
-          </form>
-        </template>
-        <button v-else class="btn btn--outline edit-btn" @click="openEdit">
-          <span class="material-icons" style="font-size:15px">edit</span> Edit profile
-        </button>
       </div>
 
       <!-- Notifications -->
@@ -462,45 +392,31 @@ onMounted(async () => {
 .role-badge--client { background: rgba(0,204,178,.15);  color: var(--teal); }
 
 /* Profile header row */
-.section-row { align-items: center; display: flex; gap: 1rem; }
+.section-row  { align-items: center; display: flex; gap: 1rem; }
 .avatar-circle { align-items: center; background: var(--accent); border-radius: 50%; color: #000; display: flex; flex-shrink: 0; font-size: 1.1rem; font-weight: 700; height: 52px; justify-content: center; width: 52px; }
 .profile-info { display: flex; flex-direction: column; gap: .15rem; }
 .profile-name { font-size: 1rem; font-weight: 600; }
 .profile-sub  { color: var(--text-secondary); font-size: .8rem; }
-.readonly-val { color: var(--text-secondary); }
 
-/* Account grid */
-.account-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); }
-.account-field label { color: var(--text-secondary); display: block; font-size: .78rem; margin-bottom: .2rem; }
-.account-field p { font-size: .85rem; }
-
-/* Edit form */
-.edit-form { margin-top: .75rem; }
-.edit-grid  { display: grid; gap: .75rem; grid-template-columns: 1fr 1fr 1fr; margin-bottom: .75rem; }
-.form-field { display: flex; flex-direction: column; gap: .3rem; }
-.form-field label { color: var(--text-secondary); font-size: .78rem; }
-.edit-actions { display: flex; gap: .5rem; }
-.edit-btn { font-size: .8rem; margin-top: .75rem; }
+/* Account form (admin — always-on stacked fields) */
+.account-form { display: flex; flex-direction: column; gap: .75rem; }
+.form-field   { display: flex; flex-direction: column; gap: .3rem; }
+.form-field label { color: var(--text-secondary); font-size: .78rem; font-weight: 500; }
+input:disabled { cursor: not-allowed; opacity: .5; }
 
 /* Alerts */
-.alert { border-radius: var(--radius); font-size: .8rem; margin-top: .5rem; padding: .5rem .75rem; }
+.alert { border-radius: var(--radius); font-size: .8rem; padding: .5rem .75rem; }
 .alert--error   { background: rgba(239,68,68,.1);  border: 1px solid rgba(239,68,68,.3);  color: var(--red); }
 .alert--success { background: rgba(34,197,94,.1);  border: 1px solid rgba(34,197,94,.3);  color: var(--green); }
 
-/* Gym */
-.gym-row  { align-items: center; display: flex; gap: .75rem; margin-top: .5rem; }
-.gym-icon { color: var(--accent); }
-.gym-name { font-size: .95rem; font-weight: 600; }
-
 /* Stats */
 .stat-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem; }
-.stat-card { align-items: center; cursor: pointer; display: flex; gap: .75rem; text-align: left; background: none; border: 1px solid var(--border); color: var(--text-primary); width: 100%; }
+.stat-card { align-items: center; background: none; border: 1px solid var(--border); color: var(--text-primary); cursor: pointer; display: flex; gap: .75rem; text-align: left; width: 100%; }
 .stat-card:hover { border-color: var(--accent); }
 .stat-icon-wrap { align-items: center; border-radius: 10px; display: flex; flex-shrink: 0; height: 44px; justify-content: center; width: 44px; }
 .stat-icon-wrap--blue  { background: rgba(59,130,246,.12); }
 .stat-icon-wrap--amber { background: rgba(245,188,54,.12); }
 .stat-icon-wrap--red   { background: rgba(239,68,68,.12); }
-.stat-icon--blue  .stat-icon { color: var(--blue); }
 .stat-icon-wrap--blue  .stat-icon { color: var(--blue); }
 .stat-icon-wrap--amber .stat-icon { color: var(--accent); }
 .stat-icon-wrap--red   .stat-icon { color: var(--red); }
@@ -509,31 +425,31 @@ onMounted(async () => {
 .stat-arrow { color: var(--text-secondary); font-size: 18px; margin-left: auto; }
 
 /* Membership */
-.membership-empty   { color: var(--text-secondary); font-size: .85rem; margin-top: .75rem; }
-.membership-body    { display: flex; flex-direction: column; gap: .4rem; margin-top: .75rem; }
-.membership-row     { align-items: center; display: flex; gap: .75rem; }
-.plan-name          { font-size: 1rem; font-weight: 700; }
-.membership-dates   { color: var(--text-secondary); font-size: .82rem; }
+.membership-empty    { color: var(--text-secondary); font-size: .85rem; }
+.membership-body     { display: flex; flex-direction: column; gap: .4rem; }
+.membership-row      { align-items: center; display: flex; gap: .75rem; }
+.plan-name           { font-size: 1rem; font-weight: 700; }
+.plan-price-inline   { color: var(--text-secondary); font-size: .85rem; font-weight: 400; }
+.membership-dates    { color: var(--text-secondary); font-size: .82rem; }
 .membership-downgrade { align-items: center; color: var(--accent); display: flex; font-size: .78rem; gap: .25rem; }
 
 /* Badges */
 .badge         { border-radius: 999px; font-size: .72rem; font-weight: 600; padding: 2px 10px; }
 .badge--green  { background: rgba(34,197,94,.15);  color: var(--green); }
 .badge--amber  { background: rgba(245,188,54,.15); color: var(--accent); }
-.badge--outline{ background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
-
-/* Change password accordion */
-.pw-header { align-items: center; background: none; border: none; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; padding: 0; width: 100%; }
-.pw-header:hover .section-title { color: var(--accent); }
-.chevron      { color: var(--text-secondary); font-size: 1.2rem; transition: transform .2s; }
-.chevron--open{ transform: rotate(180deg); }
+.badge--red    { background: rgba(239,68,68,.15);  color: var(--red); }
 
 /* Section */
 .section       { margin-bottom: 1rem; }
-.section-title { font-size: .9rem; font-weight: 600; margin-bottom: .5rem; }
+.section-title { font-size: .9rem; font-weight: 600; margin-bottom: .75rem; }
 .section-sub   { color: var(--text-secondary); display: block; font-size: .8rem; margin-bottom: .5rem; }
 .section-hint  { color: var(--text-secondary); font-size: .75rem; margin-top: .5rem; }
-.security-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .25rem; }
+.security-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+/* Client: account grid */
+.account-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); margin-bottom: .75rem; }
+.account-field label { color: var(--text-secondary); display: block; font-size: .78rem; margin-bottom: .2rem; }
+.account-field p { font-size: .85rem; }
 
 /* Client: avatar card */
 .avatar-card  { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
@@ -547,7 +463,6 @@ onMounted(async () => {
 /* Client: plan card */
 .plan-card          { margin-bottom: 1rem; }
 .plan-header        { align-items: center; display: flex; justify-content: space-between; margin-bottom: .75rem; }
-.plan-active        { background: rgba(34,197,94,.15); border-radius: 10px; color: var(--green); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; }
 .plan-price         { color: var(--text-secondary); font-size: .83rem; margin-top: .2rem; }
 .plan-renewal       { color: var(--text-secondary); font-size: .78rem; margin-top: .75rem; }
 .plan-features-title{ color: var(--text-secondary); font-size: .78rem; font-weight: 500; margin-bottom: .4rem; }
@@ -572,12 +487,6 @@ onMounted(async () => {
 .lang-options { display: flex; gap: .5rem; margin-top: .5rem; }
 .lang-btn     { font-size: .85rem; padding: .35rem .9rem; }
 
-@media (max-width: 768px) {
-  .stat-grid   { grid-template-columns: 1fr 1fr; }
-  .account-grid, .edit-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 500px) {
-  .stat-grid   { grid-template-columns: 1fr; }
-  .account-grid, .edit-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 768px) { .stat-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 500px) { .stat-grid { grid-template-columns: 1fr; } }
 </style>
