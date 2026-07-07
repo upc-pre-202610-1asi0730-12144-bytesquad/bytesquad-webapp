@@ -704,16 +704,20 @@
     "admin": {
       "title": "Panel del Administrador",
       "roleBadge": "Administrador",
-      "memberSince": "Miembro desde",
       "stats": {
-        "locations": "Sedes activas",
-        "equipment": "Equipos monitoreados",
-        "sensors": "Sensores IoT online",
-        "members": "Miembros registrados"
+        "branches": "Sedes",
+        "equipment": "Equipos",
+        "tickets": "Tickets"
       },
-      "plan": {
-        "active": "Activo",
-        "renewal": "Próxima renovación"
+      "gym": {
+        "title": "Gimnasio"
+      },
+      "membership": {
+        "title": "Membresía",
+        "manage": "Gestionar",
+        "expires": "Expira",
+        "none": "Sin membresía activa",
+        "pendingDowngrade": "Cambio pendiente a"
       }
     },
     "client": {
@@ -751,9 +755,17 @@
     },
     "account": {
       "title": "Información de la Cuenta",
+      "name": "Nombre",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
       "email": "Email",
-      "gymName": "Nombre del Gimnasio",
       "phone": "Teléfono"
+    },
+    "actions": {
+      "edit": "Editar perfil",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "saveSuccess": "Perfil actualizado correctamente"
     },
     "language": {
       "title": "Preferencias de Idioma",
@@ -763,6 +775,12 @@
     "security": {
       "title": "Seguridad",
       "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "updatePassword": "Actualizar contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "passwordChanged": "Contraseña actualizada correctamente",
       "logout": "Cerrar Sesión"
     },
     "saveChanges": "Guardar Cambios"

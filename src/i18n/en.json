@@ -704,16 +704,20 @@
     "admin": {
       "title": "Admin Panel",
       "roleBadge": "Administrator",
-      "memberSince": "Member since",
       "stats": {
-        "locations": "Active branches",
-        "equipment": "Monitored equipment",
-        "sensors": "IoT sensors online",
-        "members": "Registered members"
+        "branches": "Branches",
+        "equipment": "Equipment",
+        "tickets": "Tickets"
       },
-      "plan": {
-        "active": "Active",
-        "renewal": "Next renewal"
+      "gym": {
+        "title": "Gym"
+      },
+      "membership": {
+        "title": "Membership",
+        "manage": "Manage",
+        "expires": "Expires",
+        "none": "No active membership",
+        "pendingDowngrade": "Pending downgrade to"
       }
     },
     "client": {
@@ -751,9 +755,17 @@
     },
     "account": {
       "title": "Account Information",
+      "name": "Name",
+      "firstName": "First name",
+      "lastName": "Last name",
       "email": "Email",
-      "gymName": "Gym Name",
       "phone": "Phone"
+    },
+    "actions": {
+      "edit": "Edit profile",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saveSuccess": "Profile updated successfully"
     },
     "language": {
       "title": "Language Preferences",
@@ -763,6 +775,12 @@
     "security": {
       "title": "Security",
       "changePassword": "Change Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "updatePassword": "Update password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordChanged": "Password updated successfully",
       "logout": "Log Out"
     },
     "saveChanges": "Save Changes"
