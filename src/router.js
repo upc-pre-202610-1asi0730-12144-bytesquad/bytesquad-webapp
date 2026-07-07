@@ -41,7 +41,6 @@ const routes = [
       { path: 'bookings', component: () => import('@/reservation/presentation/views/reservation-view.vue'), meta: { requiresClient: true } },
       { path: 'routines', component: () => import('@/routines/presentation/views/routine-list-view.vue'),   meta: { requiresClient: true } },
       { path: 'routines/:id', component: () => import('@/routines/presentation/views/routine-detail-view.vue'), meta: { requiresClient: true } },
-      { path: 'anomalies/report', component: () => import('@/monitoring/presentation/views/anomaly-report-view.vue'), meta: { requiresClient: true } },
     ],
   },
   { path: '/setup-gym', component: () => import('@/gym/presentation/views/setup-gym-view.vue'), meta: { requiresAuth: true } },

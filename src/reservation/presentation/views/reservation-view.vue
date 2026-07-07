@@ -118,10 +118,6 @@ function remaining(r) {
         <p class="page__subtitle">{{ t('booking.subtitle') }}</p>
       </div>
       <div class="header-actions">
-        <router-link class="btn btn--outline" to="/anomalies/report">
-          <span class="material-icons" style="font-size:16px">report_problem</span>
-          {{ t('booking.reportIssue') }}
-        </router-link>
         <button class="btn btn--primary" :disabled="store.hasOpenReservation" @click="openModal">
           <span class="material-icons" style="font-size:16px">add</span>
           {{ t('booking.newBooking') }}
