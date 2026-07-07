@@ -1,8 +1,6 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useDashboardStore } from '@/dashboard/application/dashboard.store.js';
-import PeakCapacityChart from '@/shared/presentation/components/charts/peak-capacity-chart.vue';
-import MachineUsageChart from '@/shared/presentation/components/charts/machine-usage-chart.vue';
 
 const store = useDashboardStore();
 onMounted(() => store.load());
@@ -51,6 +49,7 @@ function fmt(n, dec = 0) {
   return Number(n).toLocaleString('es-PE', { maximumFractionDigits: dec });
 }
 function fmtDate(iso) { return iso ? iso.slice(0, 10) : '—'; }
+function shortName(n) { return n.length > 14 ? n.slice(0, 12) + '…' : n; }
 </script>
 
 <template>
@@ -131,16 +130,43 @@ function fmtDate(iso) { return iso ? iso.slice(0, 10) : '—'; }
       <!-- Peak Capacity + Machine Usage -->
       <div class="widgets-row">
 
-        <!-- Peak Capacity Hours -->
+        <!-- Peak Capacity Hours: discrete bar chart per hour -->
         <div class="chart-card card">
           <h2 class="chart-title">Capacidad por hora</h2>
-          <PeakCapacityChart :peak-hours="store.peakHours" :max-reservations="store.maxReservations" />
+          <div v-if="!store.peakHours.length" class="chart-state">
+            <span class="material-icons">bar_chart</span>
+            <span>Sin datos disponibles</span>
+          </div>
+          <div v-else class="bar-chart-wrap">
+            <div class="bar-chart">
+              <div v-for="h in store.peakHours" :key="h.hour" class="bar-col">
+                <span class="bar-count">{{ h.reservationCount }}</span>
+                <div class="bar-track">
+                  <div class="bar-fill" :style="{ height: (h.reservationCount / store.maxReservations * 100) + '%' }"></div>
+                </div>
+                <span class="bar-label">{{ String(h.hour).padStart(2, '0') }}h</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Machine Usage: top 8 by totalUsageHours -->
         <div class="chart-card card">
           <h2 class="chart-title">Uso de máquinas</h2>
-          <MachineUsageChart :bars="store.machineUsageBars" :max-hours="store.maxUsageHours" />
+          <div v-if="!store.machineUsageBars.length" class="chart-state">
+            <span class="material-icons">fitness_center</span>
+            <span>Sin datos disponibles</span>
+          </div>
+          <div v-else class="machine-list">
+            <div v-for="bar in store.machineUsageBars" :key="bar.name" class="machine-row">
+              <span class="machine-name">{{ shortName(bar.name) }}</span>
+              <div class="machine-track">
+                <div class="machine-fill" :style="{ width: (bar.totalUsageHours / store.maxUsageHours * 100) + '%' }"></div>
+              </div>
+              <span class="machine-hours">{{ fmt(bar.totalUsageHours) }}h</span>
+              <span class="machine-rsv">{{ bar.reservationCount }} rsv</span>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -296,7 +322,24 @@ function fmtDate(iso) { return iso ? iso.slice(0, 10) : '—'; }
 .badge--green   { background: rgba(34,197,94,.15); color: var(--green); }
 .badge--neutral { background: rgba(255,255,255,.08); color: var(--text-secondary); }
 
+/* Peak Capacity bar chart */
 .widgets-row { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+.bar-chart-wrap { overflow-x: auto; }
+.bar-chart { align-items: flex-end; display: flex; gap: 6px; height: 180px; padding: 0 4px; }
+.bar-col { align-items: center; display: flex; flex-direction: column; flex: 1; gap: 4px; min-width: 28px; }
+.bar-count { color: var(--text-secondary); font-size: 0.65rem; }
+.bar-track { background: rgba(255,255,255,.07); border-radius: 4px; flex: 1; position: relative; width: 100%; }
+.bar-fill { background: var(--accent); border-radius: 4px; bottom: 0; position: absolute; transition: height .3s; width: 100%; }
+.bar-label { color: var(--text-secondary); font-size: 0.65rem; text-align: center; }
+
+/* Machine Usage horizontal bars */
+.machine-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.machine-row { align-items: center; display: grid; gap: 0.5rem; grid-template-columns: 120px 1fr auto auto; }
+.machine-name { color: var(--text-primary); font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.machine-track { background: rgba(255,255,255,.07); border-radius: 3px; height: 8px; overflow: hidden; }
+.machine-fill { background: var(--accent); border-radius: 3px; height: 100%; transition: width .3s; }
+.machine-hours { color: var(--text-secondary); font-size: 0.75rem; text-align: right; white-space: nowrap; }
+.machine-rsv { color: var(--text-secondary); font-size: 0.75rem; min-width: 52px; text-align: right; white-space: nowrap; }
 
 @media (max-width: 1100px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px)  { .widgets-row { grid-template-columns: 1fr; } }
