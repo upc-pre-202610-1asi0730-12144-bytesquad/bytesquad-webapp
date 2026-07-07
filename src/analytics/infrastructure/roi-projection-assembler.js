@@ -9,6 +9,7 @@ export class RoiProjectionAssembler {
       projectedEarnings:     r.projectedEarnings,
       roiIndex:              r.roiIndex,
       demandStatus:          r.demandStatus,
+      createdAt:             r.createdAt,
     });
   }
 }
