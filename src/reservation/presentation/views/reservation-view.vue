@@ -38,6 +38,7 @@ let clock;
 let refreshTimer;
 onMounted(() => {
   store.loadMine();
+  if (!equipStore.equipment.length) equipStore.loadEquipment();
   clock = setInterval(() => { now.value = Date.now(); }, 1000);
   // The backend auto-ends expired reservations in the background; poll so this
   // screen picks up that change instead of getting stuck showing a stale "expired" card.
