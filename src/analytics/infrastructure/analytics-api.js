@@ -1,18 +1,11 @@
 import { BaseApi } from '@/shared/infrastructure/base-api.js';
-import { AnalyticsEndpoint } from './analytics-endpoint.js';
+import { AnalyticsAssembler } from './analytics-assembler.js';
+
+const asm = new AnalyticsAssembler();
 
 export class AnalyticsApi extends BaseApi {
-  #statsEndpoint;
-
-  constructor() {
-    super();
-    this.#statsEndpoint = new AnalyticsEndpoint(this);
-  }
-
-  getUsageStats()  { return this.#statsEndpoint.getAll(); }
-
-  async getEquipments() {
-    const { data } = await this.http.get('equipments');
-    return Array.isArray(data) ? data : [];
+  async getUsageStatsByAdmin(adminId) {
+    const { data } = await this.http.get(`equipment-usage-stats/by-admin/${adminId}`);
+    return Array.isArray(data) ? data.map(r => asm.toEntityFromResource(r)) : [];
   }
 }
