@@ -10,6 +10,8 @@ export class MembershipAssembler {
       endDate:              r.endDate,
       status:               r.status,
       pendingDowngradePlan: r.pendingDowngradePlan ?? null,
+      amount:               r.amount   ?? null,
+      currency:             r.currency ?? null,
     });
   }
 
