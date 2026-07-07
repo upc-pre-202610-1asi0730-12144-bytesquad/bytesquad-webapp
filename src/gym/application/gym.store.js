@@ -67,7 +67,8 @@ export const useGymStore = defineStore('gym', () => {
     zonesLoadingMap.value[branchId] = true;
     try {
       zonesMap.value[branchId] = await api.getZones(gymId, branchId);
-    } catch {
+    } catch (e) {
+      console.error(`[gym] loadZones(gymId=${gymId}, branchId=${branchId}) failed:`, e);
       zonesMap.value[branchId] = [];
     } finally {
       zonesLoadingMap.value[branchId] = false;
