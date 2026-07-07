@@ -91,11 +91,6 @@ const branchCount    = computed(() => gymStore.branches.length);
 const equipmentCount = computed(() => equipStore.error ? '—' : equipStore.equipment.length);
 const ticketCount    = computed(() => mainStore.tickets.length);
 
-// ── Client: keep existing ────────────────────────────────────────────────────
-const notifAvailability = ref(true);
-const notifMaintenance  = ref(false);
-const notifRewards      = ref(true);
-
 function gymName(gymId) {
   return gymStore.gyms.find(g => g.id === gymId)?.name ?? `#${gymId}`;
 }
@@ -397,46 +392,6 @@ onMounted(async () => {
         </button>
       </div>
 
-      <!-- Notifications -->
-      <div class="card section">
-        <div class="card-header">
-          <span class="material-icons card-header__icon">notifications</span>
-          <h2 class="section-title">{{ t('profile.client.notifications.title') }}</h2>
-        </div>
-        <div class="notif-list">
-          <div class="notif-row">
-            <div class="notif-info">
-              <p class="notif-title">{{ t('profile.client.notifications.availability.title') }}</p>
-              <p class="notif-desc">{{ t('profile.client.notifications.availability.desc') }}</p>
-            </div>
-            <label class="toggle">
-              <input type="checkbox" v-model="notifAvailability" />
-              <span class="toggle-track"></span>
-            </label>
-          </div>
-          <div class="notif-row">
-            <div class="notif-info">
-              <p class="notif-title">{{ t('profile.client.notifications.maintenance.title') }}</p>
-              <p class="notif-desc">{{ t('profile.client.notifications.maintenance.desc') }}</p>
-            </div>
-            <label class="toggle">
-              <input type="checkbox" v-model="notifMaintenance" />
-              <span class="toggle-track"></span>
-            </label>
-          </div>
-          <div class="notif-row">
-            <div class="notif-info">
-              <p class="notif-title">{{ t('profile.client.notifications.rewards.title') }}</p>
-              <p class="notif-desc">{{ t('profile.client.notifications.rewards.desc') }}</p>
-            </div>
-            <label class="toggle">
-              <input type="checkbox" v-model="notifRewards" />
-              <span class="toggle-track"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
     </template>
 
     <!-- ── SHARED: Language ───────────────────────────────────────────────── -->
@@ -560,17 +515,6 @@ input:disabled { cursor: not-allowed; opacity: .5; }
 .save-success { background: rgba(34,197,94,.1); color: var(--green); }
 .save-error { background: rgba(239,68,68,.1); color: var(--red); }
 .save-btn { margin-top: 1rem; width: 100%; }
-.notif-list { display: flex; flex-direction: column; gap: .75rem; }
-.notif-row { align-items: center; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; padding-bottom: .75rem; }
-.notif-info { display: flex; flex-direction: column; gap: .1rem; }
-.notif-title { font-size: .85rem; font-weight: 500; }
-.notif-desc  { color: var(--text-secondary); font-size: .78rem; }
-.toggle               { align-items: center; cursor: pointer; display: inline-flex; }
-.toggle input         { display: none; }
-.toggle-track         { background: var(--border); border-radius: 12px; height: 22px; position: relative; transition: background .2s; width: 44px; }
-.toggle input:checked + .toggle-track { background: var(--accent); }
-.toggle-track::after  { background: #fff; border-radius: 50%; content: ''; height: 16px; left: 3px; position: absolute; top: 3px; transition: transform .2s; width: 16px; }
-.toggle input:checked + .toggle-track::after { transform: translateX(22px); }
 
 /* Language */
 .lang-options { display: flex; gap: .5rem; margin-top: .5rem; }
