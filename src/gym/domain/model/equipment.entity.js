@@ -1,5 +1,6 @@
 export const EquipmentStatus = Object.freeze({
-  OPERATIONAL: 'OPERATIONAL',
+  AVAILABLE:    'AVAILABLE',
+  OPERATIONAL:  'OPERATIONAL',
   MAINTENANCE:  'MAINTENANCE',
   OUT_OF_ORDER: 'OUT_OF_ORDER',
 });
