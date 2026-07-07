@@ -147,37 +147,13 @@ onMounted(() => profilesStore.loadMyProfile());
         <span class="role-badge role-badge--client">{{ t('profile.client.roleBadge') }}</span>
       </div>
 
-      <!-- Avatar + points -->
+      <!-- Avatar -->
       <div class="card avatar-card">
         <div class="avatar-circle">{{ initials(profilesStore.myProfile?.fullName) }}</div>
         <div class="avatar-info">
           <p class="avatar-name">{{ profilesStore.myProfile?.fullName ?? '—' }}</p>
           <p class="avatar-email">{{ profilesStore.myProfile?.email ?? '—' }}</p>
         </div>
-        <div class="points-badge">
-          <span class="material-icons" style="font-size:16px;color:var(--accent)">stars</span>
-          <span class="points-val">1 250</span>
-          <span class="points-label">{{ t('profile.client.points') }}</span>
-        </div>
-      </div>
-
-      <!-- Plan card -->
-      <div class="card plan-card">
-        <div class="plan-header">
-          <div>
-            <p class="plan-name">{{ t('profile.client.plan.name') }}</p>
-            <p class="plan-price">{{ t('profile.client.plan.price') }}</p>
-          </div>
-          <button class="btn btn--accent">{{ t('profile.client.plan.upgrade') }}</button>
-        </div>
-        <p class="plan-features-title">{{ t('profile.client.plan.featuresTitle') }}</p>
-        <ul class="plan-features">
-          <li>{{ t('profile.client.plan.feature1') }}</li>
-          <li>{{ t('profile.client.plan.feature2') }}</li>
-          <li>{{ t('profile.client.plan.feature3') }}</li>
-          <li>{{ t('profile.client.plan.feature4') }}</li>
-        </ul>
-        <p class="plan-renewal">{{ t('profile.client.plan.renewal') }}: {{ t('profile.client.plan.renewalDate') }}</p>
       </div>
 
       <!-- Edit form -->
@@ -303,11 +279,7 @@ onMounted(() => profilesStore.loadMyProfile());
 .plan-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: .75rem; }
 .plan-name { font-size: .95rem; font-weight: 700; }
 .plan-active { background: rgba(34,197,94,.15); border-radius: 10px; color: var(--green); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; }
-.plan-price { color: var(--text-secondary); font-size: .83rem; margin-top: .2rem; }
 .plan-renewal { color: var(--text-secondary); font-size: .78rem; margin-top: .75rem; }
-.plan-features-title { color: var(--text-secondary); font-size: .78rem; font-weight: 500; margin-bottom: .4rem; }
-.plan-features { color: var(--text-secondary); font-size: .8rem; padding-left: 1.25rem; display: flex; flex-direction: column; gap: .3rem; }
-.plan-features li::marker { color: var(--accent); }
 .btn--accent { background: var(--accent); border: none; color: #000; font-weight: 600; }
 .btn--danger { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3); color: var(--red); }
 .avatar-card { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
@@ -315,9 +287,6 @@ onMounted(() => profilesStore.loadMyProfile());
 .avatar-info { flex: 1; }
 .avatar-name  { font-size: .95rem; font-weight: 600; }
 .avatar-email { color: var(--text-secondary); font-size: .8rem; }
-.points-badge { align-items: center; display: flex; flex-direction: column; gap: .15rem; text-align: center; }
-.points-val   { color: var(--accent); font-size: 1.3rem; font-weight: 700; }
-.points-label { color: var(--text-secondary); font-size: .72rem; }
 .section { margin-bottom: 1rem; }
 .section-title { font-size: .9rem; font-weight: 600; margin-bottom: .5rem; }
 .section-sub  { color: var(--text-secondary); font-size: .8rem; margin-bottom: .5rem; display: block; }
