@@ -171,7 +171,6 @@
     },
     "action": {
       "activate": "Activate",
-      "requestAvailable": "Request to release equipment",
       "end": "End",
       "cancel": "Cancel"
     },

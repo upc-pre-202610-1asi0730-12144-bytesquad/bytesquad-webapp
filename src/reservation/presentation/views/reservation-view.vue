@@ -174,10 +174,6 @@ function remaining(r) {
             {{ t('booking.action.activate') }}
           </button>
           <button v-if="r.status === ReservationStatus.Active && !isExpired(r)"
-            class="btn btn--outline btn--sm" @click="store.requestEquipmentAvailable(r.id)">
-            {{ t('booking.action.requestAvailable') }}
-          </button>
-          <button v-if="r.status === ReservationStatus.Active && !isExpired(r)"
             class="btn btn--primary btn--sm" @click="store.end(r.id)">
             {{ t('booking.action.end') }}
           </button>

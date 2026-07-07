@@ -171,7 +171,6 @@
     },
     "action": {
       "activate": "Activar",
-      "requestAvailable": "Solicitar liberar equipo",
       "end": "Finalizar",
       "cancel": "Cancelar"
     },
