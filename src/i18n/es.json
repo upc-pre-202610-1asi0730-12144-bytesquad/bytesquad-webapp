@@ -345,8 +345,9 @@
       "outOfOrder": "Fuera de Servicio"
     },
     "status": {
-      "OPERATIONAL": "Operativo",
-      "MAINTENANCE": "Mantenimiento",
+      "AVAILABLE":    "Disponible",
+      "OPERATIONAL":  "Operativo",
+      "MAINTENANCE":  "En Mantenimiento",
       "OUT_OF_ORDER": "Fuera de Servicio"
     },
     "dialog": {
