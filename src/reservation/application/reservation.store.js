@@ -16,6 +16,10 @@ export const useReservationStore = defineStore('reservation', () => {
   const initiatedReservations = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Initiated));
   const reservedReservations  = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Reserved));
   const endedReservations     = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Ended));
+  const historyReservations   = computed(() => reservations.value.filter(
+    r => r.status === ReservationStatus.Ended || r.status === ReservationStatus.Cancelled));
+  const hasOpenReservation    = computed(() => reservations.value.some(
+    r => r.status !== ReservationStatus.Ended && r.status !== ReservationStatus.Cancelled));
 
   function _upsert(updated) {
     const idx = reservations.value.findIndex(r => r.id === updated.id);
@@ -66,9 +70,9 @@ export const useReservationStore = defineStore('reservation', () => {
     } catch (e) { error.value = e.message; }
   }
 
-  async function startTimer(id) {
+  async function startTimer(id, durationMinutes) {
     try {
-      _upsert(await api.startTimer(id));
+      _upsert(await api.startTimer(id, durationMinutes));
     } catch (e) { error.value = e.message; }
   }
 
@@ -87,6 +91,7 @@ export const useReservationStore = defineStore('reservation', () => {
   return {
     reservations, loading, error,
     activeReservations, initiatedReservations, reservedReservations, endedReservations,
+    historyReservations, hasOpenReservation,
     loadMine, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
   };
 });

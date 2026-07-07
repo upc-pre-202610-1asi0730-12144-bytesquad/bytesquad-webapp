@@ -9,6 +9,7 @@ export class ReservationAssembler {
       startDate:   r.startDate,
       endDate:     r.endDate,
       status:      r.status,
+      timerExpiry: r.timerExpiry,
     });
   }
 
