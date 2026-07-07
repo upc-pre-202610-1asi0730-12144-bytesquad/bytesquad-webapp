@@ -23,7 +23,7 @@ function toggleBranch(branch) {
   expanded.value  = { ...expanded.value, [id]: !wasOpen };
   if (!wasOpen) {
     if (zoneInputs.value[id] === undefined) zoneInputs.value[id] = '';
-    if (store.zonesMap[id] === undefined)   store.loadZones(gymId.value, id);
+    if (store.zonesMap[id] === undefined)   store.loadZonesForBranch(gymId.value, id);
   }
 }
 

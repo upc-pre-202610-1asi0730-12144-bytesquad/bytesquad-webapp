@@ -81,12 +81,12 @@ export const useGymStore = defineStore('gym', () => {
     } finally { loading.value = false; }
   }
 
-  async function loadZones(gymId, branchId) {
+  async function loadZonesForBranch(gymId, branchId) {
     zonesLoadingMap.value[branchId] = true;
     try {
       zonesMap.value[branchId] = await api.getZones(gymId, branchId);
     } catch (e) {
-      console.error(`[gym] loadZones(gymId=${gymId}, branchId=${branchId}) failed:`, e);
+      console.error(`[gym] loadZonesForBranch(gymId=${gymId}, branchId=${branchId}) failed:`, e);
       zonesMap.value[branchId] = [];
     } finally {
       zonesLoadingMap.value[branchId] = false;
@@ -110,6 +110,6 @@ export const useGymStore = defineStore('gym', () => {
 
   return {
     currentGym, gymChecked, gyms, branches, zones, zonesMap, zonesLoadingMap, loading, error,
-    loadGyms, loadBranches, loadZones, loadAdminGym, addGym, addBranch, addZone,
+    loadGyms, loadBranches, loadZones, loadZonesForBranch, loadAdminGym, addGym, addBranch, addZone,
   };
 });
