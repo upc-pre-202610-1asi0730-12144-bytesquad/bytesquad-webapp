@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { useAuthStore }         from '@/authentication/application/auth.store.js';
 import { useMaintenanceStore }  from '@/maintenance/application/maintenance.store.js';
 import { useEquipmentStore }    from '@/gym/application/equipment.store.js';
+import { MaintenancePriority, MaintenanceType } from '@/maintenance/domain/model/maintenance.entity.js';
 
 const { t }      = useI18n();
 const auth       = useAuthStore();
@@ -12,7 +13,7 @@ const store      = useMaintenanceStore();
 const equipStore = useEquipmentStore();
 const router     = useRouter();
 
-const form      = ref({ equipmentId: '', description: '' });
+const form      = ref({ equipmentId: '', description: '', priority: 'Low', type: 'Corrective' });
 const submitErr = ref('');
 
 async function submit() {
@@ -23,6 +24,8 @@ async function submit() {
       equipmentId:        Number(form.value.equipmentId),
       requestedByAdminId: auth.user?.id,
       description:        form.value.description,
+      priority:           form.value.priority,
+      type:               form.value.type,
     });
     router.push('/maintenance');
   } catch {
@@ -40,14 +43,32 @@ async function submit() {
 
     <div class="card form-wrap">
       <form class="form-grid" @submit.prevent="submit">
-        <div class="form-field form-field--full">
+        <div class="form-field">
           <label>{{ t('maintenance.form.equipment') }}</label>
           <select v-model="form.equipmentId" required>
             <option disabled value="">— {{ t('maintenance.form.equipment') }} —</option>
             <option v-for="eq in equipStore.equipment" :key="eq.id" :value="eq.id">{{ eq.name }}</option>
           </select>
         </div>
-        <div class="form-field form-field--full">
+        <div class="form-row">
+          <div class="form-field">
+            <label>{{ t('maintenance.form.priority') }}</label>
+            <select v-model="form.priority" required>
+              <option v-for="p in Object.values(MaintenancePriority)" :key="p" :value="p">
+                {{ t('maintenance.priority.' + p.toUpperCase()) }}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>{{ t('maintenance.form.type') }}</label>
+            <select v-model="form.type" required>
+              <option v-for="tp in Object.values(MaintenanceType)" :key="tp" :value="tp">
+                {{ t('maintenance.type.' + tp.toUpperCase()) }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
           <label>{{ t('maintenance.form.description') }}</label>
           <textarea v-model="form.description" rows="4" required></textarea>
         </div>
@@ -66,6 +87,7 @@ async function submit() {
 <style scoped>
 .form-wrap  { max-width: 560px; }
 .form-grid  { display: flex; flex-direction: column; gap: 1rem; }
+.form-row   { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
 .form-field { display: flex; flex-direction: column; gap: .375rem; }
 .form-field label { color: var(--text-secondary); font-size: .8rem; font-weight: 500; }
 .form-field textarea { resize: vertical; }
