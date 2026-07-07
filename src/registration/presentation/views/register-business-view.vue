@@ -326,7 +326,7 @@ function setLang(l) { locale.value = l; localStorage.setItem('spottrack_lang', l
 
 <style scoped>
 /* ── Shared ────────────────────────────────────────────────────── */
-.form-field { display: flex; flex-direction: column; gap: .375rem; }
+.form-field { display: flex; flex-direction: column; gap: .375rem; min-width: 0; }
 .form-field label { font-size: .85rem; font-weight: 600; color: var(--text-primary); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
 .password-wrap { position: relative; }
@@ -358,7 +358,7 @@ function setLang(l) { locale.value = l; localStorage.setItem('spottrack_lang', l
 .role-card__desc { font-size: .75rem; color: var(--text-secondary); line-height: 1.35; }
 
 /* Business section */
-.business-section { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; gap: .75rem; padding: 1rem; }
+.business-section { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; gap: .75rem; overflow: hidden; padding: 1rem; }
 .business-label { color: var(--accent); font-size: .75rem; font-weight: 700; letter-spacing: .08em; margin: 0; text-transform: uppercase; }
 
 /* Submit + footer */
