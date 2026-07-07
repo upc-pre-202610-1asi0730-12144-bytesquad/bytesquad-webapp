@@ -152,6 +152,6 @@ export const useAnalyticsStore = defineStore('analytics', () => {
     stats, weeklyData, maxCapacity, hourlyData,
     machineTypes, pieGradient, relocationData,
     linePoints, polylinePoints, areaPath, threshold90Y,
-    SVG_W, SVG_H,
+    SVG_W, SVG_H, load,
   };
 });
