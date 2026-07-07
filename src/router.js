@@ -37,6 +37,9 @@ const routes = [
       { path: 'routines', component: () => import('@/routines/presentation/views/routines-view.vue'),   meta: { requiresClient: true } },
     ],
   },
+  { path: '/register-business', component: () => import('@/registration/presentation/views/register-business-view.vue'), meta: { public: true } },
+  { path: '/payment/success',   component: () => import('@/registration/presentation/views/payment-success-view.vue'),   meta: { public: true } },
+  { path: '/payment/cancel',    component: () => import('@/registration/presentation/views/payment-cancel-view.vue'),    meta: { public: true } },
   { path: '/:pathMatch(.*)*', redirect: '/login' },
 ];
 
