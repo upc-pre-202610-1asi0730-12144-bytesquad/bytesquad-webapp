@@ -759,7 +759,9 @@
       "firstName": "Nombre",
       "lastName": "Apellido",
       "email": "Email",
-      "phone": "Teléfono"
+      "phone": "Teléfono",
+      "dni": "DNI",
+      "gymName": "Gimnasio"
     },
     "actions": {
       "edit": "Editar perfil",
