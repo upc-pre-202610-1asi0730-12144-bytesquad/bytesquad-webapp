@@ -5,9 +5,18 @@ import { useReservationStore } from '@/reservation/application/reservation.store
 import { useEquipmentStore } from '@/gym/application/equipment.store.js';
 import { ReservationStatus } from '@/reservation/domain/model/reservation.entity.js';
 
-const { t }       = useI18n();
+const { t, locale } = useI18n();
 const store       = useReservationStore();
 const equipStore  = useEquipmentStore();
+
+const dateTimeFormatter = computed(() => new Intl.DateTimeFormat(locale.value, {
+  day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
+}));
+
+function formatDateTime(value) {
+  if (!value) return '—';
+  return dateTimeFormatter.value.format(new Date(value));
+}
 
 const showModal  = ref(false);
 const form       = ref({ equipmentId: '', windowSeconds: 600 });
@@ -146,7 +155,7 @@ function remaining(r) {
         </div>
         <div v-else class="res-dates">
           <span class="material-icons" style="font-size:14px">event</span>
-          {{ r.startDate }} → {{ r.endDate }}
+          {{ formatDateTime(r.startDate) }} → {{ formatDateTime(r.endDate) }}
         </div>
 
         <div class="res-actions">
@@ -196,8 +205,8 @@ function remaining(r) {
           <tr v-for="r in store.historyReservations" :key="r.id">
             <td>{{ eqName(r.equipmentId) }}</td>
             <td><span class="badge" :class="statusClass(r.status)">{{ r.status }}</span></td>
-            <td>{{ r.startDate }}</td>
-            <td>{{ r.startDate }} → {{ r.endDate }}</td>
+            <td>{{ formatDateTime(r.startDate) }}</td>
+            <td>{{ formatDateTime(r.startDate) }} → {{ formatDateTime(r.endDate) }}</td>
           </tr>
         </tbody>
       </table>
