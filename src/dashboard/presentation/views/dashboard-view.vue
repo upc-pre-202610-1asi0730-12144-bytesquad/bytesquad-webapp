@@ -225,12 +225,12 @@ function fmtDate(iso) { return iso ? iso.slice(0, 10) : '—'; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .error-banner { align-items: center; background: rgba(239,68,68,.1); border: 1px solid #ef4444; border-radius: var(--radius); color: #ef4444; display: flex; font-size: 0.875rem; gap: 0.5rem; padding: 0.75rem; }
 
-/* Warm olive-amber gradient overlay on every card */
+/* Warm olive-amber solid gradient on every card — matches reference */
 .kpi-card,
 .chart-card,
 .table-card {
-  background: linear-gradient(145deg, rgba(82,74,5,0.40) 0%, rgba(14,13,2,0.28) 100%), var(--bg-card);
-  border: 1px solid rgba(245,188,54,0.12);
+  background: linear-gradient(160deg, #2e2908 0%, #1d1b05 55%, #131202 100%);
+  border: 1px solid rgba(245,188,54,0.14);
 }
 
 /* KPI row */
@@ -256,7 +256,7 @@ function fmtDate(iso) { return iso ? iso.slice(0, 10) : '—'; }
 .grid-line { stroke: rgba(255,255,255,.07); stroke-width: 1; }
 .area-fill { fill: url(#areaGrad); }
 .line-stroke { fill: none; stroke: var(--accent); stroke-linejoin: round; stroke-width: 2.5; }
-.data-dot { fill: var(--accent); stroke: #1a1905; stroke-width: 2; }
+.data-dot { fill: var(--accent); stroke: #1d1b05; stroke-width: 2.5; }
 .axis-label { fill: var(--text-secondary); font-size: 10px; }
 .chart-state { align-items: center; color: var(--text-secondary); display: flex; flex-direction: column; font-size: 0.85rem; gap: 0.5rem; height: 180px; justify-content: center; }
 
