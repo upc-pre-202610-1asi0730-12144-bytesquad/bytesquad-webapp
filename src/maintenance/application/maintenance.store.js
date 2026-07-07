@@ -192,12 +192,29 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
     } finally { loading.value = false; }
   }
 
+  async function createTicketWithMaintenance({ equipmentId, requestedByAdminId, description }) {
+    loading.value = true; error.value = null;
+    try {
+      const maintenance = await api.requestMaintenance({
+        equipmentId, requestedByAdminId, reason: description,
+      });
+      const ticket = await api.createTicket({
+        maintenanceId: maintenance.id, equipmentId, description,
+      });
+      tickets.value = [...tickets.value, ticket];
+      return ticket;
+    } catch (e) {
+      error.value = e.message || 'Failed to create ticket';
+      throw e;
+    } finally { loading.value = false; }
+  }
+
   return {
     maintenances, jobs, logs, tickets, technicians, completionLogs, loading, error,
     openTickets, inProgressTickets, resolvedTickets,
     loadMaintenancesByEquipment, requestMaintenance,
     acceptJob, createLog,
-    loadTickets, getTicketById, createTicket,
+    loadTickets, getTicketById, createTicket, createTicketWithMaintenance,
     loadTechnicians, registerTechnician,
     loadLogsByAdmin, loadCompletionLog,
     updateTicketStatus, updateTicketMaintenanceProgress,
