@@ -159,7 +159,13 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
       return updated;
     } catch (e) {
       error.value = e.message || 'Failed to update maintenance progress';
+      throw e;
     } finally { loading.value = false; }
+  }
+
+  async function completeTicketFlow(id, notes = '') {
+    await updateTicketMaintenanceProgress(id, 'Completed');
+    return completeTicket(id, notes);
   }
 
   async function assignTicket(id, technicianId) {
@@ -219,6 +225,6 @@ export const useMaintenanceStore = defineStore('maintenance', () => {
     loadTechnicians, registerTechnician,
     loadLogsByAdmin, loadCompletionLog,
     updateTicketStatus, updateTicketMaintenanceProgress,
-    assignTicket, requestTicketStatusUpdate, completeTicket,
+    assignTicket, requestTicketStatusUpdate, completeTicket, completeTicketFlow,
   };
 });
