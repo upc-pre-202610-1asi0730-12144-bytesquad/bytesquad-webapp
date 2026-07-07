@@ -11,6 +11,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const reservations = ref([]);
   const loading      = ref(false);
   const error        = ref(null);
+  const usageCounts  = ref({});
 
   const activeReservations    = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Active));
   const initiatedReservations = computed(() => reservations.value.filter(r => r.status === ReservationStatus.Initiated));
@@ -88,10 +89,24 @@ export const useReservationStore = defineStore('reservation', () => {
     } catch (e) { error.value = e.message; }
   }
 
+  // Historical reservation count per equipment id, used for the map's heatmap view.
+  async function loadUsageCounts(equipmentIds) {
+    const entries = await Promise.all(equipmentIds.map(async id => {
+      try {
+        const list = await api.getByEquipment(id);
+        return [id, list.length];
+      } catch {
+        return [id, 0];
+      }
+    }));
+    usageCounts.value = Object.fromEntries(entries);
+  }
+
   return {
-    reservations, loading, error,
+    reservations, loading, error, usageCounts,
     activeReservations, initiatedReservations, reservedReservations, endedReservations,
     historyReservations, hasOpenReservation,
     loadMine, expressCreate, submitRequest, requestEquipmentAvailable, startTimer, end, cancel,
+    loadUsageCounts,
   };
 });
