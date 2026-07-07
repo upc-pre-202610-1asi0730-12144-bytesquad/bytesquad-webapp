@@ -47,5 +47,19 @@ export const useRoiProjectionStore = defineStore('roiProjection', () => {
     } finally { loading.value = false; }
   }
 
-  return { projections, loading, error, createProjection, updateProjectedEarnings, generate, loadByAdmin };
+  async function createCompleteProjection({ projectedDowntimeCost, projectedEarnings }) {
+    loading.value = true; error.value = null;
+    try {
+      const base = await api.create(projectedDowntimeCost);
+      _upsert(base);
+      await api.updateProjectedEarnings(base.roiProjectionId, projectedEarnings);
+      const final = await api.generate(base.roiProjectionId);
+      _upsert(final);
+      return final;
+    } catch (e) {
+      error.value = e.message || 'Failed to create ROI projection';
+    } finally { loading.value = false; }
+  }
+
+  return { projections, loading, error, createProjection, updateProjectedEarnings, generate, loadByAdmin, createCompleteProjection };
 });
