@@ -18,6 +18,7 @@ const viewMode         = ref('MAP');       // MAP | HEATMAP | ALL_BRANCHES
 const activeFilter     = ref('ALL');       // ALL | CARDIO | STRENGTH
 const selectedEquipmentId = ref(null);
 const showAlternatives = ref(false);
+const selectedAlternativeId = ref(null);
 const toast             = ref(null);
 
 const dataLoading = computed(() => gymStore.loading);
@@ -196,8 +197,16 @@ function openEquipmentDetail(id) {
 function closeMachineDetail() {
   selectedEquipmentId.value = null;
   showAlternatives.value = false;
+  selectedAlternativeId.value = null;
 }
-function openAlternatives() { showAlternatives.value = true; }
+function openAlternatives() {
+  showAlternatives.value = true;
+  selectedAlternativeId.value = null;
+}
+
+function selectAlternative(id) {
+  selectedAlternativeId.value = id;
+}
 
 function selectBranch(branchId) {
   selectedBranchId.value = branchId;
@@ -247,13 +256,13 @@ function showToast(message) {
 
 const QUICK_RESERVE_MINUTES = 15;
 
-async function reserveMachine() {
-  const sel = selectedEquipment.value;
-  if (!sel) return;
+async function reserveMachine(equipmentId) {
+  const targetId = equipmentId ?? selectedEquipment.value?.eq.id;
+  if (!targetId) return;
   closeMachineDetail();
   const start = new Date();
   const end   = new Date(start.getTime() + QUICK_RESERVE_MINUTES * 60 * 1000);
-  const created = await reservationStore.expressCreate(sel.eq.id, start.toISOString(), end.toISOString());
+  const created = await reservationStore.expressCreate(targetId, start.toISOString(), end.toISOString());
   if (created) showToast(t('map.detail.notifications.reserved'));
 }
 </script>
@@ -451,7 +460,7 @@ async function reserveMachine() {
         </p>
 
         <div v-else class="detail-actions">
-          <button class="btn btn--primary" @click="reserveMachine">
+          <button class="btn btn--primary" @click="reserveMachine()">
             {{ t('map.detail.reserveBtn', { minutes: QUICK_RESERVE_MINUTES }) }}
           </button>
         </div>
@@ -464,12 +473,15 @@ async function reserveMachine() {
         </div>
         <p class="detail-msg">{{ t('map.alternatives.subtitle') }}</p>
         <div class="alt-list">
-          <div v-for="alt in alternativeEquipment" :key="alt.eq.id" class="alt-item">
+          <div v-for="alt in alternativeEquipment" :key="alt.eq.id" class="alt-item"
+            :class="{ 'alt-item--selected': selectedAlternativeId === alt.eq.id }"
+            @click="selectAlternative(alt.eq.id)">
             <span>{{ alt.eq.name }}</span>
             <span class="badge badge--green">{{ t('map.alternatives.free') }}</span>
           </div>
         </div>
-        <button class="btn btn--primary" style="width:100%" @click="reserveMachine">
+        <button class="btn btn--primary" style="width:100%" :disabled="!selectedAlternativeId"
+          @click="reserveMachine(selectedAlternativeId)">
           {{ t('map.alternatives.reserveBtn', { minutes: QUICK_RESERVE_MINUTES }) }}
         </button>
       </div>
@@ -558,6 +570,7 @@ async function reserveMachine() {
 .detail-msg { color: var(--text-secondary); font-size: .85rem; margin-bottom: .5rem; }
 .detail-actions { display: flex; flex-direction: column; gap: .5rem; }
 .alt-list { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; max-height: 220px; overflow-y: auto; }
-.alt-item { align-items: center; background: var(--bg-card); border-radius: 8px; display: flex; justify-content: space-between; padding: .5rem .75rem; }
+.alt-item { align-items: center; background: var(--bg-card); border: 1px solid transparent; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; padding: .5rem .75rem; }
+.alt-item--selected { border-color: var(--accent); }
 .toast { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 8px; bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,.3); left: 50%; padding: .6rem 1rem; position: fixed; transform: translateX(-50%); z-index: 600; }
 </style>
