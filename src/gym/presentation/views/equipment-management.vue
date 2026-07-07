@@ -28,7 +28,9 @@ function statusLabel(s) {
   return t(`equipment.status.${s}`) || s;
 }
 function statusClass(s) {
-  return s === EquipmentStatus.OPERATIONAL ? 'green' : s === EquipmentStatus.MAINTENANCE ? 'amber' : 'red';
+  if (s === EquipmentStatus.OPERATIONAL || s === EquipmentStatus.AVAILABLE) return 'green';
+  if (s === EquipmentStatus.MAINTENANCE) return 'amber';
+  return 'red';
 }
 function deleteEquipment(id) {
   if (confirm(t('equipment.dialog.deleteMessage'))) store.deleteEquipment(id);
